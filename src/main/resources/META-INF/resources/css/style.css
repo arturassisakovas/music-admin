@@ -1,0 +1,2293 @@
+.sidebar-menu {
+	margin-top: 40px;
+}
+
+.clients-chart {
+	width: 500px;
+	margin: auto;
+	margin-top: 60px;
+}
+
+a {
+	color: #022B3A;
+}
+
+a:hover, a:active, a:focus {
+	color: #196582;
+}
+
+.skin-black-light .sidebar-menu>li.active>a {
+	border-left: 4px solid #46cde6;
+}
+
+.skin-black-light .sidebar-menu>li:hover>a, .skin-black-light .sidebar-menu>li.active>a {
+	background: #ececec;
+}
+
+.client-side-bar-fix:hover {
+	background-color: #dbdbdb !important;
+	border-color: #dbdbdb !important;
+	color: #022B3A !important;
+}
+
+.client-side-bar-fix:hover span {
+	color: #022B3A !important;
+}
+
+h2 {
+	margin: 0;
+}
+
+body.login-page {
+	background: rgba(47, 102, 144, 0.7);
+	min-height: 100vh;
+}
+
+label.ui-outputlabel.login-failed {
+	color: #ED1C24 !important;
+	text-align: center;
+	width: 100%;
+	margin-bottom: 20px !important;
+	font-size: 18px;
+	line-height: 1.2 !important;
+}
+
+.login-box-msg {
+	font-size: 18px;
+	padding-bottom: 15px;
+	color: #022B3A;
+}
+
+.login-box-login-section {
+	font-size: 18px;
+	color: #022B3A;
+	margin:0;
+	text-align:center;
+	padding:0 20px 0px 20px
+}
+
+.forgot-pass-description {
+	line-height: 1.4 !important;
+	margin-bottom: 20px !important;
+}
+
+.password-reset-success-msg {
+	text-align: center;
+	display: block;
+	margin-bottom: 5px !important;
+	font-size: 18px;
+	line-height: 1.21 !important;
+	color: #35bf35;
+}
+
+.envelope-custom {
+	font-size: 50px;
+	text-align: center;
+	display: block;
+	position: relative;
+	top: -15px;
+	color: #00555c;
+}
+
+.has-feedback .form-control {
+	box-shadow: none !important;
+}
+
+.ui-dialog {
+	top: 50px !important;
+}
+
+.text-left {
+	text-align: left !important;
+}
+
+.change-password-container {
+	max-width: 450px;
+}
+
+.center {
+	margin: auto;
+	display: block !important;
+	margin-right: auto !important;
+	margin-top: 15px;
+}
+
+.wizard {
+	position: relative;
+	margin-top: 15px;
+	margin-bottom: 26px;
+}
+
+.wizard>.steps {
+	transform: translateX(9%);
+}
+
+.wizard>.steps ul {
+	display: flex;
+	justify-content: center;
+}
+
+ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.wizard>.steps li.checked a {
+	background: #135282;
+}
+
+.wizard>.steps li.first a {
+	background: #135282;
+}
+
+.wizard>.steps li a {
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	background: #e9e0cf;
+	margin-right: 78px;
+	position: relative;
+}
+
+.wizard>.steps .current-info, .wizard>.steps .number {
+	display: none;
+}
+
+.wizard>.steps li a:before {
+	content: "";
+	width: 58px;
+	height: 2px;
+	background: #e9e0cf;
+	position: absolute;
+	right: 25px;
+	top: 7px;
+}
+
+.wizard>.steps li.checked a:after {
+	width: 58px;
+}
+
+.wizard>.steps li a:after {
+	content: "";
+	width: 0;
+	height: 2px;
+	background: #2F6690;
+	position: absolute;
+	left: -68px;
+	top: 7px;
+	transition: all 0.6s ease;
+}
+
+.wizard>.steps .first a:after, .wizard>.steps .first a:before {
+	content: none;
+}
+
+.register-box-custom {
+	width: 450px;
+	display: table;
+	height: calc(100vh - 30px);
+	margin: auto
+}
+
+.table-cell {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+label.ui-outputlabel {
+	margin: 10px 0px !important;
+	font-size: 16px;
+}
+
+div.ui-selectonemenu {
+	min-width: 96px !important;
+	margin-right: 5px;
+}
+
+.btn-pools {
+	color: #FFFFFF !important;
+	background-color: #2F6690 !important;
+	border-color: #2F6690 !important;
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+button.ui-button.btn-pools:hover, button.ui-button.btn-pools.ui-state-hover,
+	button.ui-button.btn-pools:active, button.ui-button.btn-pools:focus {
+	background-color: #135282 !important;
+	border-color: #135282 !important;
+}
+
+.btn-continue, .btn-back {
+	margin: auto;
+	display: block;
+	margin-top: 20px;
+}
+
+.btn-back {
+	padding-bottom: 6px !important;
+	background: #f39c12 !important;
+	border-color: #f39c12 !important;
+	color: #fff !important;
+	outline: none !important;
+	box-shadow: none !important;
+	border-radius: 3px !important;
+}
+
+.btn-back span.ui-button-text.ui-c {
+	padding-top: 3.6px;
+}
+
+.btn-back:hover {
+	background: #e4962e !important;
+	border-color: #e4962e !important;
+}
+
+.btn-continue:hover {
+	background-color: #014e50 !important;
+	border-color: #014e50 !important;
+}
+
+.content:before {
+	content: none;
+}
+
+.agreement-text {
+	position: inherit;
+	top: 2px;
+	margin-left: 10px;
+}
+
+.contract-btn {
+	display: block !important;
+	margin: auto;
+	margin-bottom: 25px !important;
+	margin-top: 30px !important;
+}
+
+.btn-flat {
+	margin-top: 0 !important;
+}
+
+.line {
+	height: 3px;
+	background: #2f6690;
+	margin: 25px 0px;
+	margin-left: -20px;
+	margin-right: -20px;
+}
+
+.relative .ui-message {
+	position: relative;
+	top: 6px;
+	min-width: 300px;
+}
+
+.captcha-block {
+	margin: 10px 0 20px 22%;
+}
+
+#formA input {
+	width: 100%;
+}
+
+.client-details-edit {
+	padding-top: 7px !important;
+}
+
+.email-confirm-btn {
+	max-width: 250px;
+	display: block !important;
+	margin: auto;
+}
+
+.confirm-modal {
+	min-width: 520px;
+	left: -7px !important;
+}
+
+.ui-datatable-tablewrapper {
+	margin-top: 10px;
+}
+
+#groupReviewForm .ui-datatable-tablewrapper {
+	overflow: unset !important;
+}
+
+#groupsForm .ui-datatable-tablewrapper {
+	overflow: unset !important;
+}
+
+.ui-paginator-bottom {
+	margin-top: 10px;
+	border: none !important;
+}
+
+.ui-paginator-top {
+	border: none !important;
+}
+
+.day-btn {
+	width: 55px !important;
+	margin: 0 3px;
+	border: none !important;
+    background: #dbdbdb !important;
+}
+
+.day-btn:active, .day-btn:hover, .day-btn:focus {
+	background: #022B3A !important;
+	color: #fff;
+}
+
+.day-btn .ui-button-text {
+	padding-left: 14px !important;
+}
+
+.work-hours-panel {
+	border: none;
+}
+
+.work-hours-panel .ui-panel-content {
+	padding: 10px 0 !important;
+}
+
+.hour-btn {
+	margin: 5px;
+}
+
+.select-hour-label {
+	display: block;
+	text-align: center;
+}
+
+#trackPeriod .ui-tabs-nav {
+	text-align: center;
+}
+
+#trackPeriod div.ui-panel .ui-panel-content, #trackPeriod .ui-dialog .ui-dialog-content
+	{
+	padding: 0px !important;
+}
+
+.trackPeriodDialog {
+	width: 500px;
+	border: none;
+	transition: 1s all;
+}
+
+.trackPeriodPanel {
+	border-top: none;
+	border-bottom: none;
+	border-left: none;
+	max-width: 500px;
+	display: inline-block;
+}
+
+.workingHours {
+	max-width: 270px;
+	display: inline-block;
+	width: 100%;
+	margin-left: 8px;
+	border: none;
+	display: none;
+	position: absolute;
+	min-height: 366px;
+	bottom: 0;
+	text-align: center;
+}
+
+.time-block {
+	height: 40px;
+}
+
+.time-block .ui-g-5 {
+	border-right: 1px solid #c7c7c7;
+}
+
+.inline-block {
+	display: inline-block !important;
+}
+
+.btn-time-delete {
+	padding: 0px !important;
+}
+
+.dialog-overlay {
+	z-index: 1031 !important;
+}
+
+.btn-cancel-hours {
+	color: #ca1212 !important;
+	position: absolute;
+	top: 61px;
+	margin-left: 7px;
+}
+
+.delete-message {
+	border: none;
+}
+
+.delete-message span {
+	font-size: 14px;
+	line-height: 1;
+}
+
+.text-black {
+	color: #000;
+}
+
+.delete-message a {
+	margin-right: 15px;
+	color: white;
+	font-weight: bold;
+}
+
+.track-working-day {
+	background: #022B3A;
+	padding: 5px 10px;
+	margin: 0 2px;
+	border-radius: 3px;
+	font-weight: bold;
+	color: #fff;
+	cursor: default;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.working-hour-column {
+	display: inline-block;
+	width: 100px;
+	text-align: center;
+	line-height: 1;
+}
+
+.working-hour-container {
+	border-top: 1px solid #fff;
+	padding: 2px 0;
+}
+
+.empty-pool-msg {
+	padding: 15px !important;
+	background-color: #f39c12;
+	margin-bottom: 15px;
+}
+
+.empty-pool-msg>div {
+	color: #ffffff;
+	font-size: 16px;
+	text-align: center;
+}
+
+.read-only-pool-track {
+	line-height: 1.74857143;
+	padding-left: 4px;
+}
+
+.discount-selection .ui-datatable-tablewrapper {
+	overflow: hidden;
+}
+
+.reg-submit-btn-block, .city-selection {
+	border: none;
+}
+
+.reg-submit-btn-block div, .city-selection .ui-panel-content {
+	padding: 0px !important;
+}
+
+.full-width {
+	width: 100% !important;
+}
+
+.city-selection table {
+	position: relative;
+	top: -5px;
+}
+
+.fa-warning-custom {
+	display: block;
+	font-size: 70px;
+	text-align: center;
+	color: #2F6690;
+}
+
+.warning-message {
+	text-align: center;
+	display: block;
+	margin: 10px 0;
+	font-size: 16px;
+}
+
+.hidden-steps {
+	visibility: hidden;
+	height: 0;
+	margin: 0;
+}
+
+.registerReserveDialog .ui-dialog-titlebar {
+	border: none !important;
+}
+
+.ui-chips-container {
+	border: none !important;
+	width: 240px;
+	display: block !important;
+	margin-right: auto !important;
+	margin-top: 0px !important;
+	margin: 20px;
+	cursor: inherit;
+}
+
+.ui-outputlabel-nonworkingdays {
+	display: block !important;
+	margin-right: auto !important;
+	margin-top: 0px !important;
+	margin: 20px;
+}
+
+.ui-panelgrid-cell-nonworkingdays {
+	border-left: 1px solid #dbdbdb;
+	height: 100%;
+}
+
+.ui-chips-input-token {
+	display: none;
+}
+
+.ui-chips {
+	cursor: inherit;
+}
+
+.ui-datepicker-inline {
+	width: 96%;
+}
+
+.ui-selectcheckboxmenu-header:before {
+	display: inline;
+	font-weight: normal;
+	margin-left: 10px;
+	color: #444;
+}
+
+label.ui-outputlabel.timetable-label {
+	margin-bottom: 0px !important;
+}
+
+.timetables-form {
+	margin-top: 20px;
+}
+
+.col-7 {
+	display: inline-block;
+	width: 14.28%;
+	border-right: 1px solid #b3b3b3;
+	text-align: center;
+}
+
+.m-40 {
+	margin: 40px 0;
+}
+
+.group-panel, .weekdays {
+	border: none;
+}
+
+.group-item {
+	margin: 10px auto;
+	color: #fff !important;
+	display: block !important;
+	width: 100%;
+	padding-right: 0 !important;
+	padding-left: 0 !important;
+}
+
+.group-item:hover {
+	background: #8a8a8a;
+}
+
+.group-item.available {
+	background: rgba(0, 0, 0, 0.2);
+	color: #000 !important;
+}
+
+.group-item.not-available {
+	background: #38bd38;
+}
+
+.group-item.not-available:hover, .group-item.not-available:focus,
+	.group-item.not-available:active {
+	background: #38bd38;
+}
+
+.group-item.group-selected {
+	background: #288230;
+}
+
+.group-item.group-selected:focus {
+	background: #1d6d24;
+}
+
+.group-item.available:focus {
+	background: #62da6c;
+}
+
+.no-groups .ui-widget-content {
+	text-align: center;
+	font-size: 18px;
+	color: #fff;
+	margin: 20px 0;
+	background: #ad2c2c;
+	font-weight: bold;
+}
+
+.groups-filter-button {
+	position: absolute;
+	bottom: 8px;
+}
+
+label.ui-outputlabel.weekdayLabel {
+	margin-bottom: 0px !important;
+	border-bottom: 2px solid #585858;
+}
+
+.choose-time {
+	display: block;
+	text-align: center;
+	font-size: 18px !important;
+	position: relative;
+	top: 30px;
+}
+
+#coach_panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	display: none;
+}
+
+.link-for-nonworkdays {
+	padding-right: 8px !important;
+	padding-left: 8px !important;
+}
+
+.poolInput, .poolInput input {
+	width: 100%;
+}
+
+#coach_panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	display: none;
+}
+
+#coach {
+	width: 100%;
+	min-width: 90px;
+}
+
+.coach-groups-table-left {
+	border-left: 1px !important;
+	border-left-style: solid !important;
+	border-left-color: #dbdbdb !important;
+}
+
+.coach-groups-table-right {
+	border-right: 1px !important;
+	border-right-style: solid !important;
+	border-right-color: #dbdbdb !important;
+}
+
+.captcha-block .ui-message-error {
+	width: 290px;
+}
+
+.register-success {
+	margin: 40px 0 20px;
+}
+
+.btn-login-last-step {
+	max-width: 150px;
+	display: block !important;
+	margin: 10px auto 20px !important;
+}
+
+div.all-missing-icon span.ui-chkbox-icon:before {
+	content: "\f00d" !important;
+	margin-left: 6px !important;
+}
+
+div.all-missing-icon div.ui-chkbox-box.ui-state-active {
+	border: 1px solid #dd4b39;
+	background: #dd4b39;
+}
+
+div.all-present-icon div.ui-chkbox-box.ui-state-active {
+	border: 1px solid #38bd38;
+	background: #38bd38;
+}
+
+div.all-present-icon .ui-state-disabled, div.all-missing-icon .ui-state-disabled
+	{
+	opacity: unset;
+}
+
+div.attendance-chkbox-true div.ui-chkbox-box.ui-state-active {
+	border: 1px solid #38bd38 !important;
+	background: #38bd38 !important;
+}
+
+div.attendance-chkbox-false div.ui-chkbox-box.ui-state-active {
+	border: 1px solid #dd4b39 !important;
+	background: #dd4b39 !important;
+}
+
+div.attendance-chkbox-true .ui-state-disabled, div.attendance-chkbox-false .ui-state-disabled
+	{
+	opacity: unset;
+}
+
+.client-attendees-headers {
+	font-weight: bold;
+	padding-bottom: 8px;
+	padding-top: 20px;
+}
+
+.client-attendees-headers-top {
+	font-weight: bold;
+	padding-bottom: 8px;
+}
+
+.client-attendees-coaches {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	width: auto;
+}
+
+.cstm-lock {
+	top: 47px !important;
+}
+
+.btn-change-password {
+	color: #fff;
+	background-color: #2f6690;
+	width: 100%;
+	border: none;
+}
+
+.btn-logout {
+	color: #FFF !important;
+	background-color: #ED1C24 !important;
+	width: 100%;
+	border: none;
+}
+
+.dd-toggle {
+	border-color: #ECF0F5;
+	min-width: 160px;
+	text-align: center;
+}
+
+.dd-menu {
+	width: 100% !important;
+}
+
+.lower-center {
+	margin-top: 10px;
+}
+
+.user-footer {
+	background-color: #FFF !important;
+}
+
+.btn-change-password:hover {
+	background-color: #135282 !important;
+	color: #fff;
+}
+
+.btn-logout:hover {
+	background-color: #a91d1d !important;
+}
+
+.wrapper {
+	background-color: #ecf0f5 !important;
+}
+
+.main-footer {
+	padding: 0px;
+	text-align: center;
+}
+
+.ui-datepicker-unselectable.ui-state-disabled span {
+	text-align: center;
+	border: none;
+}
+
+.unmarked-attendance-row {
+	background: #ed1c24;
+}
+
+.coach-opacity {
+	opacity: 0.6;
+}
+
+.client-attendees-headers-top {
+	font-weight: bold;
+	padding-bottom: 8px;
+}
+
+.client-attendees-coaches {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	width: auto;
+}
+
+#groupsForm thead th {
+	text-align: left;
+	background: #e4e4e4;
+}
+
+#groupsForm .periods-title {
+	font-size: 18px;
+	margin-bottom: 5px !important;
+	position: relative;
+	top: 30px;
+}
+
+#groupsForm .periods-select {
+	display: table;
+	min-width: 150px !important;
+	position: relative;
+	top: 30px;
+}
+
+#groupsForm .ui-selectbooleancheckbox {
+	margin: auto;
+	display: block;
+	text-align: center;
+}
+
+#groupsForm .publish-groups-btn {
+	display: block;
+	margin-left: auto;
+	width: 170px;
+	font-size: 18px;
+}
+
+#groupsForm .ui-selectcheckboxmenu {
+	min-width: auto !important;
+}
+
+.custom-confirm-dialog .ui-confirm-dialog-message {
+	max-width: 260px;
+	text-align: center;
+}
+
+.not-visible {
+	visibility: hidden;
+}
+
+.active-groups-label {
+	display: block;
+	color: #022b3a;
+	font-size: 22px;
+	margin: 15px 0;
+	text-align: center;
+}
+
+.accordion-panel {
+	min-height: 175px;
+	overflow-y: auto;
+}
+
+.ui-accordion-header {
+	background-color: #fff !important;
+	font-weight: bold !important;
+	border: 0px !important;
+}
+
+div.ui-accordion .ui-accordion-header.ui-state-active {
+	background: #fff !important;
+	border-top: 2px solid #DBDBDB !important;
+	background-color: #DBDBDB !important;
+	color: #444 !important;
+}
+
+.ui-accordion-content {
+	background-color: #DBDBDB !important;
+	color: #444;
+	font-weight: 600;
+}
+
+.profile-borderless {
+	border: hidden;
+	border-color: #FFF;
+}
+
+.font-weight {
+	font-weight: normal !important;
+}
+
+.attendance {
+	border: none;
+}
+
+.attendance .ui-panel-content {
+	padding-left: 7px !important;
+}
+
+.ui-tabs-panels .ui-panel .ui-panel-content .ui-confirm-dialog {
+	display: none !important;
+}
+
+#attendeeForm .ui-panel .ui-panel-content .ui-dialog {
+	margin: auto !important;
+}
+
+.health-problem-details-dialog {
+	margin-top: 100px !important;
+	max-width: 500px;
+	min-width: 320px;
+}
+
+.ui-state-highlight .fa-trash-o {
+	color: #ffffff !important;
+}
+
+.ui-state-highlight .fa-trash-o {
+	color: #ffffff !important;
+}
+
+.custom-radio-btn td {
+	display: block;
+	margin-top: 15px;
+}
+
+.custom-radio-btn td .ui-radiobutton-box {
+	width: 24px;
+	height: 24px;
+}
+
+.custom-radio-btn td span.ui-radiobutton-icon {
+	margin-left: 5px;
+	margin-top: 5px;
+}
+
+.custom-radio-btn td label {
+	font-size: 16px;
+	top: 2px;
+	position: relative;
+	left: 8px;
+}
+
+.generate-report-btn {
+	margin-top: 30px;
+	background: #009688 !important;
+	color: #fff !important;
+}
+
+.report {
+	border: none;
+	border-top: 2px solid #2f6690;
+	margin-top: 30px;
+	border-radius: 0 !important;
+}
+
+.excel-btn {
+	background: #306B34 !important;
+	color: #fff;
+	border: none;
+	padding: 5px;
+	width: 130px;
+	border-radius: 2px;
+	font-size: 16px;
+	margin: 15px 0;
+	outline: none;
+}
+
+.fa-file-excel-o {
+	color: #fff;
+	position: relative;
+	left: -32px;
+	font-size: 18px;
+}
+
+.report-header {
+	background: #009688
+}
+
+.report-header th {
+	text-align: left !important;
+	color: #fff !important;
+}
+
+.num-of-attendees {
+	color: #022b3a;
+	font-weight: bold;
+	font-size: 20px;
+	margin-top: 10px;
+}
+
+.attendees-report-table thead th {
+	width: 140px;
+}
+
+.no-header.ui-datatable table thead tr {
+	display: none;
+}
+
+.attendees-empty-places {
+	margin-top: -11px;
+}
+
+.attendees-empty-space {
+	background-color: #ED1C24;
+	height: 55px;
+}
+
+.attendees-empty-space td {
+	color: #fff;
+}
+
+.attendees-extra-space-start {
+	border-top: 5px solid #ffffff !important;
+}
+
+.review-group-panel {
+	padding: 20px !important;
+	/*noinspection CssInvalidPropertyValue*/
+	height: -webkit-fill-available;
+	display: inline-table;
+}
+
+
+.view-progress-levels-btn {
+	display: block !important;
+	margin: 10px 0;
+	background: #00c0ef !important;
+	border: none !important;
+	color: #fff !important;
+}
+
+.health-problems-block {
+	margin-top: 20px;
+}
+
+.hidden {
+	display: none !important;
+}
+
+.jqplot-title {
+	left: 60px !important;
+	text-align: left !important;
+	font-size: 23px;
+	padding-bottom: 30px;
+}
+
+.ui-dialog-titlebar > #redirectToPayseraDialog_title {
+	width: 100%;
+	margin-right: 0;
+}
+
+#redirectToPayseraDialog_title > .ui-button {
+	float: right;
+	background: none;
+	border: 0;
+	margin-right: -7px;
+	margin-top: -15px;
+}
+
+button.btn-light-blue, .ui-confirmdialog-yes, .ui-fileupload-choose {
+	color: #FFFFFF !important;
+	background-color: #2F6690 !important;
+	border-color: #2F6690 !important;
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+button.ui-button.btn-light-blue:hover, button.ui-button.btn-light-blue.ui-state-hover,
+	button.ui-button.btn-light-blue:active, button.ui-button.btn-light-blue:focus,
+	div.ui-fileupload .ui-fileupload-buttonbar span.ui-fileupload-choose:hover {
+	background-color: #135282 !important;
+	border-color: #135282 !important;
+}
+
+button.btn-dark-blue {
+	color: #FFFFFF !important;
+	background-color: #022B3A !important;
+	border-color: #022B3A !important;
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+button.ui-button.btn-dark-blue:hover, button.ui-button.btn-dark-blue.ui-state-hover,
+	button.ui-button.btn-dark-blue:active, button.ui-button.btn-dark-blue:focus
+	{
+	background-color: #001a23 !important;
+	border-color: #001a23 !important;
+}
+
+div.ui-messages-error, div.ui-messages-fatal{
+	border-color: #ED1C24;
+	background-color: #ED1C24;
+}
+
+label.ui-outputlabel, .countdown, .ui-selectoneradio label,
+	.ui-panelgrid-cell, h3, div.ui-accordion .ui-accordion-header, div.ui-accordion .ui-accordion-header.ui-state-active,
+	.ui-dialog-title, .ui-widget-content {
+	color: #022B3A !important;
+}
+
+body .ui-dialog.box-warning.box-solid .ui-dialog-titlebar .ui-dialog-title {
+	color: white !important;
+}
+
+div.ui-selectonemenu, div.ui-fluid div.ui-selectonemenu, div.ui-selectcheckboxmenu,
+	div.ui-fluid div.ui-selectcheckboxmenu {
+	color: #FFFFFF !important;
+	background-color: #2F6690 !important;
+	border-color: #2F6690 !important;
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+.ui-selectonemenu.ui-state-hover, .ui-selectonemenu.ui-state-focus {
+	background-color: #2F6690;
+}
+
+div.ui-selectonemenu div.ui-selectonemenu-trigger.ui-state-hover, div.ui-selectonemenu div.ui-selectonemenu-trigger.ui-state-focus
+	{
+	background: #2F6690;
+}
+
+div.ui-selectonemenu div.ui-selectonemenu-trigger span.ui-icon-triangle-1-s:before
+	{
+	color: #fff;
+}
+
+div.ui-selectonemenu.ui-state-focus, div.ui-fluid div.ui-selectonemenu.ui-state-focus
+	{
+	border-color: #2F6690;
+}
+
+body .ui-radiobutton .ui-radiobutton-box.ui-state-active span.ui-radiobutton-icon
+	{
+	background-color: #2F6690 !important;
+}
+
+body div.ui-selectonemenu.ui-state-error {
+	border: 1px solid #ed1c24;
+	color: #ffffff;
+	background: #ED1C24;
+	border-color: #ed1c24 !important;
+}
+
+div.ui-selectonemenu.ui-state-error div.ui-selectonemenu-trigger.ui-state-hover,
+	div.ui-selectonemenu.ui-state-error div.ui-selectonemenu-trigger.ui-state-focus
+	{
+	background: #ED1C24;
+}
+
+div.ui-messages-warn {
+	border-color: #f39c12;
+	background-color: #f39c12;
+}
+
+.btn-warning {
+	border-color: #f39c12 !important;
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+.btn-warning:hover, .btn-warning:focus, .btn-warning:active {
+	border-color: #e08e0b !important;
+}
+
+.accordion-content-text {
+	font-size: 13px;
+}
+
+div.ui-message-error {
+	background-color: #ED1C24;
+	border-color: #ed1c24 !important;
+}
+
+.skin-black-light .main-sidebar {
+	background-color: #022B3A;
+}
+
+.skin-black-light .main-sidebar .fa {
+	color: #fff;
+}
+
+.skin-black-light .main-sidebar .active .fa {
+	color: #022B3A;
+}
+
+.skin-black-light .sidebar-menu>li.active>a {
+	border-left: 4px solid transparent;
+}
+
+.skin-black-light .sidebar-menu>li:hover>a  .fa {
+	color: #022B3A !important;
+}
+
+.skin-black-light .sidebar-menu>li>a {
+	color: #fff;
+}
+
+.skin-black-light .main-header .navbar {
+	background: #2F6690;
+}
+
+.skin-black-light .main-header .navbar .navbar-custom-menu .navbar-nav>li>a
+	{
+	background-color: #2F6690 !important;
+	color: #fff;
+}
+
+.main-header .sidebar-toggle:before {
+	color: #fff;
+}
+
+.sidebar-mini.sidebar-collapse .main-header .logo {
+	background-color: #2F6690 !important;
+}
+
+.skin-black-light .main-header .navbar .sidebar-toggle:hover {
+	background: #184e77;
+}
+
+.skin-black-light .main-header>.logo {
+	background: #022B3A;
+	border-right: 1px solid #2f6690;
+}
+
+.skin-black-light .main-header .navbar>.sidebar-toggle {
+	border: none;
+}
+
+.skin-black-light .main-sidebar {
+	border-right: 1px solid #DBDBDB;
+}
+
+.content-wrapper {
+	background-color: #DBDBDB;
+}
+
+.skin-black-light .main-header>.logo:hover {
+	background-color: #022B3A;
+}
+
+body .ui-tabs.ui-tabs-top .ui-tabs-nav.ui-widget-header li.ui-state-active
+	{
+	border-top: 3px solid #2f6690;
+}
+
+body .ui-datatable th[role="columnheader"].ui-state-default, body .ui-treetable th[role="columnheader"].ui-state-default
+	{
+	background: #2f6690 !important;
+	color: #fff;
+	border-color: #2f6690;
+}
+
+body .ui-datatable span.ui-sortable-column-icon.ui-icon-carat-2-n-s:before,
+	body .ui-treetable span.ui-sortable-column-icon.ui-icon-carat-2-n-s:before
+	{
+	color: #022b3a;
+}
+
+button.ui-button.btn-red, .ui-confirmdialog-no {
+	background: #ED1C24 !important;
+	color: #fff !important;
+	border: 1px solid #ed1c24 !important;
+	outline: none !important;
+	box-shadow: none !important;
+	float: right;
+}
+
+button.ui-button.btn-red:hover, ui-confirmdialog-no:hover, button.ui-button.btn-red:active,
+	ui-confirmdialog-no:active, button.ui-button.btn-red:focus,
+	ui-confirmdialog-no:focus {
+	background: #d40c14 !important;
+}
+
+.ui-datepicker .ui-datepicker-header, .ui-datepicker .ui-timepicker-div>.ui-widget-header,
+	.ui-datepicker-year, .ui-datepicker-month {
+	background: #2f6690 !important;
+	border: 1px solid #2f6690;
+}
+
+.ui-datepicker th, body .ui-datepicker td.ui-datepicker-current-day a.ui-state-active,
+	body .ui-datepicker td.ui-datepicker-current-day a.ui-state-default,
+	body .ui-datepicker td.ui-datepicker-current-day a.ui-state-hover {
+	background: #2f6690 !important;
+}
+
+body .ui-datepicker tbody td.ui-datepicker-today a {
+	border: 1px solid #022b3a !important;
+}
+
+.ui-tabs .ui-tabs-nav>li.ui-state-default {
+	background: #DBDBDB;
+}
+
+body .ui-widget-header .ui-state-default {
+	border-color: #dbdbdb;
+	background: #DBDBDB;
+	box-shadow: none !important;
+}
+
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited
+	{
+	color: #022b3a;
+}
+
+.unmarked-attendance-row td {
+	color: #fff;
+}
+
+.box {
+	border: none;
+	box-shadow: none;
+}
+
+div.ui-messages-info {
+	border-color: #306b34;
+	background-color: #306B34;
+}
+
+.ui-selectonemenu label.ui-selectonemenu-label {
+	background: #2f6690;
+}
+
+.ui-inputfield {
+	background: #dbdbdb;
+}
+
+.ui-selectcheckboxmenu-multiple-container.ui-inputfield {
+	background: #2F6690;
+}
+
+.ui-state-error.ui-selectonemenu label.ui-selectonemenu-label,
+	.ui-corner-right.ui-state-error {
+	background: #ed1c24;
+	border-radius: 0;
+}
+
+body .ui-paginator .ui-paginator-page.ui-state-active {
+	background: #2f6690;
+	color: #fff !important;
+	border-color: #2f6690;
+}
+
+.skin-black-light .sidebar-menu>li:hover>a, .skin-black-light .sidebar-menu>li.active>a
+	{
+	background: #dbdbdb;
+}
+
+body .ui-dialog.ui-widget-content.box-danger.box-solid .ui-dialog-titlebar,
+	body .ui-dialog.box-danger.box-solid .ui-dialog-titlebar {
+	background: #ed1c24 !important;
+}
+
+body .ui-dialog.box-danger.box-solid .ui-dialog-title {
+	color: #fff !important;
+}
+
+.ui-selectcheckboxmenu .ui-selectcheckboxmenu-label.ui-state-hover {
+	background-color: transparent;
+}
+
+body .ui-widget-content .ui-state-default {
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+body .ui-chips .ui-chips-token {
+	background: #022B3A;
+}
+
+body .ui-selectcheckboxmenu-multiple .ui-selectcheckboxmenu-token-label
+	{
+	background: #022B3A;
+}
+
+.ui-widget-content.ui-state-highlight {
+	color: #fff !important;
+	background: #022b3a;
+	border-color: #022b3a !important;
+}
+
+button.ui-inplace-save {
+	background: #2F6690;
+	border-color: #2F6690 !important;
+}
+
+button.ui-inplace-save:hover {
+	background-color: #135282 !important;
+	border-color: #135282 !important;
+}
+
+button.ui-inplace-cancel {
+	background: #ED1C24;
+	border-color: #ED1C24 !important;
+}
+
+button.ui-inplace-cancel:hover {
+	background: #d40c14 !important;
+}
+
+.ui-state-highlight {
+	background-color: #022b3a !important;
+	background-image: none !important;
+}
+
+.sidebar-collapse .sidebar-menu li span {
+	box-shadow: 2px 2px 2px #022B3A;
+}
+
+.btn-orange {
+	background: #f39c12 !important;
+	border-color: #f39c12 !important;
+}
+
+li .btn-orange {
+	color: #022B3A;
+}
+
+.btn-orange a:hover {
+	background: #f39c12 !important;
+}
+
+.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse .sidebar-menu>li:hover>a>span {
+	margin-left: -4px;
+}
+
+.ui-widget-content { 
+	border: 1px solid transparent;
+}
+
+.ui-tabs.ui-tabs-top .ui-tabs-nav.ui-widget-header {
+	border-bottom: 1px solid #dbdbdb;
+}
+
+.ui-tabs.ui-tabs-top .ui-tabs-nav.ui-widget-header li.ui-state-active {
+	border-color: #dbdbdb #dbdbdb transparent #dbdbdb;
+}
+
+body .ui-datatable tbody>tr.ui-widget-content, body .ui-treetable tbody>tr.ui-widget-content {
+	border-top-color: #dbdbdb;
+	border-bottom-color: #dbdbdb;
+	border-left: #dbdbdb;
+	border-right: #dbdbdb;
+}
+
+.discounts-panel thead {
+	display: none;
+}
+
+.ui-datepicker-today a {
+	color: #fff !important;
+}
+
+.ui-panelgrid-cell-nonworkingdays ul {
+	background: transparent;
+}
+
+#groupsForm .ui-state-highlight {
+    background-color: #306B34 !important;
+}
+
+#groupsForm .ui-widget-content.ui-state-highlight {
+	border-color: #fff !important;
+}
+
+.custom-filter .ui-selectcheckboxmenu-label {
+    background: #fff !important;
+    color: #022b3a;
+}
+
+.custom-filter .ui-selectcheckboxmenu-label:hover,
+.custom-filter .ui-selectcheckboxmenu-label:focus,
+.custom-filter .ui-selectcheckboxmenu-label:active {
+	/*noinspection CssInvalidPropertyValue*/
+	background-color: #fff !transparent;
+}
+
+#emailForm .ui-editor-toolbar {
+	background: #2f6690;
+}
+
+.ql-snow .ql-stroke, .ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill {
+    stroke: #fff;
+}
+
+.ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill {
+	fill: #fff;
+}
+
+.ql-toolbar.ql-snow, .ql-container.ql-snow {
+    border: 1px solid #2f6690;
+}
+
+.important-info {
+    background: #f39c12;
+    color: #022b3a;
+}
+
+.dropdown-menu {
+    border-color: #fff;
+    box-shadow: 2px 2px 2px #2f6690;
+}
+
+.new-attendee-row {
+	background-color: #f39c12;
+}
+
+.attendee-in-session-row {
+	background-color: #022b3a;
+	color: #022B3A !important
+}
+
+.attendees-tab-view.ui-tabs .ui-tabs-panel {
+    padding: 0 !important;
+}
+
+.attendees-tab-view div.ui-panel .ui-panel-content {
+    padding: 10px 0 !important;
+}
+
+.period-label-margin label {
+	margin-right: 0;
+}
+
+#registerReserveDialog .ui-custom-12.top-15,
+#registerReserveDialog .ui-custom-12.top-15 .ui-selectoneradio {
+	    margin-top: 5px;
+}
+
+.margin-tb-10 {
+	margin: 10px 0;
+}
+
+.text-red {
+	color: #ED1C24;
+}
+
+.review-contract-btn {
+    margin: auto;
+	display: block !important;
+    margin-top: 15px;
+}
+.dark-blue-line {
+    height: 1px;
+    background: #022b3a;
+}
+.btn-center {
+    margin: auto;
+    display: block !important;
+}
+.contract-not-paid {
+    color: #fff;
+    background: #ed1c24;
+    padding: 5px;
+}
+.contract-not-in-force {
+	color: #fff;
+	background: #2F6690;
+	padding: 5px;
+}
+#emailForm .ui-editor-toolbar {
+	background: #2f6690;
+}
+
+.important-info {
+    background: #f39c12;
+    color: #022b3a;
+}
+
+#contractConfirmDialog {
+    min-width: 350px;
+    width: auto !important;
+}
+
+.agreement-text-top {
+	position: relative;
+	top: -3px;
+	left: 8px;
+}
+
+.change-invoice-status-msg {
+	font-size: 18px;
+    text-align: center;
+    max-width: 310px;
+    margin: 10px auto 20px;
+}
+
+#registerReserveDialog .ui-custom-12 input {
+	width: 100%;
+}
+
+#registerReserveDialog {
+	top: -40px !important;
+    right: 35px;
+    left: 35px;
+}
+.registration-boolean-margins {
+	margin-right: 10px;
+	margin-top: 8px;
+}
+.foreigner-check.ui-selectbooleancheckbox {
+	margin-top: 13px;
+}
+label.ui-outputlabel.choose-attendee-title {
+	display: block;
+    margin-top: 0px !important;
+}
+.excel-btn[disabled] {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+.radioright td {
+	text-align: right;
+}
+.radioright td input {
+	float: right;
+}
+.download-btn {
+	color: #fff !important;
+    background: #306b34 !important;
+    border-color: #306b34 !important;
+}
+
+.column-width.ui-g-2 {
+	width: 50%;
+}
+
+.text-bold {
+	font-weight: bold;
+}
+
+.display-block {
+	display: block;
+}
+
+.upload-certificate.ui-fileupload {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.dual-btn-column {
+	width: 275px;
+}
+
+.upload-certificate .ui-widget-header {
+	border: none;
+}
+
+.invalid-certificate div {
+	color: #ED1C24 !important;
+}
+
+.pdf-preview-dialog {
+    width: 85% !important;
+    height: 85% !important;
+}
+
+.pdf-preview-dialog .ui-dialog-content {
+    height: 95% !important;
+    width: 100% !important;	
+}
+
+.pdf-preview-media {
+	width: 100% !important;
+	height: 100% !important;
+}
+
+.certificate-calendar-align .ui-inputfield {
+	margin-top: 4px;
+}
+
+#password-input-container {
+	margin-bottom: 0;
+}
+
+.btn-certificate-green {
+	background-color: #306b34 !important;
+	border-color: #306b34 !important;
+	color: #ffffff !important;
+}
+
+.btn-text-color .ui-button-text, .btn-text-color span.ui-icon.fa:before {
+	color: #333333;
+}
+
+.word-break-all {
+	word-break: break-all;
+}
+
+.admin-groups-datatable-border .ui-datatable-header {
+	border: none;
+}
+
+.discounts-column p {
+	margin: 5px 0 0 0;
+}
+
+.timetables-hide-checkbox div.ui-chkbox {
+	visibility: hidden;
+}
+
+.margins-top-bottom-10  {
+    margin: 10px 0px;
+}
+
+.lessons-time-delete {
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.btn-time-delete .ui-icon.fa {
+    margin-left: -1px;
+}
+.client-attendence-hidden-status tr {
+	height: 65px !important;
+}
+
+.attendee-med-certificate-section .ui-fileupload-buttonbar {
+	padding: 0;
+}
+
+.client-side-bar-fix {
+	width: 100%;
+	height: 100%;
+	text-align: left !important;
+	color: white !important;
+}
+
+.client-side-bar-fix .ui-icon {
+	margin-left: 10px;
+}
+
+.client-side-bar-fix .ui-button-text {
+	margin-left: 7px;
+	font-weight: 600 !important;
+}
+
+.notification-style {
+	padding: 15px;
+	border: 1px solid transparent;
+	border-radius: 3px;
+	font-size: 16px;
+	border-color: #f39c12;
+	background-color: #f39c12;
+}
+
+.employee-dialog-input-margin {
+	margin-top: 5px;
+}
+
+.float-btn-left button {
+	float: left !important;
+}
+
+.registration-step-4-text-align-end {
+	text-align: end;
+}
+
+body .ui-calendar button.ui-datepicker-trigger {
+	height: auto;
+	max-height: 32px;
+}
+
+.client-child-attendance-header-align {
+	padding-left: 2px;
+	padding-bottom: 0px;
+	margin-bottom: 7px;
+}
+
+.custom-download-button-registration-step-5-mobile {
+	background: #f39c12 !important;
+	border-color: #f39c12 !important;
+	line-height: 1.74857143;
+	text-align: center;
+	white-space: normal;
+	vertical-align: middle;
+	font-size: 14px;
+	padding: 10px 22px;
+	border-radius: 3px;
+	color: #FFFFFF !important;
+	border: none;
+}
+
+.custom-caps-lock-on-button {
+	background: orange;
+	color: white !important;
+	line-height: 1.74857143;
+	text-align: center;
+	white-space: normal;
+	height: inherit;
+	width: 62%;
+	display: inline-block;
+}
+
+.caps-lock-on-box-body {
+	height: 25px;
+	text-align: center;
+	margin: 3px 0 3px;
+}
+
+#form\:pdfDownloadDialog > div.ui-dialog-titlebar.ui-widget-header.ui-helper-clearfix.ui-corner-top > a > span {
+	bottom: 65px;
+}
+.update-email-code-container {
+	display: table;
+	width: 100%;
+}
+
+#redirectToPayseraDialog {
+	width: auto;
+	top: 170px !important;
+}
+
+.update-email-code-label {
+	display: table-cell;
+	width: auto;
+}
+
+.update-email-code input {
+	width: 100% !important;
+}
+
+.client-med-certif-table td.client-med-certif-width {
+	width: 25% !important;
+	text-align: center;
+}
+
+.btn-widen-tooltip .ui-button-text {
+	width: 100%;
+}
+
+.tabs-margin-right {
+	margin-right: 7px !important;
+}
+
+.app-version {
+	color: #808080;
+	margin-right: 20px;
+}
+
+@media (max-width: 650px) {
+	.display-for-dekstop {
+		display: none !important;
+	}
+	.media-fit {
+		width: fit-content;
+	}
+	.display-dekstop {
+		display: none !important;
+	}
+	.mobile-width {
+		width: 68px !important;
+	}
+	.dd-menu {
+		width: 160px !important;
+		right: 0% !important;
+	}
+	.btn-logout {
+		width: 140px;
+		color: #FFF !important;
+		background-color: #ED1C24 !important;
+	}
+	.btn-change-password {
+		width: 140px;
+		color: #fff !important;
+		background-color: #2f6690 !important;
+	}
+	.dd-toggle {
+		height: 50px;
+	}
+	.mobile-display-block {
+		display: block !important;
+	}
+	.mobile-panel-width {
+		width: 100% !important;
+	}
+	.mobile-padding {
+		padding-left: 0.5em;
+	}
+	.column-title-mobile span.ui-column-title {
+		display: none;
+	}
+	.column-title-mobile {
+		width: 45px;
+	}
+	.column-row {
+		width: 35px !important;
+	}
+	.mobile-pay-sum-column {
+	   width: 65px !important;
+	}
+	.invoices-table td {
+        padding: 5px 5px !important;
+        word-break: break-word;
+	}
+	.wizard>.steps {
+		transform: translateX(6%);
+	}
+	.wizard>.steps li a {
+	    margin-right: 36px;
+	}
+	.wizard>.steps li a:before {
+	    width: 25px;
+	    right: 21px;
+	}
+	.login-box-body {
+		height: 56px !important;
+		padding: 10px;
+	    max-width: 340px;
+	    margin: auto;
+	}
+	.register-box-custom {
+	    max-width: 340px;
+	}
+	.wizard {
+	    margin-bottom: 20px;
+	}
+	.login-box-body div.ui-selectonemenu {
+	    min-width: 33% !important;
+	}
+	.wizard>.steps li.checked a:after {
+	    width: 25px;
+	}
+	.wizard>.steps li a:after {
+	    left: -31px;
+	}
+	body .ui-g .ui-outputlabel, body .ui-grid .ui-outputlabel, body .box .ui-outputlabel {
+	    line-height: 1.2;
+	}
+	.ui-custom-12 {
+		width: 100%;
+	}
+	.top-15 {
+		position: relative;
+		top: -15px;
+	}
+	.captcha-block {
+	    margin: 20px 0;
+	    transform:scale(0.8);
+	    -webkit-transform:scale(0.8);
+	    position: relative;
+    	left: -20px;
+	}
+	.relative .ui-message {
+	    min-width: 260px;
+	}
+	.confirm-modal {
+	    min-width: 300px;
+	}
+	.no-padding.ui-tabs .ui-tabs-panel {
+		padding: 0 !important;
+	}
+	.no-padding button.ui-button.btn-red {
+	    float: none;
+	}
+	#registerReserveDialog .ui-custom-12.top-15 {
+	    top: 0px;
+	    margin-top: -15px;
+	}
+	#registerReserveDialog {
+	   right: 0px;
+	   left: 0px;
+	}
+	.fa-coach-client-contacts {
+        margin-left: -4px;
+	}
+	.dual-btn-column {
+        width: 55px;
+    }
+    .client-btn-responsive {
+        padding: 15px 15px !important;
+    }
+    .client-btn-responsive .ui-button-text {
+        display: none !important;
+    }
+    .client-btn-gap {
+        margin-top: 5px;
+    }
+    .client-profile-word-break {
+        word-break: break-word;
+    }
+    .register-dates-tabled-width {
+        width: 100% !important;
+    }
+    .register-dates-select-margin {
+        margin-right: 0px !important;
+    }
+    .no-records-table-width th {
+        width: 25%;
+    }
+	.text-align-center {
+		text-align: center;
+	}
+	.mobile-width-25-percent {
+		width: 25% !important;
+	}
+	#contractConfirmDialog {
+		min-width: 320px;
+		margin: 5px;
+	}
+	.coach-attendance-marker-width {
+		width: 78px !important;
+	}
+	.registration-step-4-text-align-end {
+		text-align: center;
+	}
+	.registration-step-4-text-align-end span, .registration-step-4-text-align-end button {
+		width: inherit;
+	}
+	.registration-step-4-text-align-end span span.ui-icon {
+		text-align: left;
+	}
+	.float-btn-left button {
+		width: inherit;
+	}
+	.step-5-full-width-input input, .step-4-full-width-input input {
+		width: inherit;
+	}
+	.step-4-full-width-input {
+		margin-right: 6px;
+	}
+	.step-4-full-width-input input {
+		margin-left: 4px !important;
+	}
+	#j_idt44\:attendeesTabView\:0\:j_idt60_content > div > div:nth-child(2) {
+		padding-left: 0px;
+	}
+	#j_idt11\:workingHours > tbody > tr > td > label {
+		width: 80%;
+	}
+
+	#clientProfileForm button {
+		height: 34px !important;
+		margin-top: 3px !important;
+	}
+	#clientProfileForm input {
+		width: 100%;
+	}
+
+	.update-email-code-label label.ui-outputlabel {
+		display: block;
+		margin-right: unset;
+		max-width: unset;
+	}
+
+	.update-email-code {
+		width: 100%;
+		display: table-cell;
+		vertical-align: middle;
+		width: auto;
+	}
+
+	.update-email-button-container-desktop {
+		display: none !important;
+	}
+	.update-email-btn-desktop {
+		display: none !important;
+	}
+
+	.update-email-button-container-mobile {
+		display: grid !important;
+	}
+	.update-email-btn-mobile {
+		display: inline-grid !important;
+	}
+}
+
+@media (max-width: 365px) {
+	.register-box-custom, .login-box-body {
+	    max-width: 292px;
+	}
+	.fit-table-for-smallest-phones {
+	   font-size: 13px !important;
+	}
+	.mobile-width {
+		width: 51px !important;
+	}
+	#contractConfirmDialog {
+		min-width: 308px;
+		margin: 5px;
+	}
+	.word-break-break-word {
+		word-break: break-word;
+	}
+
+	#clientProfileForm button {
+		height: 34px !important;
+		margin-top: 3px !important;
+	}
+	#clientProfileForm input {
+		width: 100%;
+	}
+}
+
+@media (max-width: 325px) {
+	#form\:pdfDownloadDialog > div.ui-dialog-titlebar.ui-widget-header.ui-helper-clearfix.ui-corner-top > a > span {
+		bottom: 85px;
+	}
+
+}
+
+@media ( min-width : 651px) {
+	.mobile-display {
+		display: none !important;
+	}
+
+	#clientProfileForm button {
+		height: 34px !important;
+		margin-top: -3px !important;
+	}
+	#clientProfileForm input {
+		width: 69%
+	}
+
+	.update-email-code-label label.ui-outputlabel {
+		display: block;
+		margin-right: -50px !important;
+		max-width: unset;
+	}
+
+	.update-email-code {
+		width: 100%;
+		display: unset;
+		vertical-align: unset;
+		width: unset;
+	}
+
+	.update-email-button-container-desktop {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+	}
+	.update-email-btn-desktop {
+		display: inline-flex;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+
+	.update-email-button-container-mobile {
+		display: none !important;
+	}
+	.update-email-btn-mobile {
+		display: none !important;
+	}
+}
+
+@media (min-width: 760px) and (max-width: 1024px) {
+	.tablet-price-width {
+		width: 66px;
+	}
+	.tablet-buttons-column-width {
+		width: 160px !important;
+	}
+	.tablet-contract-status-width {
+		width: 70px !important;
+	}
+	.tablet-contract-child-column-width {
+		width: 115px !important;
+	}
+
+	#clientProfileForm button {
+		height: 34px !important;
+		margin-top: -3px !important;
+	}
+	#clientProfileForm input {
+		width: 69%
+	}
+	.dual-btn-column {
+		width: 105px;
+	}
+	.tablet-med-certif-button-width {
+		width: 35px !important;
+	}
+}
+
+@media ( min-height : 600px) {
+	.preview-window-height {
+		height: 83%;
+	}
+}
+
+@media ( min-height : 800px) {
+	.preview-window-height {
+		height: 88%;
+	}
+}
+
+@media ( min-height : 1000px) {
+	.preview-window-height {
+		height: 92%;
+	}
+}
+
+@media ( max-height : 599px) {
+	.preview-window-height {
+		height: 80%;
+	}
+}
+
+.lds-ellipsis {
+  position: relative;
+  margin-top: 27px;
+  display: none;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 27px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #022b3a;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 6px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 6px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 26px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 45px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(19px, 0);
+  }
+}

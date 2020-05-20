@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:th="http://www.thymeleaf.org"
+	template="../templates/client-template.xhtml">
+
+	<ui:define name="top-menu">
+		<ui:include src="../includes/top-bar.xhtml" />
+	</ui:define>
+
+	<ui:define name="title">
+		<h2>#{label['client.myChild.title']}</h2>
+	</ui:define>
+	<f:metadata>
+		<f:viewAction action="#{clientProfileController.onLoad}" />
+	</f:metadata>
+
+	<ui:define name="body">
+		<f:view locale="#{localeController.locale}">
+			<p:panel id="container">
+				<h:form>
+					<p:tabView id="attendeesTabView"
+							   value="#{clientProfileController.attendees}"
+							   var="attendee"
+							   styleClass="attendees-tab-view"
+							   activeIndex="#{activeIndex}">
+						<p:ajax event="tabChange"
+							listener="#{clientProfileController.onChange}"  update="@form" />
+					 	
+					 		<p:tab title="#{attendee.name}">
+					 			<p:panel style="border: none;" id="registeredAttendeeInformation" rendered="#{clientProfileController.checkIfAttendeeIsRegistered(attendee)}">
+					 				<ui:include src="../includes/attendees/registered-attendees.xhtml"/>
+					 			</p:panel>
+					 			<p:panel style="border: none;" id="reservedAttendeeInformation" rendered="#{!clientProfileController.checkIfAttendeeIsRegistered(attendee)}">
+					 				<ui:include src="../includes/attendees/reserved-attendees.xhtml"/>
+					 			</p:panel>
+					 		</p:tab>
+					</p:tabView>
+				</h:form>
+			</p:panel>
+		</f:view>
+
+		<h:outputScript library="js" name="main.js" />
+		<h:outputScript library="js" name="translations/locale_lt.js" />
+
+	</ui:define>
+
+</ui:composition>

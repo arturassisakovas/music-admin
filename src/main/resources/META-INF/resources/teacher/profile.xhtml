@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/teacher-template.xhtml">
+                
+	<ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+
+	<f:metadata>
+	    <f:viewAction action="#{teacherProfileController.onLoad}" />
+	</f:metadata>
+		
+	<ui:define name="title">
+		<ui:include src="../includes/warrning/teacherNotMarkedAttendanceWarrning.xhtml"/>
+        <h2>#{label['client.myContacts.title']}</h2>
+    </ui:define>
+	
+    <ui:define name="body">
+		<p:panel id="container">
+			<h:form>
+				<p:panelGrid id="coachData" styleClass="ui-g-4" style="float: none;">
+					<p:row styleClass="profile-borderless">
+						<p:column style="width:150px;">
+							<p:outputLabel value="#{label['profile.name']}" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="#{teacherProfileController.coach.name}" styleClass="font-weight" />
+						</p:column>
+					</p:row>
+					<p:row styleClass="profile-borderless">
+						<p:column>
+							<p:outputLabel value="#{label['profile.surname']}" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="#{teacherProfileController.coach.surname}" styleClass="font-weight" />
+						</p:column>
+					</p:row>
+					<p:row styleClass="profile-borderless">
+						<p:column>
+							<p:outputLabel value="#{label['profile.phone']}" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="#{teacherProfileController.coach.phone}" styleClass="font-weight" />
+						</p:column>
+					</p:row>
+					<p:row styleClass="profile-borderless">
+						<p:column>
+							<p:outputLabel value="#{label['profile.email']}" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="#{teacherProfileController.coach.email}" styleClass="font-weight" />
+						</p:column>
+					</p:row>
+					<p:row styleClass="profile-borderless">
+						<p:column>
+							<p:outputLabel value="#{label['profile.address']}" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="#{teacherProfileController.coach.address}" styleClass="font-weight" />
+						</p:column>
+					</p:row>	
+				</p:panelGrid>
+			</h:form>
+		</p:panel>
+		 
+    </ui:define>
+  
+</ui:composition>

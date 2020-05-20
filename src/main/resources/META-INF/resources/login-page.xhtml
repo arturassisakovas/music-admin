@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="templates/forms.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{loginController.onLoad}" />
+    </f:metadata>
+
+    <ui:define name="body">
+		<div class="login-box">
+            <div class="login-logo">
+                <p:link style="color: #fff;" href="/login"><b>#{label['login.logo.name1']}</b>#{label['login.logo.name2']}</p:link>
+            </div>
+            <div class="box login-box-body">
+                <h:form prependId="false" style="margin-bottom: 25px;">
+                	<p:outputLabel styleClass="password-reset-success-msg" rendered="${param['resetSuccess'] != null}">#{label['login.password.created']}</p:outputLabel>
+                    <p class="login-box-login-section">#{label['login.login.to.continue']}</p>
+                    <p:messages autoUpdate="true" showDetail="true" closable="true"/>
+                    <p:outputLabel value="#{label['login.wrong.credentials']}" styleClass="login-failed"
+        								  rendered="${!empty param['error']}" />
+                    <div class="caps-lock-on-box-body">
+                        <p id="caps-lock-on" class="custom-caps-lock-on-button" style="display: none;">#{label['login.caps.lock.on']}</p>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <p:inputText id="username" type="email" styleClass="form-control" placeholder="#{label['login.email']}"
+                                     required="true"
+                                     requiredMessage="#{label['login.email.required']}"/>
+                        <i class="fa fa-envelope form-control-feedback" ></i>
+                    </div>
+                    <div id="password-input-container" class="form-group has-feedback">
+                        <p:inputText id="password" type="password" styleClass="form-control"
+                                     placeholder="#{label['login.password']}" required="true"
+                                     requiredMessage="#{label['login.password.required']}"/>
+                        <i class="fa fa-lock form-control-feedback" style="font-size: 18px"></i>
+                    </div>
+                    <div class="row">
+                        <p:spacer height="10"/>
+                        <div class="col-xs-12">
+                           <p:commandButton styleClass="btn btn-teal btn-block btn-light-blue" validateClient="true" value="#{label['login.login.text']}" ajax="false" />
+                        </div>
+                    </div>
+                </h:form>
+                <a  href="/forgot-password">#{label['login.forget.password']}</a><br/>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

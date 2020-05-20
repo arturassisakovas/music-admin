@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+			    <div class="ui-tabs ui-widget ui-widget-content ui-corner-all ui-hidden-container ui-tabs-top">
+				    <ul class="ui-tabs-nav ui-helper-reset ui-widget-header ui-corner-all">
+						<li  class="ui-tabs-header ui-state-default ui-corner-top #{view.viewId eq '/admin/inactive-clients.xhtml' ? 'ui-tabs-selected ui-state-active' : ''}" >
+							<a href="/admin/inactive-clients">#{label['client.menu.clients']}</a>
+						</li>
+				    </ul>
+			    </div>
+</ui:composition>

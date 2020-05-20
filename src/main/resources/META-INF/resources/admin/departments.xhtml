@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/templates/template.xhtml">
+
+    <ui:define name="top-menu">
+        <ui:include src="/includes/top-bar.xhtml"/>
+    </ui:define>
+
+	<ui:define name="title">
+        <h2>#{label['timetable.page.title']}</h2>
+    </ui:define>
+ <f:metadata>  
+ 	
+     <f:viewAction action="#{departmentController.onLoad}" />
+    </f:metadata>
+    <ui:define name="body">
+ 
+		<p:panel id="container">
+		
+		<ui:include src="/includes/timetables-menu.xhtml"/>
+ 
+		<p:tabView id="poolTab">
+	        <p:tab title="#{label['timetable.menu.pools']}">
+	         	<p:messages showSummary="false" showDetail="true" id="crudMessages" autoUpdate="true" closable="true" severity="info, warn"/>
+				<h:form id="poolsForm">
+						<p:commandButton style="margin-top: 30px;" value="#{label['timetable.button.addNew']}"
+		                				 icon="fa fa-plus-circle"
+		                				 action="#{departmentController.add}"
+		                				 oncomplete="PF('poolDialog').show();"
+		                				 update=":poolDialog"
+		                				 styleClass="btn-dark-blue">
+		                				 <p:resetInput target=":poolDialog" />
+						</p:commandButton>
+						
+						<p:dataTable rowIndexVar="poolIndex" 
+									 style="margin-top: 20px;" 
+									 id="poolsTable" 
+									 value="#{departmentController.model}"
+									 var="pool"
+									 paginator="true"
+									 lazy="true"
+				              		 rows="#{departmentController.rowsPerPage}"
+                             		 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             		 currentPageReportTemplate="{currentPage} #{label['paginator.of']} {totalPages}"
+                             		 rowsPerPageTemplate="#{departmentController.rowsPerPageTemplate}"
+                             		 emptyMessage="#{msg['no.records.found']}">
+						    <p:column class="text-left" headerText="#{label['timetable.column.name']}" sortBy="#{pool.name}">
+						    	<h:outputText value="#{pool.name}"/>
+						    </p:column>
+						    <p:column class="text-left" headerText="#{label['timetable.pool.abbreviation']}" sortBy="#{pool.abbreviation}">
+						    	<h:outputText value="#{pool.abbreviation}"/>
+						    </p:column>
+						    <p:column class="text-left" headerText="#{label['timetable.column.city']}" sortBy="#{pool.city}">
+						    	<h:outputText value="#{pool.city}"/>
+						    </p:column>
+						    <p:column class="text-left" headerText="#{label['timetable.column.address']}" sortBy="#{pool.address}">
+						    	<h:outputText value="#{pool.address}"/>
+						    </p:column >
+						    <p:column style="width: 150px;">          
+						        <p:commandButton value="#{label['timetable.button.edit']}"
+						        				 process="@this"
+						        				 action="#{departmentController.edit(pool.id, poolIndex)}"
+						        				 update=":poolDialog"
+						        				 oncomplete="PF('poolDialog').show();"
+						        				 icon="fa fa-pencil"
+						        				 styleClass="btn-light-blue">
+						        	<p:resetInput target="poolDialog" />
+						        </p:commandButton>
+						    </p:column>
+						    <p:column style="width: 150px;">
+								<h:panelGroup id="poolDeleteButton">
+						        <p:commandButton value="#{label['timetable.button.delete']}" id="withIcon"
+						        				 icon="fa fa-trash-o"  styleClass="btn-red btn-block"
+						        				 action="#{departmentController.delete(pool.id, poolIndex)}"
+						        				 update=":poolTab:poolsForm:poolsTable :poolTab:poolsSeasonsForm"
+												 disabled="#{departmentController.checkIfPoolHasTrack(pool.id)}">
+			                        <p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.pool.message.delete']} '#{pool.name}'?" icon="ui-icon-alert"/>
+			                    </p:commandButton>
+								</h:panelGroup>
+								<p:tooltip for="poolDeleteButton"
+										   styleClass="text-center"
+										   position="center top"
+										   value="#{label['cannot.delete.pool.has.track']}"
+										   rendered="#{departmentController.checkIfPoolHasTrack(pool.id)}"/>
+							</p:column>
+						</p:dataTable>
+				</h:form>
+				
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
+                        <p:commandButton value="#{label['timetable.button.yes']}" styleClass="btn-primary ui-confirmdialog-yes"
+                                         icon="fa fa-check"/>
+                        <p:commandButton value="#{label['timetable.button.no']}" type="button" styleClass="btn-danger ui-confirmdialog-no"
+                                         icon="fa fa-close"/>
+                    </p:confirmDialog>
+				 
+	        </p:tab>
+	        <p:tab title="#{label['timetable.menu.pools.seasons']}">
+	        <p:messages showSummary="false" showDetail="true" id="poolSeasonMessages" autoUpdate="true" closable="true"/>
+				<h:form id="poolsSeasonsForm">
+					<p:outputLabel for="season" value="#{label['timetable.season']}"/>
+					<p:selectOneMenu id="season"
+								 	 value="#{departmentController.selectedSeason}"
+								 	 required="true"
+								 	 style="width: 171px;"
+        						 	 converter="omnifaces.SelectItemsConverter"
+        						 	 label="#{label['timetable.season']}">
+        				<f:ajax listener="#{departmentController.filterPools}" render="@form"/>
+		            	<f:selectItems value="#{departmentController.seasons}" var="season" itemLabel="#{season.name}" />
+	        		</p:selectOneMenu>
+					 
+					<h:panelGroup  id="poolSelectBox">
+						<p:commandButton value="#{label['timetable.button.selectPool']}"
+										 style="margin-top: 10px;"
+		                				 icon="fa fa-plus-circle"
+		                				 validateClient="true"
+		                				 action="#{departmentController.add}"
+		                				 update=":poolSeasonlDialog"
+		                				 disabled="#{empty departmentController.availablePools}"
+		                				 styleClass="btn-dark-blue"
+		                				 oncomplete="PF('poolSeasonlDialog').show();">
+						</p:commandButton>
+					</h:panelGroup>
+					<p:tooltip for="poolSelectBox"
+							   styleClass="text-center"
+							   position="right"
+							   value="#{label['timetable.poolseason.button.not.available']}"
+						       rendered="#{empty departmentController.availablePools}"/>
+					
+					<p:dataTable rowIndexVar="poolIndex" 
+									 style="margin-top: 20px;" 
+									 id="poolsSeasonsTable" 
+									 value="#{departmentController.seasonPools}"
+									 var="pool"
+									 paginator="true"
+									 lazy="true"
+				              		 rows="#{departmentController.rowsPerPage}"
+                             		 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             		 currentPageReportTemplate="{currentPage} #{label['paginator.of']} {totalPages}"
+                             		 rowsPerPageTemplate="#{departmentController.rowsPerPageTemplate}"
+                             		 emptyMessage="#{msg['no.records.found']}">
+						    <p:column class="text-left" headerText="#{label['timetable.column.name']}" sortBy="#{pool.name}">
+						    	<h:outputText value="#{pool.name}"/>
+						    </p:column>
+						    <p:column class="text-left" headerText="#{label['timetable.column.city']}" sortBy="#{pool.city}">
+						    	<h:outputText value="#{pool.city}"/>
+						    </p:column>
+						    <p:column class="text-left" headerText="#{label['timetable.column.address']}" sortBy="#{pool.address}">
+						    	<h:outputText value="#{pool.address}"/>
+						    </p:column >
+						    <p:column class="text-left" headerText="#{label['timetable.column.nonworkingdays']}" >
+						    	<h:outputLink id="nonWorkdayLink" value="#">
+        							<h:outputText id="nonWorkdayNumber" value="#{departmentController.showNonWorkdays(pool).size()}"/>
+    							</h:outputLink>    							
+						    	<p:tooltip for="nonWorkdayLink" position="top" rendered="#{not empty departmentController.showNonWorkdays(pool)}">
+						    		<div style="width: 200px;">
+							    		<div class="ui-g">
+								    		<p:repeat var="nonWorkingDay" 
+								    				  value="#{departmentController.showNonWorkdays(pool)}"
+								    				  process="@this" 
+								    				  varStatus="step">								    								    			
+								    				<div class="ui-g-6 text-center">
+								    					#{nonWorkingDay}
+								    				</div>									    									    				
+								    		</p:repeat>
+							    		</div>
+						    		</div>
+						    	</p:tooltip>
+						    </p:column>
+						    <p:column style="width: 150px;">
+								<h:panelGroup id="editButton">
+						        <p:commandButton value="#{label['timetable.button.edit']}"
+						        				 process="@this"
+						        				 action="#{departmentController.edit(pool.id, poolIndex)}"
+						        				 update=":poolSeasonlDialog"
+						        				 oncomplete="PF('poolSeasonlDialog').show();"
+						        				 icon="fa fa-pencil"
+												 disabled="#{departmentController.checkIfNonWorkDayCanBeModified(pool.id)}"
+						        				 styleClass="btn-light-blue">
+						        	<p:resetInput target="poolDialog" />
+						        </p:commandButton>
+								</h:panelGroup>
+								<p:tooltip for="editButton"
+										   styleClass="text-center"
+										   position="top"
+										   value="#{label['cannot.modify.pool.nonworkday.has.group']}"
+										   rendered="#{departmentController.checkIfNonWorkDayCanBeModified(pool.id)}"/>
+						    </p:column>
+						    <p:column style="width: 150px;">
+								<h:panelGroup id="deleteButton">
+									<p:commandButton value="#{label['timetable.button.delete']}" id="withIcon"
+													 icon="fa fa-trash-o"  styleClass="btn-red btn-block"
+													 action="#{departmentController.deleteDaysOfPool(pool.id)}"
+													 process="@form"
+													 disabled="#{departmentController.checkIfNonWorkDayCanBeModified(pool.id)}"
+													 update=":poolTab:poolsSeasonsForm @form">
+										<p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.pool.message.delete']} '#{pool.name}'?" icon="ui-icon-alert"/>
+									</p:commandButton>
+								</h:panelGroup>
+								<p:tooltip for="deleteButton"
+										   styleClass="text-center"
+										   position="top"
+										   value="#{label['cannot.modify.pool.nonworkday.has.group']}"
+										   rendered="#{departmentController.checkIfNonWorkDayCanBeModified(pool.id)}"/>
+						    </p:column>
+						</p:dataTable>
+				</h:form>
+	        </p:tab>
+    	</p:tabView>
+		
+				<p:dialog header="#{empty departmentController.pool.id ? label['timetable.pool.header.save'] : label['timetable.pool.header.edit']}" id="poolDialog"
+                          widgetVar="poolDialog" resizable="false"
+                          draggable="false" responsive="true" width="450" modal="true">
+					<h:form id="pool">
+		                <p:messages showDetail="true" showSummary="false" closable="true"/>
+		                
+		                		<div class="ui-g">
+		                			<div class="ui-g-5">
+		                				<p:outputLabel for="poolName" value="#{label['timetable.pool.name']}"/>
+		                			</div>
+		                			<div class="ui-g-7">
+		                				<p:inputText id="poolName" styleClass="poolInput" value="#{departmentController.pool.name}" required="true"
+                                                     requiredMessage="#{label['timetable.pool.name.requiredMessage']}" label="poolName"/>
+			                		</div>
+			                		<div class="ui-g-5">
+		                				<p:outputLabel for="poolAbbreviation" value="#{label['timetable.pool.abbreviation']}:"/>
+		                			</div>
+		                			<div class="ui-g-7">
+		                				<p:inputText id="poolAbbreviation" styleClass="poolInput" value="#{departmentController.pool.abbreviation}" required="true"
+                                                     requiredMessage="#{label['timetable.pool.abbreviation.requiredMessage']}" label="poolAbbreviation" disabled="#{!departmentController.editableFields}"/>
+			                		</div>
+			                		<div class="ui-g-5">
+			                			<p:outputLabel for="poolCity" value="#{label['timetable.column.city']}:"/>
+			                		</div>
+			                		<div class="ui-g-7">
+			                			<p:autoComplete id="poolCity" minQueryLength="3" value="#{departmentController.pool.city}"
+                                                        completeMethod="#{departmentController.completeEnum}" effect="fade"
+                                                        required="true" requiredMessage="#{label['timetable.pool.city.requiredMessage']}"
+                                                        styleClass="poolInput" label="poolCity" disabled="#{!departmentController.editableFields}"/>
+			                		</div>
+			                		<div class="ui-g-5">
+			                			<p:outputLabel for="poolAddress" value="#{label['timetable.column.address']}:"/>
+			                		</div>
+			                		<div class="ui-g-7">
+			                			<p:inputText id="poolAddress" styleClass="poolInput" value="#{departmentController.pool.address}" required="true"
+                                                     requiredMessage="#{label['timetable.pool.address.requiredMessage']}" label="poolAddress"/>
+			                		</div>
+			                	</div>
+
+		                <p:separator/>
+		                <p:button styleClass="btn-red pull-left" value="#{label['timetable.button.close']}" onclick="PF('poolDialog').hide();return false"/>
+		                <p:commandButton styleClass="btn-primary btn-light-blue pull-right" value="#{label['timetable.button.save']}"
+		               					 validateClient="true"
+		               					 process="@form"
+										 action="#{departmentController.save}"
+										 update=":poolTab:poolsForm:poolsTable :poolTab:poolsSeasonsForm @form">					
+		                	<p:confirm disabled="true" />
+		                </p:commandButton>
+					</h:form> 
+		        </p:dialog>
+		        
+				<p:dialog header="#{empty departmentController.pool.id ? label['timetable.pool.header.save'] : label['timetable.pool.header.edit']}" id="poolSeasonlDialog"
+                          widgetVar="poolSeasonlDialog" resizable="false"
+                          draggable="false" responsive="true" width="720" modal="true">
+					<h:form id="poolSeason">
+		                <p:messages showDetail="true" showSummary="false" closable="true"/>
+		                
+		                	<div class="ui-g">
+		                		<div class="ui-g-7">
+		                		<div class="ui-g">
+		                			<div class="ui-g-6">
+		                				<p:outputLabel for="poolName" value="#{label['timetable.track.pool']}:"/>
+		                			</div>
+		                			<div class="ui-g-6">
+		                			<p:selectOneMenu id="poolName"
+												 	 value="#{departmentController.selectedPool}"
+												 	 required="true"
+												 	 style="width: 171px;"
+				        						 	 converter="omnifaces.SelectItemsConverter"
+				        						 	 label="#{label['timetable.track.pool']}"
+				        						 	 disabled="#{!departmentController.create}">
+				        				<p:ajax listener="#{departmentController.relateSeasonWithPool}"/>
+				         				<f:selectItem itemLabel="#{departmentController.pool.name}"/>
+						            	<f:selectItems value="#{departmentController.availablePools}" var="pool" itemLabel="#{pool.name} (#{pool.city})" />
+					        		</p:selectOneMenu>
+			                		</div>
+			                		<div class="ui-g-6">
+				                		 <p:outputLabel for="nonWorkingDays" value="#{label['timetable.pool.nonWorkdays']}" />	
+				                	</div > 	
+				                	<div class="ui-g-6">
+				                		<p:button value="#{label['timetable.pool.check.nonworkdays']}"
+				                				  href="#{label['timetable.pool.link.tocheck.nonworkdays'].concat(departmentController.selectedSeason.startDate.year)}"
+				                			      target="_blank"
+				                			      styleClass="btn-dark-blue"/>				                	
+				                	</div>
+				                		<div class="ui-g-12">			       
+				       						<p:calendar id="nonWorkingDays" mode="inline" locale="lt_LT"
+								        				pattern="yyyy-MM-dd" navigator="true"  
+								        				converter="localDateTimeConverter"
+								        				mindate="#{departmentController.selectedSeason.startDate}"
+								        				maxdate="#{departmentController.selectedSeason.endDate}">
+								        		<p:ajax event="dateSelect" listener="#{departmentController.markNonWorkdays}" update="selectedNonWorkingDaysChips"/>
+								        	</p:calendar>	
+			                		</div>
+			                	</div>
+		                		</div>
+		                		<div class="ui-g-5">
+		                		
+		                		<p:panelGrid id="nonWorkingDaysGrid" columns="1" layout="grid" cellpadding="5" styleClass="ui-panelgrid-cell-nonworkingdays">
+					        		<p:outputLabel for="selectedNonWorkingDaysChips" value="#{label['timetable.pool.selecetedNonWorkdays']}" 
+					        					   styleClass="ui-outputlabel-nonworkingdays" />
+							       		<p:chips id="selectedNonWorkingDaysChips" value="#{departmentController.selectedPoolNonWorkdaysLocalDateList}" converter="localDateTimeConverter" >
+							        		<p:ajax event="itemUnselect" listener="#{departmentController.deleteNonWorkDays}"
+							        		update="selectedNonWorkingDaysChips"/>
+							        	</p:chips>						        
+					        	</p:panelGrid>
+		                		
+		                		</div>
+		                	</div>  	        	                             
+		                 
+		                <p:separator/>
+		                <p:button styleClass="btn-red pull-left" value="#{label['timetable.button.close']}" onclick="PF('poolSeasonlDialog').hide();return false"/>
+		                <p:commandButton styleClass="btn-primary btn-light-blue pull-right" value="#{label['timetable.button.save']}"
+		               					 validateClient="true"
+		               					 process="@form"
+										 action="#{departmentController.saveNonWorkdays}"
+										 oncomplete="PF('poolSeasonlDialog').hide()"
+										 update=":poolTab:poolsSeasonsForm @form">					
+		                	<p:confirm disabled="true" />
+		                </p:commandButton>
+					</h:form> 
+		        </p:dialog>
+			
+		        
+		</p:panel>
+		
+		<h:outputScript library="js" name="main.js"/>
+		<h:outputScript library="js" name="translations/locale_lt.js"/>
+			
+    </ui:define>
+  
+</ui:composition>

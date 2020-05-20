@@ -1,0 +1,123 @@
+@font-face {
+    font-family: Aller-Lt;
+    src: url('../../fonts/pdf/Aller_Lt.ttf');
+    -fs-pdf-font-embed: embed;
+    -fs-pdf-font-encoding: Identity-H;
+}
+
+@font-face {
+    font-family: Aller-Bd;
+    src: url('../../fonts/pdf/Aller_Bd.ttf');
+    -fs-pdf-font-embed: embed;
+    -fs-pdf-font-encoding: Identity-H;
+}
+
+body {
+    font-family: Aller-Lt;
+    font-size: 8.5pt;
+}
+
+.logo {
+    width: 150px;
+    float: left;
+}
+
+.content {
+    width: 100%;
+    margin: auto;
+    background-color: #fff;
+}
+
+.gdpr-header {
+    text-align: center;
+    margin-bottom: 5px;
+    font-size: 8.5pt !important;
+}
+
+.gdpr-sub-heading {
+    text-align: center;
+    margin: 15px 0 0 0;
+}
+
+.bold {
+    font-family: Aller-Bd;
+}
+
+table {
+    font-size: 8.5pt;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+table td:first-child {
+    width: 40%;
+}
+
+table td, table th {
+    border: 1px solid black;
+    border-spacing: 0;
+    border-collapse: collapse;
+    padding-left: 7px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    vertical-align: top;
+}
+
+table th:first-child {
+    border-right: 0;
+}
+
+table th:last-child {
+    border-left: 0;
+}
+
+.table-header-row {
+    height: 20px;
+    background-color: #e4e4e4;
+}
+
+ol {
+    padding-left: 0;
+    counter-reset: item
+}
+
+ol > li {
+    display: block;
+    line-height: 20px;
+}
+
+ol > li:before {
+    content: counters(item, ".") ".";
+    counter-increment: item;
+    font-weight: bold;
+    margin-left: 0;
+}
+
+ul {
+    padding-left: 30px;
+    list-style-type: disc !important;
+}
+
+ul > li {
+    line-height: 17px;
+}
+
+ul > li:before {
+    display: inline-block;
+    width: 1em;
+}
+
+ul > li > span {
+    padding-left: 10px;
+}
+
+ol.subtitle {
+    padding-left: 30px;
+}
+
+p {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    line-height: 17px !important;
+}
+

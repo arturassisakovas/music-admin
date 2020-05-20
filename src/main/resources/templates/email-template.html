@@ -1,0 +1,132 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+	<style>
+		body {
+			font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
+		}
+		.content {
+			padding: 40px 130px 60px 130px;
+		}
+		@media screen and (max-width: 600px) {
+			.content {
+				padding: 40px 20px 60px 20px;
+			}
+		}
+		.btn-light-orange {
+		    color: #ffffff !important;
+		    background-color: #f39c12 !important;
+		    padding: 10px 34px;
+		    border-radius: 4px;
+		    border: none;
+		    font-size: 18px;
+		    margin: 20px 0;
+		    width: 200px;
+		    text-decoration: none;
+		}
+		
+
+	</style>
+</head>
+<body style="font-size: 20px; margin: 0; padding: 0; min-height: 100%;">
+
+<div style="height: 100%; position: relative;">
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse; position: relative;">
+		<tr>
+			<td bgcolor="#fff" style="margin: 0; padding: 10px 130px 10px 130px;">
+	            <img th:src="@{${applicationurl + '/images/logo.png'}}" style="width: 150px;"/>
+	        </td>
+		</tr>
+	    <tr>
+	        <td bgcolor="#eaeaea" style="min-height: 373px; display: block !important;" class="content">
+				<p style="font-weight: bold; font-size: 25px; color: #2d379b;" th:text="${title}"></p>
+				<div th:switch="${mailtype}"> 
+					<div th:case="'newuser'" style="margin-top: 50px; font-size: 15px; color: #2d379b;">
+						<p th:text="${'Sveiki, ' + user.name + ' ' + user.surname + ','}"></p>
+						<br/>
+					  	<p>
+					  		Jums sukurta paskyra. Jungiantis pirmą kartą Jums reikia susikurti slaptažodį.
+					  	</p>
+					  	<br/>
+                        <form style="text-align: center; margin: 25px;">
+                        <a th:href="${resetUrl}" class="btn-light-orange"> Prisijungti </a>
+                        </form>
+					  	<br/>
+					  	<p>Ačiū,</p>
+					  	<p th:text="${signature}" style="margin-bottom: 55px;"></p>
+					  	<br/>
+					</div>
+                    <div th:case="'contractterminationnotification'" style="margin-top: 50px; color: #2d379b;">
+                    <p style="font-size: 25px; font-style: bold;">
+                    Laba diena, </p>
+
+                    <p style="font-size: 25px; font-style: bold;" th:text="${'Informuojame, kad mūsų sudaryta muzikos mokyklos pamokų sutartis „' + contract.number + '“ yra nutraukta.'}"></p>
+
+                    <p style ="font-size: 25px; font-style: bold;" >Music Admin</p>
+                    </div>
+
+					<p th:case="'confirmation'" style="margin-top: 50px; font-size: 15px; color: #2d379b;">Jūsų el. pašto patvirtinimo kodas: <span th:text="${confirmationCode}" style="font-weight: bold;"/></p>
+					
+					<div th:case="'passwordrecovery'" style="margin-top: 50px; font-size: 15px; color: #2d379b;">
+						<p th:text="${'Sveiki, ' + user.name + ' ' + user.surname + ','}"></p>
+						<br/>
+			            <p>
+			                Pasikeisti slaptažodį galite paspaudę
+			                <a th:href="${resetUrl}">čia.</a>
+			            </p>
+			            <br/>
+			            <p>Ačiū,</p>
+			            <p th:text="${signature}"></p>
+					</div>
+					<div th:case="'custom'" style="margin-top: 50px; font-size: 15px; color: #2d379b;">
+							 <p th:utext="${customText}"/>
+							<br/>
+					</div>
+					<div th:case="'successfulPaymentMemo'" style="font-size: 15px; color: #2d379b;">
+						<p>Sveiki,</p>
+						<p>Džiaugiamės jog prisijungėte prie mūsų, nekantraujame susitikti pamokose :)</p>
+						<p>Pamokose vaikui reikia turėti šiuos daiktus:</p>
+							<ul>
+								<li>Grojimo instrumentą (privaloma);</li>
+								</ul>
+								<br/>
+								Taip pat bus reikalingos vaikų sveikatos pažymos, jas turite pateikti per mėnesį nuo šio laiško gavimo. Pažyma tokia pati kaip į mokyklą ar darželį. Instrukciją kaip tai padaryti rasite 
+								<a href="http://rsveikata.lt/svarbi-informacija-teveliams-del-vaiko-sveikatos-pazymejimo/"> čia.</a>
+
+						<p>Music Admin</p>
+						<br/>
+						<br/>
+						<p></p>
+					</div>
+					<div th:case="'attendeeSavedToReserve'" style="font-size: 15px; color: #2d379b;">
+						<p>Sveiki,</p>
+						<p>Džiaugiamės jog norite prisijungti. Informuojame jog šiuo metu laisvų vietų pasiūlyti Jums negalime, tačiau įtraukėme Jus į laukiančiųjų sąrašą. Kai tik atsiras galimybė atitinkanti jūsų poreikius mes susisieksime ir pakviesime pradėti mokytis groti.</p>
+						<p>Music Admin</p>
+					</div>
+				</div>
+
+				<div th:switch="${quoteType}">
+		     		<div th:case="'quote2'" style="position: absolute; bottom: 100px; height: 120px; right: 50px; left: 50px;">
+		        		<p style="text-align: center; color: #2d379b; font-weight: bold; font-size: 18px;">Juk groti gali išmokti tik grodamas!</p>
+		     		</div>
+		     	</div>
+	        </td>
+	    </tr>
+	    <tr>
+	        <td bgcolor="#0e1459" style="height: 120px;" align="center">
+	        	<a href="tel:+3706666666"><img th:src="@{${applicationurl + '/images/phone.png'}}" style="width: 30px; padding: 15px;"/></a>
+	        	<a href="mailto:info@music-admin.lt"><img th:src="@{${applicationurl + '/images/envelope.png'}}" style="width: 30px; padding: 15px;"/></a>
+	        	<a href="https://www.facebook.com"><img th:src="@{${applicationurl + '/images/facebook.png'}}" style="width: 30px; padding: 15px;"/></a>
+	        	<p style="color: #ffffff; font-size: 15px; font-weight: 400; margin-top: 0;">Music Admin. Visos teisės yra saugomos.</p>
+	        </td>
+	    </tr>
+	</table>
+</div>
+
+</body>
+</html>

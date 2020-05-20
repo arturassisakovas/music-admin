@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="../templates/client-template.xhtml">
+
+
+	<ui:define name="top-menu">
+		<ui:include src="../includes/top-bar.xhtml" />
+	</ui:define>
+
+	<ui:define name="title">
+		<h2>#{label['client.myContacts.title']}</h2>
+	</ui:define>
+	<f:metadata>
+		<f:viewAction action="#{clientProfileController.onLoad}" />
+	</f:metadata>
+
+	<ui:define name="body">
+		<f:view locale="#{localeController.locale}">
+			<p:panel id="container">
+				<h:form id="clientProfileForm">
+					<p:messages showDetail="true" closable="true" showSummary="false" globalOnly="true" for="inputEmail">
+						<p:autoUpdate />
+					</p:messages>
+					<p:messages showDetail="true" closable="true" showSummary="false" globalOnly="true" for="inputPhone">
+						<p:autoUpdate />
+					</p:messages>
+					<p:panelGrid id="clientData">
+						<p:row styleClass="profile-borderless">
+							<p:column>
+								<p:outputLabel value="#{label['profile.name']}" />
+							</p:column>
+							<p:column>
+								<p:outputLabel value="#{clientProfileController.client.name}" styleClass="font-weight" />
+							</p:column>
+						</p:row>
+						<p:row styleClass="profile-borderless">
+							<p:column>
+								<p:outputLabel value="#{label['profile.surname']}" />
+							</p:column>
+							<p:column>
+								<p:outputLabel value="#{clientProfileController.client.surname}" styleClass="font-weight" />
+							</p:column>
+						</p:row>
+						<p:row styleClass="profile-borderless">
+							<p:column>
+								<p:outputLabel value="#{label['profile.email']}" />
+							</p:column>
+							<p:column>
+
+								<p:inplace id="editEmail" class="editEmail" editor="true"
+									toggleable="false"
+									saveLabel="#{label['button.save']}"
+									cancelLabel="#{label['button.cancel']}"
+									widgetVar="editEmailInplace">
+									<p:ajax event="save"
+										listener="#{clientProfileController.confirmEmailAndSave}"
+										validateClient="true"
+										update=":formB:infoText confirmModal clientData"
+										oncomplete="if (args.validationFailed) hideInplaceEditorTrigger()"/>
+									<p:ajax event="cancel"
+											oncomplete="showInplaceEditorTrigger()"/>
+									<p:inputText id="inputEmail"
+										value="#{clientProfileController.email}"
+										label="#{label['profile.email']}"
+										onkeydown="onInplaceEditorKeyDown(event, 'editEmailInplace')">
+										<f:validator validatorId="custom.emailValidator" />
+									</p:inputText>
+								</p:inplace>
+							</p:column>
+							<p:column styleClass="client-details-edit">
+								<p:commandButton icon="fa fa-pencil" id="editEmailButton"
+									styleClass="btn-light-blue inplace-editor-trigger"
+									oncomplete="PF('editEmailInplace').show()"
+									title="#{label['button.edit']}"
+									widgetVar="editEmailButton"
+									onclick="hideInplaceEditorTrigger()"/>
+							</p:column>
+						</p:row>
+						<p:row styleClass="profile-borderless">
+							<p:column>
+								<p:outputLabel value="#{label['profile.phone']}" />
+							</p:column>
+							<p:column>
+
+								<p:inplace id="editPhone" class="editPhone" editor="true"
+									toggleable="false"
+									saveLabel="#{label['button.save']}"
+									cancelLabel="#{label['button.cancel']}"
+									widgetVar="editPhoneInplace">
+									<p:ajax event="save"
+										listener="#{clientProfileController.handleSave}"
+										oncomplete="if (args.validationFailed) hideInplaceEditorTrigger()"/>
+									<p:ajax event="cancel"
+											oncomplete="showInplaceEditorTrigger()"/>
+									<p:inputText id="inputPhone"
+										value="#{clientProfileController.client.phone}"
+										class="editPhone"
+										label="#{label['profile.phone']}"
+										onkeydown="onInplaceEditorKeyDown(event, 'editPhoneInplace')">
+										<f:validator validatorId="custom.phoneNumberValidator" />
+										<f:validateLength maximum="50" />
+									</p:inputText>
+								</p:inplace>
+							</p:column>
+							<p:column styleClass="client-details-edit">
+								<p:commandButton icon="fa fa-pencil" id="editPhoneButton"
+									styleClass="btn-light-blue inplace-editor-trigger"
+									oncomplete="PF('editPhoneInplace').show()"
+									title="#{label['button.edit']}"
+									widgetVar="editPhoneButton"
+									onclick="hideInplaceEditorTrigger()"/>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+			</p:panel>
+
+
+			<p:dialog id="confirmModal"
+					  header="#{label['dialog.infoText.header']}"
+					  widgetVar="confirmModal"
+					  draggable="false"
+					  resizable="false"
+					  responsive="true"
+					  modal="true"
+					  appendTo="@(body)">
+				<h:form id="formB">
+					<p:panel id="startPanel"
+						rendered="#{!clientProfileController.matchedCodes}">
+						<h:outputFormat id="infoText"
+							value="#{label['dialog.infoText.confirmEmail']}" escape="false">
+							<f:param value="#{clientProfileController.email}"></f:param>
+						</h:outputFormat>
+						<br />
+						<p:messages showDetail="true">
+							<p:autoUpdate />
+						</p:messages>
+						<p:outputPanel styleClass="update-email-code-container">
+							<p:outputPanel styleClass="update-email-code-label">
+								<p:outputLabel for="enteredCode"
+											   value="#{label['dialog.infoText.enterCode']}" />
+							</p:outputPanel>
+							<p:outputPanel styleClass="update-email-code">
+								<p:inputText id="enteredCode"
+											 value="#{clientProfileController.enteredCode}" />
+							</p:outputPanel>
+						</p:outputPanel>
+						<br />
+						<p:outputPanel styleClass="update-email-button-container-desktop">
+							<p:outputPanel styleClass="update-email-btn-desktop">
+								<p:commandButton id="resendButtonDesktop"
+												 value="#{label['input.button.resend']}"
+												 styleClass="btn-dark-blue"
+												 action="#{clientProfileController.resendEmail}"
+												 update="@this"
+												 disabled="#{clientProfileController.disabledButton}"
+												 process="@this" />
+							</p:outputPanel>
+							<br />
+							<p:outputPanel styleClass="update-email-btn-desktop">
+								<p:commandButton value="Patvirtinti"
+												 action="#{clientProfileController.compareCodes}"
+												 update="successPanel confirmModal resendButtonDesktop :clientProfileForm:inputEmail"
+												 oncomplete="PF('confirmModal').show();" styleClass="btn-light-blue"/>
+							</p:outputPanel>
+						</p:outputPanel>
+						<p:outputPanel styleClass="update-email-button-container-mobile">
+							<p:outputPanel styleClass="update-email-btn-mobile">
+								<p:commandButton value="Patvirtinti"
+												 action="#{clientProfileController.compareCodes}"
+												 update="successPanel confirmModal resendButtonMobile :clientProfileForm:inputEmail"
+												 oncomplete="PF('confirmModal').show();" styleClass="btn-light-blue">
+								</p:commandButton>
+							</p:outputPanel>
+							<br />
+							<p:outputPanel styleClass="update-email-btn-mobile">
+								<p:commandButton id="resendButtonMobile"
+												 value="#{label['input.button.resend']}"
+												 styleClass="btn-dark-blue"
+												 action="#{clientProfileController.resendEmail}"
+												 update="@this"
+												 disabled="#{clientProfileController.disabledButton}"
+												 process="@this" />
+							</p:outputPanel>
+						</p:outputPanel>
+
+					</p:panel>
+					<p:panel id="successPanel"
+						rendered="#{clientProfileController.matchedCodes}">
+						<h:outputFormat value="#{label['dialog.infoText.successMessage']}"
+							escape="false">
+							<f:param value="#{clientProfileController.email}"></f:param>
+						</h:outputFormat>
+					</p:panel>
+				</h:form>
+			</p:dialog>
+		</f:view>
+	</ui:define>
+
+</ui:composition>

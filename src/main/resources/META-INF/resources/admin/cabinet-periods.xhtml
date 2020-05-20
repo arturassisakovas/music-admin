@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/template.xhtml">
+
+    <ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+
+	<ui:define name="title">
+        <h2>#{label['timetable.page.title']}</h2>
+    </ui:define>
+    <ui:define name="body">
+    
+		<p:panel id="container">
+		
+		<ui:include src="../includes/timetables-menu.xhtml"/>
+		<p:messages showSummary="false"
+					showDetail="true"
+					id="crudMessages"
+					closable="true"
+					severity="info, warn, fatal">
+			<p:autoUpdate/>
+		</p:messages>
+			<h:form id="trackPeriodsForm">
+			<div style="margin-left: 20px ;"> 
+
+				<p:outputLabel style="margin-top: 10px ;" for="seasonperiod" value="#{label['timetable.menu.seasons.periods']}"/>
+					<p:selectOneMenu id="seasonperiod"
+								 	 value="#{cabinetPeriodController.model.selectedPeriod}"
+								 	 style="width: 217px;"
+        						 	 converter="omnifaces.SelectItemsConverter"
+        						 	 label="#{label['seasonperiod']}">
+         				<f:selectItem itemLabel="Rodyti"/>
+         				<f:selectItems value="#{cabinetPeriodController.periods}" var="period" itemLabel="#{period.name } - (#{period.season.name})" itemValue="#{period}" />
+         				<p:ajax listener="#{cabinetPeriodController.setSelectedPeriod(cabinetPeriodController.model.selectedPeriod)}" update="trackPeriodsForm trackPeriodsTable" />
+	        		</p:selectOneMenu>
+					<p:commandButton style="margin-top: 10px;"
+									 value="#{label['timetable.button.addNewTrackPeriod']}"
+	                				 icon="fa fa-plus-circle"
+	                				 action="#{cabinetPeriodController.add}"
+	                				 oncomplete="PF('trackPeriodDialog').show();"
+	                				 update="trackPeriodDialog"
+	                				 disabled="#{cabinetPeriodController.selectedPeriod eq null }"
+	                				 styleClass="btn-dark-blue">
+	                				 <p:resetInput target="trackPeriodDialog" />
+					</p:commandButton>
+				</div>
+						<p:dataTable rowIndexVar="trackPeriodIndex" 
+									 style="margin-top: 20px;" 
+									 id="trackPeriodsTable" 
+									 value="#{cabinetPeriodController.model}"
+									 var="trackPeriod"
+									 paginator="true"
+									 lazy="true"
+				              		 rows="#{cabinetPeriodController.rowsPerPage}"
+                             		 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             		 currentPageReportTemplate="{currentPage} #{label['paginator.of']} {totalPages}"
+                             		 rowsPerPageTemplate="#{cabinetPeriodController.rowsPerPageTemplate}"
+                             		 emptyMessage="#{msg['no.records.found']}">
+                             		 
+                            <p:column class="text-left" headerText="#{label['timetable.trackPeriod.pool']}" sortBy="#{trackPeriod.track.pool.name}">
+						    	<h:outputText value="#{trackPeriod.track.pool.name}"  />
+						    </p:column>
+						    <p:column class="text-left" headerText="#{label['timetable.trackPeriod.track']}" sortBy="#{trackPeriod.track.number}">
+						    	<h:outputText value="#{trackPeriod.track.number}" />
+						    </p:column>
+						    <p:column style="width: 140px;" class="text-left" headerText="#{label['timetable.column.startDate']}" sortBy="#{trackPeriod.startDate}">
+						    	<h:outputText value="#{trackPeriod.startDate}"/>
+						    </p:column>
+						    <p:column style="width: 140px;" class="text-left" headerText="#{label['timetable.column.endDate']}" sortBy="#{trackPeriod.endDate}">
+						    	<h:outputText value="#{trackPeriod.endDate}"/>
+						    </p:column>
+						    <p:column style="width: 260px;" class="text-left" headerText="Savaitės dienos ir valandos">
+						    	<p:repeat var="weekday" value="#{trackPeriod.trackWeekdays}">
+						    		<h:outputText rendered="#{not empty weekday.trackWorkingHours}" styleClass="track-working-day"
+						    				  	  value="#{calendarLabel[weekday.dayOfWeek]}"
+						    				  	  id="workday"/>
+						    		<p:tooltip rendered="#{not empty weekday.trackWorkingHours}" for="workday" position="top">
+					    				 <div style="width: 220px;">
+					    					<div class="working-hour-column">#{label['track.startdate']}</div>
+					    					<div class="working-hour-column">#{label['track.enddate']}</div>
+							    			<p:repeat var="workingHour" value="#{weekday.trackWorkingHours}">
+							    				<div class="working-hour-container">
+						    						<div class="working-hour-column">#{cabinetPeriodController.minutesToTimeConverter(workingHour.startHour)}</div>
+						    						<div class="working-hour-column">#{cabinetPeriodController.minutesToTimeConverter(workingHour.endHour)}</div>
+							    				</div>
+							    			</p:repeat>
+					    				 </div>
+						    		</p:tooltip>
+						    	</p:repeat>
+						    </p:column>
+						    <p:column style="width: 150px;">          
+						        <p:commandButton value="#{label['timetable.button.edit']}"
+						        				 process="@this"
+						        				 action="#{cabinetPeriodController.edit(trackPeriod.id, trackPeriodIndex)}"
+						        				 update=":trackPeriodDialog"
+						        				 oncomplete="PF('trackPeriodDialog').show();"
+						        				 icon="fa fa-pencil"
+						        				 styleClass="btn-light-blue">
+						        	<p:resetInput target="trackPeriodDialog" />
+						        </p:commandButton>
+						    </p:column>
+						    <p:column style="width: 150px;">          
+			                    <h:panelGroup id="trackPeriodDeleteButton">
+									<p:commandButton value="#{label['timetable.button.delete']}"
+							        				 icon="fa fa-trash-o"  styleClass="btn-red btn-block"
+							        				 action="#{cabinetPeriodController.delete(trackPeriod.id, trackPeriodIndex)}"
+							        				 update=":trackPeriodsForm:trackPeriodsTable"
+							        				 disabled="#{!cabinetPeriodController.checkIfGroupExistWithTrackPeriod(trackPeriod)}">
+				                        <p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.trackPeriod.message.delete']} '#{trackPeriod.id}'?" icon="ui-icon-alert"/>
+				                    </p:commandButton>
+								</h:panelGroup>
+								<p:tooltip for="trackPeriodDeleteButton"
+										   styleClass="text-center"
+										   position="center top"
+										   value="#{label['timetable.trackperiod.dont.allow.to.delete.trackperiod']}"
+										   rendered="#{!cabinetPeriodController.checkIfGroupExistWithTrackPeriod(trackPeriod)}"/>
+						    </p:column>
+						</p:dataTable>
+				</h:form>
+
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
+                        <p:commandButton value="#{label['timetable.button.yes']}" styleClass="btn-primary ui-confirmdialog-yes"
+                                         icon="fa fa-check"/>
+                        <p:commandButton value="#{label['timetable.button.no']}" type="button" styleClass="btn-danger ui-confirmdialog-no"
+                                         icon="fa fa-close"/>
+                    </p:confirmDialog>
+
+				<p:dialog header="#{empty cabinetPeriodController.trackPeriod.id ? label['timetable.trackPeriod.header.save'] : label['timetable.trackPeriod.header.edit']}"
+						  id="trackPeriodDialog" 
+						  widgetVar="trackPeriodDialog" resizable="false" 
+						  draggable="false" responsive="true" modal="true">
+					<p:ajax event="close" listener="#{cabinetPeriodController.clearTrackWorkdaysData}"/>
+					<p:panel styleClass="trackPeriodDialog">
+					<h:form id="trackPeriod"
+							styleClass="trackPeriod" >
+						<p:panel id="trackPeriodPanel"
+								 styleClass="trackPeriodPanel">
+			                <p:messages showSummary="false"
+			                			showDetail="true"
+			                			closable="true"
+			                			severity="error"/>
+			                <p:panel rendered="#{cabinetPeriodController.trackWeekdayHasData}"
+			                		 styleClass="delete-message">
+				                <div class="ui-messages ui-widget" >
+									<div class="ui-messages-error ui-corner-all">
+										<span>#{label['track.delete.confirmation']}</span>
+										<h:outputText value="&lt;br/&gt;" escape="false" />
+										<p:commandLink value="#{label['condition.true']}"
+													   action="#{cabinetPeriodController.deleteDay}"
+													   update="@form"/>
+										<p:commandLink styleClass="text-black"
+													   value="#{label['condition.false']}"
+													   action="#{cabinetPeriodController.setTrackWeekdayHasData(false)}"
+													   update="@form"/>
+									</div>
+								</div>
+			                </p:panel>
+			                <p:panel id="emptyPoolMsg" style="border: none;">
+			                    <p:panel styleClass="empty-pool-msg" rendered="#{cabinetPeriodController.emptyPool}">
+				                    <h:outputFormat value="#{label['timetable.trackPeriod.emptyPoolMsg']}"
+				          							escape="false">
+				          				<f:param value="#{cabinetPeriodController.pool.name}"></f:param>
+				          			</h:outputFormat>
+			                    </p:panel>
+			          				
+			                </p:panel>
+			                <p:panelGrid columns="2" layout="grid" styleClass="no-border ui-fluid">
+			                	<p:outputLabel for="pool" value="#{label['timetable.trackPeriod.pool']}:"/>
+			          			<p:selectOneMenu id="pool" value="#{cabinetPeriodController.poolId}" required="true"
+                                                 rendered="#{cabinetPeriodController.create}"
+                                                 requiredMessage="#{label['timetable.trackPeriod.track.requiredMessage']}">
+			          				<p:ajax update="track emptyPoolMsg" listener="#{cabinetPeriodController.tracksFiller}" />
+						            <f:selectItem itemLabel="" itemValue="" noSelectionOption="true" />
+						            <f:selectItems value="#{cabinetPeriodController.pools}" var="pool" itemLabel="#{pool.name}" itemValue="#{pool.id}" />
+			          			</p:selectOneMenu>
+			          			<h:outputLabel value="#{cabinetPeriodController.pool.name}"
+			          						   styleClass="read-only-pool-track"
+			          						   rendered="#{!cabinetPeriodController.create}"/>
+
+			          			<p:outputLabel for="track" value="#{label['timetable.trackPeriod.track']}:"/>
+			          			<p:selectCheckboxMenu id="track" 
+			          							 value="#{cabinetPeriodController.selectedTracksIds}"
+			          							 required="true" 
+			          							 rendered="#{cabinetPeriodController.create}"
+			          							 requiredMessage="#{label['timetable.trackPeriod.track.requiredMessage']}" 
+			          							 multiple="true">
+			          				<f:selectItems value="#{cabinetPeriodController.tracks}" var="track"
+                                                   itemLabel="#{track.number}" itemValue="#{track.id}"/>
+						        </p:selectCheckboxMenu>
+						        <h:outputLabel value="#{cabinetPeriodController.selectedNumbersTracks}"
+			          						   styleClass="read-only-pool-track"
+						        			   rendered="#{!cabinetPeriodController.create}"/>
+
+			                    <p:outputLabel for="startDate" value="#{label['timetable.trackPeriod.startDate']}"/>
+			                    <p:calendar id="startDate" showOn="button" required="true"
+			                    			navigator="true" mask="true" locale="lt_LT"
+					        				pattern="yyyy-MM-dd" value="#{cabinetPeriodController.startDate}"
+											disabled="#{!cabinetPeriodController.trackPeriodEditable}"
+			                    			requiredMessage="#{label['timetable.trackPeriod.startDate.requiredMessage']}"
+			                    			converter="localDateTimeConverter"
+			                    			mindate="#{cabinetPeriodController.selectedPeriod.startDate}"
+		                    				maxdate="#{cabinetPeriodController.selectedPeriod.endDate}"
+			                    			readonlyInput="true">
+			                    			<p:ajax event="dateSelect" listener="#{cabinetPeriodController.setMinDate}" update="endDate"/>
+			                    </p:calendar>
+
+			                    <p:outputLabel for="endDate" value="#{label['timetable.trackPeriod.endDate']}"/>
+			                    <p:calendar id="endDate" showOn="button" required="true"
+			                    			navigator="true" mask="true" locale="lt_LT"
+					        				pattern="yyyy-MM-dd" value="#{cabinetPeriodController.endDate}"
+											disabled="#{!cabinetPeriodController.trackPeriodEditable}"
+			                    			requiredMessage="#{label['timetable.trackPeriod.endDate.requiredMessage']}"
+			                    			converter="localDateTimeConverter"
+			                    			mindate="#{cabinetPeriodController.minDate}"
+			                    			maxdate="#{cabinetPeriodController.selectedPeriod.endDate}"
+			                    			readonlyInput="true">
+			                    			<p:ajax event="dateSelect" listener="#{cabinetPeriodController.setMinDate}"/>
+			                    </p:calendar>        
+			                </p:panelGrid>
+			                
+							<p:panelGrid rendered="#{cabinetPeriodController.trackPeriodExist}"
+										 columns="1"
+										 layout="grid"
+										 styleClass="no-border ui-fluid">
+								<p:outputLabel for="track" value="#{label['track.select.working.days']}"/>
+									<p:repeat var="dayOfWeek" value="#{cabinetPeriodController.weekdays}">
+										 <h:panelGroup id="workingDayDeleteButton">
+											<p:commandButton action="#{cabinetPeriodController.saveDay(dayOfWeek)}"
+															 styleClass="#{cabinetPeriodController.containsDay(dayOfWeek) ? 'btn-dark-blue' : ''} day-btn"
+															 value="#{calendarLabel[dayOfWeek]}"
+															 update="@form"
+															 process="@this"
+															 oncomplete="showWorkingHours(false)"
+															 icon="#{cabinetPeriodController.containsDay(dayOfWeek) ? 'fa fa-check' : 'fa fa-times'}"
+															 disabled="#{cabinetPeriodController.checkIfGroupExistWithDay(dayOfWeek)}"/>
+										 </h:panelGroup>
+										 <p:tooltip for="workingDayDeleteButton"
+												    styleClass="text-center"
+												    position="top"
+												    value="#{label['timetable.trackperiod.dont.allow.to.delete.trackweekday']}"
+												    rendered="#{cabinetPeriodController.checkIfGroupExistWithDay(dayOfWeek)}"/>
+									</p:repeat>
+									
+									<p:panel rendered="#{!empty cabinetPeriodController.selectedWeekdays}"
+								 		 styleClass="work-hours-panel">
+										<h:outputLabel style="display: block; margin-top: 10px; font-weight: 600;" value="#{label['track.select.working.hours']}"/>
+										<p:repeat var="selectedDayOfWeek" value="#{cabinetPeriodController.selectedWeekdays}">
+											<p:commandButton value="#{calendarLabel[selectedDayOfWeek]}"
+															 styleClass="#{cabinetPeriodController.selectedDayOfWeek eq selectedDayOfWeek ? 'btn-dark-blue' : ''} day-btn"
+															 action="#{cabinetPeriodController.selectDay(selectedDayOfWeek)}"
+															 process="@this"
+															 update="@form"
+															 oncomplete="showWorkingHours(true)"/>
+										</p:repeat>
+									</p:panel>
+									
+									<p:tabView rendered="#{cabinetPeriodController.selectedDayOfWeek != null}" activeIndex="1">
+								        <p:tab title="#{label['track.beforelunch']}">
+								        	 <p:outputLabel styleClass="select-hour-label" rendered="#{cabinetPeriodController.startHourSet}" value="#{label['track.select.enddate']}"/>
+								        	 <p:outputLabel styleClass="select-hour-label" rendered="#{!cabinetPeriodController.startHourSet}" value="#{label['track.select.startdate']}"/>
+								        	 <p:commandLink action="#{cabinetPeriodController.cancelHourSelection}"
+												            rendered="#{cabinetPeriodController.startHourSet}"
+												            value="#{label['track.cancel']}"
+												            styleClass="btn-cancel-hours"
+												            update="@form"
+												            oncomplete="showWorkingHours(false)"/>
+								             <p:repeat var="minutes" value="#{cabinetPeriodController.hoursBeforeLunch}">
+								             	<p:commandButton styleClass="#{cabinetPeriodController.startHour eq minutes ? 'btn-dark-blue' : ''} day-btn hour-btn"
+								             					 action="#{cabinetPeriodController.selectTime(minutes)}"
+																 value="#{cabinetPeriodController.minutesToTimeConverter(minutes)}"
+																 disabled="#{cabinetPeriodController.checkAvailability(minutes)}"
+																 update="@form"
+																 oncomplete="showWorkingHours(false)"/>
+								             </p:repeat>
+								        </p:tab>
+								        <p:tab title="#{label['track.afterlunch']}">
+								        	 <p:outputLabel styleClass="select-hour-label" rendered="#{cabinetPeriodController.startHourSet}" value="#{label['track.select.enddate']}"/>
+								        	 <p:outputLabel styleClass="select-hour-label" rendered="#{!cabinetPeriodController.startHourSet}" value="#{label['track.select.startdate']}"/>
+								        	 <p:commandLink action="#{cabinetPeriodController.cancelHourSelection}"
+												            rendered="#{cabinetPeriodController.startHourSet}"
+												            value="#{label['track.cancel']}"
+												            styleClass="btn-cancel-hours"
+												            update="@form"
+												            oncomplete="showWorkingHours(false)"/>
+								             <p:repeat var="minutes" value="#{cabinetPeriodController.hoursAfterLunch}">
+								             	<p:commandButton styleClass="#{cabinetPeriodController.startHour eq minutes ? 'btn-dark-blue' : ''} day-btn hour-btn"
+								             					 action="#{cabinetPeriodController.selectTime(minutes)}"
+																 value="#{cabinetPeriodController.minutesToTimeConverter(minutes)}"
+																 disabled="#{cabinetPeriodController.checkAvailability(minutes)}"
+																 update="@form"
+																 oncomplete="showWorkingHours(false)"/>
+								             </p:repeat>
+								        </p:tab>
+								    </p:tabView>
+									    
+							</p:panelGrid>
+							 
+			                <p:separator/>
+			                <p:commandButton styleClass="btn-red pull-left"
+			                				 value="#{label['timetable.button.close']}"
+											 action="#{cabinetPeriodController.clearTrackWorkdaysData}"
+			                				 oncomplete="PF('trackPeriodDialog').hide();">
+			                	<p:confirm disabled="true" />
+			                </p:commandButton>
+			                <p:commandButton rendered="#{cabinetPeriodController.trackPeriodExist}"
+			                				 styleClass="btn-primary btn-light-blue pull-right"
+			                				 value="#{label['timetable.button.save']}"
+			               					 validateClient="true"
+			               					 process="@form"
+											 action="#{cabinetPeriodController.save}"
+											 update=":trackPeriodsForm:trackPeriodsTable @form"> 
+			                	<p:confirm disabled="true" />
+			                </p:commandButton>
+			                <p:commandButton rendered="#{cabinetPeriodController.trackPeriodExist == false}"
+			                			     styleClass="btn-primary btn-light-blue pull-right"
+			                    			 value="#{label['timetable.button.save']}"
+			               					 validateClient="true"
+			               					 process="@form"
+											 action="#{cabinetPeriodController.save}"
+											 update=":trackPeriodsForm:trackPeriodsTable @form"> 
+			                	<p:confirm disabled="true" />
+			            	</p:commandButton>
+		            	</p:panel>
+		            	
+						<p:panel widgetVar="workingHours"
+								 id="workingHours"
+								 styleClass="workingHours"
+								 rendered="#{not empty cabinetPeriodController.trackWorkingHours}">
+ 								<div class="ui-g">
+ 									<div class="ui-g-5">
+ 										<p:outputLabel>#{label['track.startdate']}</p:outputLabel>
+ 									</div>
+ 									<div class="ui-g-5">
+ 										<p:outputLabel>#{label['track.enddate']}</p:outputLabel>
+ 									</div>
+ 									<div class="ui-g-2"></div>
+ 								</div>
+								<p:repeat var="trackWorkingTime" value="#{cabinetPeriodController.displayTrackWorkingHours()}">
+									<div class="ui-g time-block">
+	 									<div class="ui-g-5">
+	 										<p:outputLabel>#{cabinetPeriodController.minutesToTimeConverter(trackWorkingTime.startHour)}</p:outputLabel>
+	 									</div>
+	 									<div class="ui-g-5">
+	 										<p:outputLabel>#{cabinetPeriodController.minutesToTimeConverter(trackWorkingTime.endHour)}</p:outputLabel>
+	 									</div>
+	 									<div class="ui-g-2 lessons-time-delete">
+	 										
+					                    <h:panelGroup id="workingHourDeleteButton">
+											<p:commandButton value=""
+ 														 id="sadas"
+					        							 icon="fa fa-trash-o"
+					        				 			 styleClass="btn-red btn-block btn-time-delete"
+					        				 			 action="#{cabinetPeriodController.deleteWorkingHour(trackWorkingTime)}"
+					        				 			 update="@form"
+					        				 			 oncomplete="showWorkingHours(false)"
+					        				 			 disabled="#{!cabinetPeriodController.checkIfGroupExistWithTrackHour(trackWorkingTime)}">
+					                     	</p:commandButton>
+										</h:panelGroup>
+										<p:tooltip for="workingHourDeleteButton"
+												   styleClass="text-center"
+												   position="top"
+												   value="#{label['timetable.trackperiod.dont.allow.to.delete.hour']}"
+												   rendered="#{!cabinetPeriodController.checkIfGroupExistWithTrackHour(trackWorkingTime)}"/>
+	 									</div>
+	 								</div>
+		            			</p:repeat>
+		            	</p:panel>
+		            	
+					</h:form> 
+					</p:panel>
+		        </p:dialog>
+		        
+			</p:panel>
+			
+    </ui:define>
+  
+</ui:composition>

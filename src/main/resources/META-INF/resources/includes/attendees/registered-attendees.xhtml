@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
+ 
+ 				 
+	 				<p:messages id="messages" showDetail="true" showSummary="false" closable="true">
+						<p:autoUpdate />
+					</p:messages>
+					<div class="ui-g">
+						<h:outputText value="&lt;br/&gt;" escape="false" />
+						<div class="ui-g-6 mobile-panel-width">
+							<h4 class="client-attendees-headers-top">#{label['client.information.about.child']}</h4>
+							<p:panelGrid id="attendeeGrid">
+								<p><strong>#{label['profile.name']}  </strong>#{attendee.name}</p>
+								<p><strong>#{label['profile.surname']}  </strong>#{attendee.surname}</p>
+								<p><strong>#{label['profile.birthdate']}  </strong>#{attendee.birthDate}</p>
+								<p><strong>#{label['profile.progresslevel']}  </strong>#{label['client.attendees.progressLevel.'.concat(attendee.progressLevel.toString().toLowerCase())]}
+												 
+									<p:dialog header="#{label['client.attendees.progressLevel.viewalllevels']} " widgetVar="swimmingLvlDlg" modal="true" resizable="false" appendTo="@(body)">
+										<p:graphicImage name="images/manotikslai.png" width="100%"/>
+									</p:dialog>
+								</p>
+
+							</p:panelGrid>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
+		                        <p:commandButton value="#{label['timetable.button.yes']}" styleClass="btn-primary ui-confirmdialog-yes"
+		                                         icon="fa fa-check"/>
+		                        <p:commandButton value="#{label['timetable.button.no']}" type="button" styleClass="btn-danger ui-confirmdialog-no"
+		                                         icon="fa fa-close"/>
+		                    </p:confirmDialog>
+
+							<h4 class="client-attendees-headers">#{label['client.information.about.group']}</h4>
+							<p:panelGrid id="groupGrid">
+								<p><strong>#{label['client.attendees.group.age']}    </strong>  #{clientProfileController.formatAgeGroup().concat(' ').concat(label['client.attendees.group.age.years'])}</p>
+								<p:panelGrid layout="grid" columns="2" columnClasses="client-attendees-coaches">
+									<ui:fragment ><strong>#{label['client.attendees.coaches']}</strong>
+									</ui:fragment>
+									<ui:fragment>
+											<p:repeat var="coach" value="#{clientProfileController.formatNamesOfCoaches()}">
+											<span>#{coach}</span>
+											<br />
+										</p:repeat>
+									</ui:fragment>
+								</p:panelGrid>											
+							</p:panelGrid>							
+
+							<h4 class="client-attendees-headers">#{label['client.information.workouts.time']}</h4>
+							<p:panelGrid id="timeGrid">
+									<ui:fragment>
+										<p:repeat var="time" value="#{clientProfileController.formatTimeOfGroup()}">
+											<span>#{time}</span>
+											<br />
+										</p:repeat>
+									</ui:fragment>
+							</p:panelGrid>
+						</div>
+
+						<div class="ui-g-6 mobile-panel-width mobile-padding">
+							<h4 class="client-attendees-headers-top client-child-attendance-header-align">#{label['client.information.attendance']}</h4>
+
+							<p:panel id="attendanceData">
+								<p:panel rendered="#{not empty clientProfileController.attendanceListForMonthlyCalendar}" id="attendance" styleClass="attendance">
+									<p:selectOneMenu id="calendar"
+													 value="#{clientProfileController.selectedAttendanceDate}" 											
+													 style="width:200px;"																					
+													 converter="localDateTimeConverter">
+										<p:ajax update="attendanceTable"  process="@this" listener="#{clientProfileController.checkIfContractIsActive}" />
+										<f:selectItems value="#{clientProfileController.attendanceListForMonthlyCalendar}"
+													var="date" itemValue="#{date}"
+													itemLabel="#{date.year} #{calendarLabel[date.month]}" />
+									</p:selectOneMenu>
+
+									<p:panel id="attendanceTable">								
+										<p:dataTable rendered="#{clientProfileController.contractActive}"
+													 rowIndexVar="attendanceIndex"
+													 style="margin-top: 20px;"
+													 var="groupWorkout"
+													 value="#{clientProfileController.groupWorkoutsListOfMonth}"
+													 emptyMessage="#{msg['no.records.found']}"
+													 styleClass="client-attendence-hidden-status">
+													<p:column class="text-left" headerText="#{label['client.attendees.attendance.workouts.date']}" groupRow="true">
+														<p:outputLabel value="#{groupWorkout.date}" />
+													</p:column>
+													<p:column class="text-left" headerText="#{label['client.attendees.attendance.status']}">
+														<p:outputLabel rendered="#{clientProfileController.showAttendance(groupWorkout) ne null}" value="#{clientProfileController.showAttendance(groupWorkout) ? '✓' : '✖'}"/>
+													</p:column>
+										</p:dataTable>
+
+										<p:dataTable rendered="#{!clientProfileController.contractActive}"
+													 rowIndexVar="attendanceIndex"
+													 style="margin-top: 20px;"
+													 var="groupWorkout"
+													 value="#{clientProfileController.attendance}"
+													 emptyMessage="#{msg['no.records.found']}"
+													 styleClass="client-attendence-hidden-status">
+													<p:column class="text-left" headerText="#{label['client.attendees.attendance.workouts.date']}" style="border-right: 1px solid #f4f4f4 !important;">
+														<p:outputLabel value="#{groupWorkout.workoutDate}" />
+													</p:column>
+													<p:column class="text-left" headerText="#{label['client.attendees.attendance.status']}">
+														<p:outputLabel rendered="#{groupWorkout.isPresent ne null}" value="#{groupWorkout.isPresent ? '✓' : '✖'}"/>
+													</p:column>
+										</p:dataTable>
+									</p:panel>	
+								</p:panel>
+							</p:panel>
+						</div>
+					</div>
+</ui:composition>

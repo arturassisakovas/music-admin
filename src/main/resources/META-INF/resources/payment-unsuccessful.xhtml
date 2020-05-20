@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="templates/forms.xhtml">
+      
+    <ui:define name="body">
+		<div class="register-box-custom">
+			<div class="table-cell">
+	            <div class="login-logo">
+	                <p:link style="color: #fff;" href="/login"><b>#{label['login.logo.name1']}</b>#{label['login.logo.name2']}</p:link>
+	            </div>
+	            <div class="box login-box-body">
+					<h:form id="form">
+ 						  <p style="font-size: 20px;"> Mokėjimas nebuvo sėkmingas. Prašome kreiptis į sistemos administratorių. </p>
+					</h:form>
+	            </div>
+	    	</div>
+        </div>
+    </ui:define>
+
+</ui:composition>

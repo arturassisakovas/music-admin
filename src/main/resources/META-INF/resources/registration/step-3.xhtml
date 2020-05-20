@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../templates/forms.xhtml">
+                
+    <f:metadata>
+		<f:viewAction action="#{clientRegistrationController.onLoadExisting}"/>
+		<f:viewAction action="#{registrationSessionController.onLoad}"/>
+		<f:event type="preRenderView" listener="#{registerController.checkCurrentRegistrationStep(3)}" />
+		<f:event type="preRenderView" listener="#{registerController.checkIfGroupAvailable}" />
+	</f:metadata>
+	           
+    <ui:define name="body">
+		<div class="register-box-custom">
+			<div class="table-cell">
+	            <div class="login-logo">
+	                <p:link style="color: #fff;" href="/login"><b>#{label['login.logo.name1']}</b>#{label['login.logo.name2']}</p:link>
+	            </div>
+	            <div class="box login-box-body">
+				    <div class="#{registerController.noGroupAvailable ? 'hidden-steps' : ''} wizard">
+						<div class="steps">
+							<ul role="tablist">
+								<li class="first"><a></a></li>
+								<li class="checked"><a></a></li>
+								<li class="checked"><a></a></li>
+								<li><a></a></li>
+								<li><a></a></li>
+								<li class="last"><a></a></li>
+							 </ul>
+						 </div>
+					 </div>
+					 	
+					 <h3>#{label['register.header.chosensubscription']}</h3>
+					 <p:panelGrid layout="grid" columns="1"> 
+					 	<p><strong>#{label['register.chosensubscription.duration']}: </strong>#{registerController.subscription} #{label['register.chosensubscription.month']}</p>
+					 	<p><strong>#{label['register.chosensubscription.workoutprice']}: </strong>#{registerController.selectedHour.singleWorkoutPrice} Eur.</p>		
+					 	<p><strong>#{label['register.chosensubscription.discount']}: </strong>#{registerController.subscriptionsMap.get(registerController.parseToInt(registerController.subscription))} % (#{registerController.selectedHour.formattedSavedMoney} Eur).</p>
+					 	<p><strong>#{label['register.chosensubscription.totalprice']}: </strong>#{registerController.selectedHour.formattedTotalPrice} Eur.</p>			 	
+					 </p:panelGrid>	    
+					 <h3>#{label['register.header.workoutsinfo']}</h3>
+					 <p:panelGrid layout="grid" columns="1"> 
+					 	<p><strong>#{label['register.workoutsinfo.pool']}: </strong>#{registerController.selectedPool.name} (#{registerController.selectedPool.address}, #{registerController.selectedPool.city}).</p>
+					 	<p><strong>#{label['register.workoutsinfo.timesperweek']}: </strong>#{registerController.workoutsPerWeek}.</p>		
+					 	<p><strong>#{label['register.workoutsinfo.timespermonths']} #{registerController.subscription} #{label['register.workoutsinfo.month']}: </strong>#{registerController.countWorkouts()}.</p>
+					 	<p><strong>#{label['register.workoutsinfo.time']}: </strong>#{registerController.selectedHour.daysAndHours}</p>			 	
+					 </p:panelGrid>
+					 
+					 <h:form>
+					 	<p:panelGrid layout="grid" columns="2" columnClasses="ui-sm-6, ui-sm-6" style="margin-top: 20px">
+				        	<p:button href="/registration/step-2" value="#{label['input.button.back']}"
+				      	    	      ajax="false" icon="fa fa-caret-left"
+	       					 		  styleClass="btn-block btn-warning btn-back"/>
+	       					<p:commandButton  value="#{label['input.button.continue']}"
+					       					  id="submit"
+											  process="@this"
+											  action="#{registerController.redirectToStep4}"
+					       					  icon="fa fa-caret-right" 
+	       					 				  iconPos="right"
+	       					 				  styleClass="btn-block btn-pools btn-continue"/>
+			        	</p:panelGrid>
+					 </h:form>
+					 
+	            </div>
+	    	</div>
+        </div>
+    </ui:define>
+
+</ui:composition>

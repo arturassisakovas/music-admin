@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                template="../templates/forms.xhtml">
+
+    <ui:define name="body">
+		<div style="background-color: #fff">
+            <h:form>
+            	<ul>
+            	    <li>
+                        <p:commandLink value="Change groups for attendees" action="#{attendeeGroupChange.changeAttendeesGroup}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Change status for 2 years old medical certificates to ABSENT" action="#{automaticMedicalCertificateStatusChange.checkIfCertificateOlderThanTwoYears}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Change status for clients who have 0 ACTIVE contracts to INACTIVE" action="#{automaticClientStatusChange.changeTypeOfClientWithNoActiveContracts}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Change status for expired contracts to EXPIRED" action="#{automaticContractTypeChange.changeTypeOfExpiredContracts}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Change status for expired medical certificates to EXPIRED" action="#{certificateExpirationJob.changeCertificateStatus}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Automatic birthday greeting" action="#{automaticGreetingEmail.checkNextBirthdaysAndSendEmailToCoach}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Clean-up table 'attendees_in_session'" action="#{automaticSessionAttendeesCleanup.checkIfSessionAttendeesSessionHasEnded()}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Check and increase swimming level of attendees" action="#{automaticSwimLevelIncrease.checkAndIncreaseSwimmingLevels}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Generate invoices" action="#{subscriptionGenerator.findAttendeesForInvoices}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Inform managers about expiring subscriptions (Emails to managers)" action="#{automaticSubscriptionReminder.checkIfSubscriptionsExpireSoonAndSendMailToManagers}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Inform managers about medical certificates with status PENDING (Emails to managers)" action="#{automaticPendingCertificatesReminder.checkForPendingMedicalCertificates}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Move attendees to reserve if clients have not paid for attendees in time" action="#{automaticReservationCancel.checkIfRegisteredAttendeeHasContract()}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Move attendees to reserve if contracts are with status NOT_ACTIVE" action="#{checkIfAttendeeContractIsPaid.moveAttendeeToReservedAttendeesIfContractNotActive}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Remind clients about medical certificates expiration (Emails to clients)" action="#{automaticCertificateExpirationReminder.checkForExpiringCertificates}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Remind clients about unpaid payments (Emails to managers)" action="#{automaticPaymentReminder.checkIfThereIsInvoiceNotPaidAndSendMailToManagers}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Report admins about unmarked attendance of managers (Emails to admins)" action="#{unmarkedAttendanceReport.checkUnmarked}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Report managers about attendees missed attendance (Emails to managers)" action="#{missingAttendeesReport.checkAttendeesMissedWorkouts}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Report managers about clients with expiring contracts (Emails to managers)" action="#{expiringContractEmail.prepareClientsWithExpiringContract}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Send generated invoices (Emails to clients)" action="#{invoiceEmail.prepareClientsGettingInvoiceEmail}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Terminate contracts, report managers about soon expiring subscriptions and inform clients about terminated contracts (Emails to clients and managers)" action="#{automaticContractTermination.checkIfContractMustBeTerminated}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Notify clients about to be contract termination in time frame of seven days" action="#{automaticNotificationAboutContractTermination.remindClientsAboutToBeTerminatedContracts}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Clean-up table 'subscriptions" action="#{automaticSubscriptionCleanup.checkIfSubscriptionHasNullInvoiceForLongerThanLimit}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Inform managers about refunds needed to make" action="#{automaticRefundReminder.findPaidAndNotValidContracts}" ajax="false"/>
+                    </li>
+                    <li>
+                        <p:commandLink value="Disable attendees when their group has no more workouts" action="#{groupHasNoWorkoutsLeft.findGroupsWithNoWorkouts}" ajax="false"/>
+                    </li>
+            	</ul>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

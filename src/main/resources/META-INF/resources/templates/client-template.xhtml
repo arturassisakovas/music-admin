@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:adm="http://github.com/adminfaces">
+      
+<f:view locale="#{localeController.locale}">
+<ui:insert name="metadata"/>
+
+<h:head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <ui:insert name="head"/>
+    <ui:insert name="head-end"/>
+    <title>Music Admin</title>
+</h:head>
+<h:body styleClass="#{not empty skin ? skin:skinMB.skin} sidebar-mini #{not empty sidebarCollapse and sidebarCollapse eq 'true' ? 'sidebar-collapse':''}">
+    <ui:insert name="body-begin"/>
+    <p:ajaxStatus rendered="#{adminConfig.renderAjaxStatus}"
+                  onstart="$('#loader').show();"
+                  onsuccess="$('#loader').hide();"/>
+
+    <div class="wrapper">
+        <div id="loader" class="load-bar" style="display: none">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <header class="main-header">
+            <a href="/client" class="logo">
+                <span class="logo-lg">
+                        <h:graphicImage style="height: 40px;" value="../images/logo-white.png" />
+                </span>
+            </a>
+            <nav class="navbar navbar-static-top">
+                <a href="#" class="sidebar-toggle mobile-display" data-toggle="push-menu" role="button">
+                    <span class="sr-only"></span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ui:insert name="top-menu"/>
+                </div>
+            </nav>
+        </header>
+
+        <!-- side menu -->
+        <aside id="sidebar" class="main-sidebar slideout-menu">
+            <div>
+                <ul class="sidebar-menu">
+			        <li>
+			            <p:link href="/client/attendees">
+			                <i class="fa fa-users"></i>
+			                <span>#{label['client.panel.menu.myChild']}</span>
+			            </p:link>
+			        </li>
+			        <li>
+                        <p:link href="/client/invoices">
+                            <i class="fa fa-credit-card"></i>
+                            <span>#{label['client.panel.menu.myInvoices']}</span>
+                        </p:link>
+                    </li>
+                    <li>
+                        <p:link href="/client/contracts">
+                            <i class="fa fa-list-alt"></i>
+                            <span>#{label['client.panel.menu.myContracts']}</span>
+                        </p:link>
+                    </li>
+                    <li>
+                        <p:link href="/client/profile">
+                            <i class="fa fa-user"></i>
+                            <span>#{label['client.panel.menu.myContacts']}</span>
+                        </p:link>
+                    </li>
+		        </ul>
+            </div>
+        </aside>
+        <!-- content -->
+        <div id="content" class="content-wrapper">
+            <adm:breadcrumb title="#{title}" rendered="#{not empty title and empty requestScope['javax.servlet.error.exception_type'] and empty requestScope['javax.servlet.error.message']}"/>
+            <ui:insert name="content-wrapper"/>
+            <section class="content-header">
+                <h1>
+                    <ui:insert name="title">
+                        <h:outputText value="#{title}" rendered="#{not empty title and empty requestScope['javax.servlet.error.exception_type'] and empty requestScope['javax.servlet.error.message']}"/>
+                    </ui:insert>
+                    <small><ui:insert name="description"/></small>
+                </h1>
+
+                <ui:insert name="content-header"/>
+            </section>
+            <section class="content">
+                <ui:insert name="body"/>
+            </section>
+        </div>
+
+
+        <footer class="main-footer">
+	    	<a target="_blank">
+	            #{label['footer.company.name']} <h:outputText  value="#{homeController.currentYear()}"/> #{label['footer.rights']}
+	        </a>
+	        <div class="pull-right hidden-xs app-version">
+	            <i>#{applicationController.buildVersion}</i>
+	        </div>
+        </footer>
+
+    </div>
+  
+    <script type="text/javascript">
+        if (isMobile()) {
+            window.onscroll = activateScrollToTop;
+        }
+    </script>
+
+    <adm:ripple/>
+
+	<h:outputStylesheet library="css" name="style.css" target="head" />
+    <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
+    <h:outputScript library="js" name="bootstrap.min.js" target="head"/>
+    <h:outputScript library="js" name="admin-lte.min.js" target="head"/>
+    <h:outputScript library="js" name="admintemplate.js" target="head"/>
+    <!-- slide in/out menu integration  -->
+    <h:outputScript library="js" name="slideout.min.js" target="head" rendered="#{adminConfig.enableSlideMenu and (empty enableSlideMenu or enableSlideMenu)}"/>
+    <h:outputScript library="js" name="adminslide.js" target="head" rendered="#{adminConfig.enableSlideMenu and (empty enableSlideMenu or enableSlideMenu)}"/>
+    <h:outputScript library="js" name="control-sidebar.js" target="head" rendered="#{adminConfig.renderControlSidebar and (empty renderControlSidebar or renderControlSidebar)}"/>
+    <h:outputScript library="js" name="slimscroll.min.js" target="head"/>
+    		<h:outputScript library="js" name="main.js" />
+		<h:outputScript library="js" name="translations/locale_lt.js" />
+		<h:outputScript library="js" name="validators/email_validator.js" />
+		<h:outputScript library="js" name="validators/phone_number_validator.js" />
+    <ui:fragment rendered="#{not adminConfig.enableSlideMenu or (not empty enableSlideMenu and enableSlideMenu eq 'false')}">
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.slideout-menu').removeClass('slideout-menu');
+                $('.slideout-panel').removeClass('slideout-panel');
+            });
+        </script>
+    </ui:fragment>
+
+    
+</h:body>
+</f:view>
+</html>

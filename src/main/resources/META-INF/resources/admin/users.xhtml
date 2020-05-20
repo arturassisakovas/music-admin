@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/template.xhtml">
+
+    <ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+
+	<ui:define name="title">
+        <h2>#{label['admin.panel.menu.users.title']}</h2>
+    </ui:define>
+ 
+    <ui:define name="body">
+    
+	    <style>
+		    .ui-selectcheckboxmenu-header:before {
+		    	content: "#{label['user.selectAll']}";
+		    }
+	    </style>
+
+		<p:panel id="container">
+			<p:messages showSummary="false" showDetail="true" id="crudMessages" autoUpdate="true" closable="true" severity="info, warn"/>
+			<h:form id="employeeForm">
+			<p:tabView id="poolTab" cache="false" dynamic="true">
+				<p:tab title="#{label['user.status.tab.active']}" titleStyleClass="tabs-margin-right">
+					<h:form id="activeUsersForm">
+						<p:commandButton value="#{label['timetable.button.addNew']}"
+										 icon="fa fa-plus-circle" process="@this"
+										 actionListener="#{employeeController.add()}"
+										 oncomplete="PF('userDialog').show();"
+										 update="dialogForm:userDialog"
+										 styleClass="btn-dark-blue">
+										 <p:resetInput target="dialogForm:userDialog" />
+						</p:commandButton>
+						<p:dataTable rowIndexVar="userIndex"
+									 style="margin-top: 20px;"
+									 id="activeUsersTable"
+									 value="#{employeeController.getModel(true)}"
+									 var="user"
+									 paginator="true"
+									 lazy="true"
+									 rows="#{employeeController.rowsPerPage}"
+									 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									 currentPageReportTemplate="{currentPage} #{label['paginator.of']} {totalPages}"
+									 rowsPerPageTemplate="#{employeeController.rowsPerPageTemplate}"
+									 emptyMessage="#{msg['no.records.found']}">
+									<p:column style="width: 50px;" class="text-left" headerText="#{label['rows.No']}">
+										<h:outputText value="#{userIndex+1}"/>
+									</p:column>
+									<p:column style="width: 100px;" class="text-left" headerText="#{label['user.name']}" sortBy="#{user.name}">
+										<h:outputText value="#{user.name}"/>
+									</p:column>
+									<p:column style="width: 100px;" class="text-left" headerText="#{label['user.surname']}" sortBy="#{user.surname}">
+										<h:outputText value="#{user.surname}"/>
+									</p:column>
+									<p:column class="text-left" headerText="#{label['user.address']}" sortBy="#{user.address}">
+										<h:outputText value="#{user.address}"/>
+									</p:column>
+									<p:column style="width: 120px;" class="text-left" headerText="#{label['user.phone']}" sortBy="#{user.phone}">
+										<h:outputText value="#{user.phone}"/>
+									</p:column>
+									<p:column class="text-left" headerText="#{label['user.email']}" sortBy="#{user.email}">
+										<h:outputText value="#{user.email}"/>
+									</p:column>
+									<p:column class="text-left" headerText="#{label['user.role']}">
+										<p:repeat var="role" value="#{user.getAllRoles()}">
+												<h:outputText value="#{roleLabel[role]}"/>
+												<br />
+										</p:repeat>
+
+									</p:column>
+									<p:column style="width: 150px;">
+										<p:commandButton value="#{label['timetable.button.edit']}"
+														 process="@this"
+														 action="#{employeeController.edit(user)}"
+														 update="dialogForm:userDialog"
+														 oncomplete="PF('userDialog').show();"
+														 icon="fa fa-pencil"
+														 styleClass="btn-light-blue">
+											<p:resetInput target="dialogForm:userDialog" />
+										</p:commandButton>
+									</p:column>
+						</p:dataTable>
+					</h:form>
+			</p:tab>
+			<p:tab title="#{label['user.status.tab.inactive']}">
+				<h:form id="unactiveUsersForm">
+					<p:dataTable rowIndexVar="userIndex"
+								 style="margin-top: 20px;"
+								 id="unactiveUsersTable"
+								 value="#{employeeController.getModel(false)}"
+								 var="user"
+								 paginator="true"
+								 lazy="true"
+								 rows="#{employeeController.rowsPerPage}"
+								 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								 currentPageReportTemplate="{currentPage} #{label['paginator.of']} {totalPages}"
+								 rowsPerPageTemplate="#{employeeController.rowsPerPageTemplate}"
+								 emptyMessage="#{msg['no.records.found']}">
+						<p:column style="width: 50px;" class="text-left" headerText="#{label['rows.No']}">
+							<h:outputText value="#{userIndex+1}"/>
+						</p:column>
+						<p:column style="width: 100px;" class="text-left" headerText="#{label['user.name']}" sortBy="#{user.name}">
+							<h:outputText value="#{user.name}"/>
+						</p:column>
+						<p:column style="width: 100px;" class="text-left" headerText="#{label['user.surname']}" sortBy="#{user.surname}">
+							<h:outputText value="#{user.surname}"/>
+						</p:column>
+						<p:column class="text-left" headerText="#{label['user.address']}" sortBy="#{user.address}">
+							<h:outputText value="#{user.address}"/>
+						</p:column>
+						<p:column style="width: 120px;" class="text-left" headerText="#{label['user.phone']}" sortBy="#{user.phone}">
+							<h:outputText value="#{user.phone}"/>
+						</p:column>
+						<p:column class="text-left" headerText="#{label['user.email']}" sortBy="#{user.email}">
+							<h:outputText value="#{user.email}"/>
+						</p:column>
+						<p:column class="text-left" headerText="#{label['user.role']}">
+							<p:repeat var="role" value="#{user.getAllRoles()}">
+								<h:outputText value="#{roleLabel[role]}"/>
+								<br />
+							</p:repeat>
+
+						</p:column>
+						<p:column style="width: 150px;">
+							<p:commandButton value="#{label['timetable.button.edit']}"
+											 process="@this"
+											 action="#{employeeController.edit(user)}"
+											 update="dialogForm:userDialog"
+											 oncomplete="PF('userDialog').show();"
+											 icon="fa fa-pencil"
+											 styleClass="btn-light-blue">
+								<p:resetInput target="dialogForm:userDialog" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</h:form>
+			</p:tab>
+			</p:tabView>
+			</h:form>
+		</p:panel>
+
+		<h:form id="dialogForm">
+				<p:dialog header="#{empty employeeController.employee.id ? label['user.header.save'] : label['user.header.edit']}" id="userDialog" 
+						  widgetVar="userDialog" resizable="false"
+						  draggable="false" responsive="true" width="475" modal="true">
+					<h:form id="user">
+		                <p:messages showSummary="false" showDetail="true" id="errorMessages" autoUpdate="true" closable="true" severity="error"/>
+		                <p:panelGrid columns="2" layout="grid" styleClass="no-border ui-fluid">
+		                    <p:outputLabel for="userName" value="#{label['user.name']}:"/>
+		                    <p:inputText id="userName" value="#{employeeController.employee.name}" required="true"
+		                                 requiredMessage="#{label['user.name.requiredMessage']}" label="userName"
+		                                 validatorMessage="#{label['user.wronginput.name']}"
+										 styleClass="employee-dialog-input-margin">
+						        	<f:validator validatorId="custom.nameValidator" />
+				                	<f:validateLength minimum="1" maximum="50" />
+				            </p:inputText>
+		                    <p:outputLabel for="userSurname" value="#{label['user.surname']}:"/>
+		                    <p:inputText id="userSurname" value="#{employeeController.employee.surname}" required="true"
+		                                 requiredMessage="#{label['user.surname.requiredMessage']}" label="userSurname"
+						        		 validatorMessage="#{label['user.wronginput.surname']}"
+										 styleClass="employee-dialog-input-margin">
+						        	<f:validator validatorId="custom.surnameValidator" />
+				                	<f:validateLength minimum="1" maximum="50" /> 
+				            </p:inputText>
+		                    <p:outputLabel for="userPhone" value="#{label['user.phone']}:"/>
+		                    <p:inputText id="userPhone" value="#{employeeController.employee.phone}" required="true"
+		                                 requiredMessage="#{label['user.phone.requiredMessage']}" label="userPhone"
+										 styleClass="employee-dialog-input-margin">
+		                    	<f:validator validatorId="custom.phoneNumberValidator" />
+	        					<f:validateLength minimum="6" maximum="20" />
+	        				</p:inputText>
+		                    <p:outputLabel for="userAddress" value="#{label['user.address']}:"/>
+		                    <p:inputText id="userAddress" value="#{employeeController.employee.address}" required="true"
+		                                 requiredMessage="#{label['user.address.requiredMessage']}" label="userAddess"
+										 styleClass="employee-dialog-input-margin"/>
+		                    <p:outputLabel for="userEmail" value="#{label['user.email']}:"
+										   styleClass="employee-dialog-margin-top"/>
+		                    <p:inputText id="userEmail" value="#{employeeController.employee.email}" required="true"
+		                                 requiredMessage="#{label['user.email.requiredMessage']}" label="userEmail"
+										 styleClass="employee-dialog-input-margin">
+		                    	<f:validator validatorId="custom.emailValidator" />
+		                    </p:inputText>
+		                    <p:outputLabel for="userRoles" value="#{label['user.role']}:"/>
+		                    <p:selectCheckboxMenu id="userRoles" value="#{employeeController.selectedRoles}"
+						                          filterMatchMode="startsWith" label="#{label['user.role']}" panelStyle="width:250px"
+						                          style="margin-top: 5px">
+						    	<f:selectItems value="#{employeeController.roles}" var="singleRole" itemValue="#{singleRole.id}"
+											   itemLabel="#{roleLabel[singleRole.name]}" itemDisabled="#{!employeeController.checkIfCanSetAdmin() and singleRole.name eq 'ROLE_SADMIN'}"/>
+						    </p:selectCheckboxMenu>
+							<p:outputLabel for="userStatus" value="#{label['user.status']}:" rendered="#{!employeeController.hideUsedActivity and !employeeController.create and !employeeController.selfEditing}"/>
+							<p:selectOneRadio id="userStatus"
+											  value="#{employeeController.employee.enabled}"
+											  unselectable="true" style="margin-top: 9px"
+											  rendered="#{!employeeController.hideUsedActivity and !employeeController.create and !employeeController.selfEditing}">
+								<f:selectItem itemLabel="#{label['user.status.true']}" itemValue='true' />
+								<f:selectItem itemLabel="#{label['user.status.false']}" itemValue='false' />
+							</p:selectOneRadio>
+		                </p:panelGrid>
+		                <p:separator/>
+		                <p:button styleClass="btn-red pull-left" value="#{label['timetable.button.close']}" onclick="PF('userDialog').hide();"/>
+		                <p:commandButton styleClass="btn-primary btn-light-blue pull-right button-validate" value="#{label['timetable.button.save']}"
+		               					 validateClient="true"
+		               					 process="@this @form"
+										 actionListener="#{employeeController.validateRolesList()}"
+										 action="#{employeeController.save}"
+										 update="employeeForm @form">
+		                	<p:confirm disabled="true" />
+							<p:resetInput target="dialogForm:userDialog" />
+		                </p:commandButton>
+					</h:form> 
+		        </p:dialog>
+		</h:form>
+	<h:outputScript library="js" name="main.js" />
+	<h:outputScript library="js" name="translations/locale_lt.js" />
+	<h:outputScript library="js" name="validators/email_validator.js" />
+	<h:outputScript library="js" name="validators/phone_number_validator.js" />
+	<h:outputScript library="js" name="validators/name_validator.js" />
+	<h:outputScript library="js" name="validators/surname_validator.js" />
+	
+    </ui:define>
+ 
+</ui:composition>

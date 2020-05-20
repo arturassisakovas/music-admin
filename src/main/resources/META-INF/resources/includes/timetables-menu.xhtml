@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+			    <div class="ui-tabs ui-widget ui-widget-content ui-corner-all ui-hidden-container ui-tabs-top">
+				    <ul class="ui-tabs-nav ui-helper-reset ui-widget-header ui-corner-all">
+						<li  class="ui-tabs-header ui-state-default ui-corner-top #{view.viewId eq '/admin/seasons.xhtml' ? 'ui-tabs-selected ui-state-active' : ''}" >
+							<a href="/admin/seasons">#{label['timetable.menu.seasons']}</a>
+						</li>
+						<li  class="ui-tabs-header ui-state-default ui-corner-top #{view.viewId eq '/admin/seasons-periods.xhtml' ? 'ui-tabs-selected ui-state-active' : ''}" >
+							<a href="/admin/seasons-periods">#{label['timetable.menu.seasons.periods']}</a>
+						</li>
+						<li  class="ui-tabs-header ui-state-default ui-corner-top #{view.viewId eq '/admin/departments.xhtml' ? 'ui-tabs-selected ui-state-active' : ''}" >
+							<a href="/admin/departments">#{label['timetable.menu.pools']}</a>
+						</li>
+						<li  class="ui-tabs-header ui-state-default ui-corner-top #{view.viewId eq '/admin/tracks.xhtml' ? 'ui-tabs-selected ui-state-active' : ''}" >
+							<a href="/admin/cabinets">#{label['timetable.menu.tracks']}</a>
+						</li>
+						<li  class="ui-tabs-header ui-state-default ui-corner-top #{view.viewId eq '/admin/tracks-periods.xhtml' ? 'ui-tabs-selected ui-state-active' : ''}" >
+							<a href="/admin/cabinet-periods">#{label['timetable.menu.tracks.periods']}</a>
+						</li>
+						<li  class="ui-tabs-header ui-state-default ui-corner-top #{view.viewId eq '/admin/timetables.xhtml' ? 'ui-tabs-selected ui-state-active' : ''}" >
+							<a href="/admin/timetables">#{label['timetable.menu.groups']}</a>
+						</li>
+						<li  class="ui-tabs-header ui-state-default ui-corner-top #{view.viewId eq '/admin/timetables-management.xhtml' ? 'ui-tabs-selected ui-state-active' : ''}" >
+							<a href="/admin/timetables-management">#{label['timetable.menu.groupsmanagement']}</a>
+						</li>
+				    </ul>
+			    </div>
+
+</ui:composition>

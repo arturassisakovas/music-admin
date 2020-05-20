@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:adm="http://github.com/adminfaces"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/template.xhtml">
+
+    <ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+    
+	<ui:define name="title">
+        <h2>Pradinis puslapis</h2>
+    </ui:define>
+
+    <ui:define name="body">
+        <f:view locale="#{localeController.locale}">
+	        <f:metadata>
+				<f:viewAction action="#{homeController.onLoad}" />
+			</f:metadata>
+		    <div class="box" style="width: 100%; padding: 25px;">
+				<p:scrollPanel style="width:100%; height:550px;">
+					<p:chart class="clients-chart" type="bar" model="#{homeController.attendanceChart}" style="width:2000px; height:450px;"/>
+				</p:scrollPanel>
+				<h:panelGrid style="width:100%;">
+				    <p:chart class="clients-chart" type="bar" model="#{homeController.contractChart}" style="width:100%;" />
+				</h:panelGrid>
+		    </div>
+	    </f:view>
+    </ui:define>
+
+
+</ui:composition>

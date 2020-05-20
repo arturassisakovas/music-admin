@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/forms.xhtml">
+                
+     <f:metadata>
+		<f:viewAction action="#{registrationSessionController.onLoad}"/>
+		 <f:viewAction action="#{paymentController.onLoad}" />
+		 <f:viewAction action="#{registrationController.onLoad}"/>
+		<f:event type="preRenderView" listener="#{registerController.checkCurrentRegistrationStep(5)}" />
+	</f:metadata>
+           
+    <ui:define name="body">
+		<div class="register-box-custom">
+			<div class="table-cell">
+	            <div class="login-logo">
+	                <p:link style="color: #fff;" href="/login"><b>#{label['login.logo.name1']}</b>#{label['login.logo.name2']}</p:link>
+	            </div>
+	            <div class="box login-box-body">
+				    <div class="wizard">
+						<div class="steps">
+							<ul role="tablist">
+								<li class="first"><a></a></li>
+								<li class="checked"><a></a></li>
+								<li class="checked"><a></a></li>
+								<li class="checked"><a></a></li>
+								<li class="checked"><a></a></li>
+								<li class="last"><a></a></li>
+							 </ul>
+						 </div>
+					 </div>
+
+					<h:form id="form">
+						<p:outputLabel styleClass="notification-style mobile-display" style="font-size: 14px;" value="#{label['mobile.informing.how.to.review.contract']}" />
+						<ui:remove>
+						<p:commandButton value="#{label['btn.review.contract.clarification']}"
+										 process="@this"
+										 actionListener="#{contractController.setUpPreview()}"
+				        				 icon="fa fa-file-pdf-o"
+										 styleClass="contract-btn btn-warning display-dekstop"
+										 oncomplete="PF('pdfPreviewDialog').show();"
+										 update="form:pdfPreviewDialog"
+						  				 onclick="scrollToTop()"/>
+						</ui:remove>
+						<p:commandButton value="#{label['btn.review.contract.clarification']}"
+										 process="@this"
+										 actionListener="#{contractController.setUpDownload()}"
+										 icon="fa fa-file-pdf-o"
+										 styleClass="contract-btn btn-warning display-dekstop"
+										 oncomplete="PF('pdfDownloadDialog').show();"
+										 update="pdfDownloadDialog"
+										 onclick="scrollToTop()"/>
+
+						<p:commandButton value="#{label['btn.review.contract.clarification']}"
+										 process="@this"
+										 icon="fa fa-file-pdf-o"
+										 styleClass="contract-btn btn-warning mobile-display"
+										 style="background-color: #38bd38 !important; border-color: #38bd38 !important;"
+										 action="#{contractController.setUpDownload()}"
+										 oncomplete="PF('pdfDownloadDialog').show();"
+										 update="pdfDownloadDialog"
+										 onclick="scrollToTop()"/>
+
+						<p:remoteCommand name="updateButtonPanelGrid" update="form:buttonPanelGrid" action="#{registrationController.setAgreeWithTermsOfService(true)}" process="@this"/>
+						<p:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5" rendered="#{registrationController.checkClientAgreementsPresence() eq 'false'}">
+							<p:outputLabel for="direct-marketing" styleClass="agreement-text" value="#{label['agree.direct.marketing']}" />
+							<p:selectOneRadio id="direct-marketing" layout="pageDirection" value="#{registrationController.directMarketing}" columns="2" required="true" requiredMessage="#{label['agreement.direct.marketing.not.selected']}">
+								<f:selectItem itemLabel="Sutinku" itemValue="#{true}" />
+								<f:selectItem itemLabel="Nesutinku" itemValue="#{false}"/>
+							</p:selectOneRadio>
+							<p:message for="direct-marketing"/>
+						</p:panelGrid>
+						<p:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5" rendered="#{registrationController.checkClientAgreementsPresence() eq 'false'}">
+							<p:outputLabel for="data-processing" styleClass="agreement-text" value="#{label['agree.data.processing']}" />
+							<p:selectOneRadio id="data-processing" layout="pageDirection" columns="2" required="true" value="#{registrationController.dataProcessing}" requiredMessage="#{label['agreement.data.processing.not.selected']}">
+								<f:selectItem itemLabel="#{label['agree']}" itemValue="#{true}"/>
+								<f:selectItem itemLabel="#{label['disagree']}" itemValue="#{false}" />
+							</p:selectOneRadio>
+							<p:message for="data-processing"/>
+						</p:panelGrid>
+
+				        <p:panelGrid layout="grid" style="margin-top: 30px;" columns="2" columnClasses="ui-sm-6, ui-sm-6" id="buttonPanelGrid">
+				      	    <p:button href="/registration/step-4" value="#{label['btn.back']}"
+				      	    	      ajax="false" icon="fa fa-caret-left"
+	       					 		  styleClass="btn-block btn-warning btn-back"/>
+							<h:panelGroup id="submitButton">
+				            <p:commandButton value="#{label['btn.continue']}" id="submit" ajax="true" icon="fa fa-caret-right" widgetVar="submit"
+											 update="@form"
+	       					 				 iconPos="right" styleClass="btn-block btn-pools btn-continue btn-widen-tooltip"
+											 disabled="#{!registrationController.agreeWithTermsOfService}"
+											 action="#{registrationController.saveClientChoiceAndProceedToPayment()}"
+											 onclick="disableSubmitButton();"/>
+							</h:panelGroup>
+							<p:tooltip for="submitButton"
+									   styleClass="text-center"
+									   position="center top"
+									   value="#{label['continue.when.agree.with.terms.of.service']}"
+									   rendered="#{!registrationController.agreeWithTermsOfService}"/>
+				        </p:panelGrid>
+
+						<p:dialog id="pdfPreviewDialog"
+								  header="#{label['review.contract.step5']}"
+								  widgetVar="pdfPreviewDialog"
+								  draggable="false"
+								  resizable="false"
+								  responsive="true"
+								  appendTo="@(body)"
+								  styleClass="pdf-preview-dialog"
+								  modal="true">
+
+							<div id="contractDiv" class="preview-window-height">
+								<p:media value="#{contractController.preview}"  styleClass="pdf-preview-media" cache="true" player="pdf">
+									<f:param name="id" value="#{fileController.generateRandomIdForNotCaching()}" />
+									<f:param name="title" value="sutartis" />
+								</p:media>
+							</div>
+							<p:commandButton value="#{label['btn.agree.with.terms.of.service']}"  ajax="true" id="aggreWithTerms" icon="fa fa-caret-right"
+											 iconPos="right" styleClass="btn-block btn-pools btn-continue"
+											 process="@this"
+											 update="form:buttonPanelGrid"
+											 actionListener="#{registrationController.setAgreeWithTermsOfService(true)}"
+											 oncomplete="PF('pdfPreviewDialog').hide()"/>
+						</p:dialog>
+
+						<p:dialog id="pdfDownloadDialog"
+								  header="#{label['review.contract.step5']}"
+								  widgetVar="pdfDownloadDialog"
+								  draggable="false"
+								  resizable="false"
+								  responsive="true"
+								  appendTo="@(body)"
+								  width="auto"
+								  modal="true">
+							<div style="text-align: center; margin: 10px 0;">
+								<a href="/contract/preview/file"
+								   onclick="PF('agreeWithTermsMobile').enable();"
+								   class="custom-download-button-registration-step-5-mobile"
+								   style="background-color: #38bd38 !important; border-color: #38bd38 !important;">
+									<i class="fa fa-download" aria-hidden="true" style="padding-right: 10px;"/>
+									#{label['btn.download.contract']}
+								</a>
+							</div>
+								<p:commandButton value="#{label['btn.agree.with.terms.of.service']}"  ajax="true" id="agreeWithTermsMobile" icon="fa fa-caret-right" widgetVar="agreeWithTermsMobile"
+												 process="@this"
+												 disabled="true"
+												 iconPos="right" styleClass="btn-block btn-pools btn-continue"
+												 oncomplete="PF('pdfDownloadDialog').hide(); updateButtonPanelGrid();"/>
+						</p:dialog>
+
+					</h:form>
+
+	            </div>
+	    	</div>
+        </div>
+    </ui:define>
+</ui:composition>

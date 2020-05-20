@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/forms.xhtml">
+           
+    <ui:define name="body">
+    	<f:metadata>
+    		<f:viewAction action="#{registrationSessionController.onLoad}"/>
+    		<f:event type="preRenderView" listener="#{registerController.checkCurrentRegistrationStep(2)}" />
+    	</f:metadata>
+		<div class="register-box-custom">
+			<div class="table-cell">
+	            <div class="login-logo">
+	                <p:link style="color: #fff;" href="/login"><b>#{label['login.logo.name1']}</b>#{label['login.logo.name2']}</p:link>
+	            </div>
+	            <div class="box login-box-body">
+ 
+				     <h:form styleClass="reg-step-3">
+						<div class="wizard">
+							<div class="steps">
+								<ul role="tablist">
+									<li class="first"><a></a></li>
+									<li class="checked"><a></a></li>
+									<li><a></a></li>
+									<li><a></a></li>
+									<li><a></a></li>
+									<li class="last"><a></a></li>
+								 </ul>
+							 </div>
+					 	 </div>
+						
+						<p:panelGrid columns="1" layout="grid" id="grid">
+						
+							<p:panelGrid columns="1" layout="grid">
+								<p:outputLabel style="color: #c11b1b;" rendered="#{registerController.cities eq null}">#{label['registration.go.back.msg']}</p:outputLabel>
+								<p:outputLabel rendered="#{registerController.cities ne null}" for="city" value="#{label['register.city']}" />
+						       	<p:selectOneRadio id="city"
+						       					  value="#{registerController.city}"
+						       					  layout="grid"
+						       					  columns="1"
+						       					  required="true">
+						       		<p:ajax update="grid" listener="#{registerController.workoutTimesFiller}" />
+						           	<f:selectItems value="#{registerController.cities}"
+						           				   var="city"
+						           				   itemLabel="#{city}"
+						           				   itemValue="#{city}"/>
+						       	</p:selectOneRadio>
+					       	</p:panelGrid>
+							
+							<p:panelGrid columns="1" layout="grid" id="workoutTimesGrid" rendered="#{not empty registerController.city}">
+								<p:outputLabel for="workout_times" value="#{label['register.workouttimes']}" />
+						       	<p:selectOneRadio id="workout_times"
+						       					  value="#{registerController.workoutsPerWeek}"
+						       					  layout="grid"
+						       					  columns="1"
+						       					  required="true">
+						       		<p:ajax update="grid" listener="#{registerController.poolsFiller}" />
+						           	<f:selectItems value="#{registerController.workoutTimes}"
+						           				   var="workoutTimes"
+						           				   itemLabel="#{workoutTimes.value}"
+						           				   itemValue="#{workoutTimes.value}"/>
+						       	</p:selectOneRadio>
+							</p:panelGrid>
+							
+							<p:panelGrid columns="1" layout="grid" id="poolGrid" rendered="#{registerController.workoutsPerWeek ne 0}">
+								<p:outputLabel for="pool" value="#{label['register.pool']}" />
+						       	<p:selectOneRadio id="pool"
+						       					  value="#{registerController.poolId}"
+						       					  layout="grid"
+						       					  columns="1"
+						       					  required="true">
+						       		<p:ajax update="grid" listener="#{registerController.subscriptionsFiller}" />
+						           	<f:selectItems value="#{registerController.filteredPools}"
+						           				   var="pool"
+						           				   itemLabel="#{pool.name}"
+						           				   itemValue="#{pool.id}"/>
+						       	</p:selectOneRadio>
+							</p:panelGrid>							
+							
+							<p:panelGrid columns="1" layout="grid" id="subscriptionGrid" rendered="#{not empty registerController.poolId}">
+								<p:outputLabel for="subscription" value="#{label['register.subscription']}" />
+						       	<p:selectOneRadio id="subscription"
+						       					  layout="grid"
+						       					  columns="1"
+						       					  required="true"
+						       					  value="#{registerController.subscription}">
+						       		<p:ajax update="grid" listener="#{registerController.workingHoursFiller}" />
+						           	<f:selectItems value="#{registerController.subscriptionsList}"
+						           				   var="subscription"
+						           				   itemLabel="#{subscription} #{(subscription==1) ? label['register.subscription.monthlabel'] :
+									           				   label['register.subscription.monthslabel'].concat(' ').concat(label['register.subscription.applieddiscountlabel.with']).
+									           				   concat(registerController.subscriptionsMap.get(subscription)).
+									           				   concat(label['register.subscription.applieddiscountlabel.discount'])}"
+						           				   itemValue="#{subscription}"/>
+						       	</p:selectOneRadio>
+							</p:panelGrid>
+							
+							<p:panelGrid columns="1" layout="grid" id="workingHoursGrid" rendered="#{not empty registerController.subscription}">
+								<p:outputLabel for="workingHours" value="#{label['register.workinghours']}" />
+								<h:outputFormat for="subscription" value="#{label['register.price.of.workout']}" style="#{registerController.selectedHour.singleWorkoutPrice == null ? 'opacity: 0;' : 'opacity: 1;'}">
+                                    <f:param value="#{registerController.selectedHour.singleWorkoutPrice}" ></f:param> 
+                                </h:outputFormat>
+						       	<p:selectOneRadio id="workingHours"
+						       					  layout="grid"
+						       					  columns="1"
+						       					  required="true"
+						       					  value="#{registerController.selectedHour}"
+						       					  styleClass="working-hours-label mobile-radio-button-align"
+						       					  converter="omnifaces.SelectItemsConverter">
+						       		<p:ajax update="grid" />
+						           	<f:selectItems value="#{registerController.availableWorkingHours}"
+						           				   var="hours"
+						           				   itemLabel="#{hours.daysAndHours}"
+						           				   itemValue="#{hours}"/>
+						       	</p:selectOneRadio>
+					       	</p:panelGrid>
+ 
+					       	<p:panelGrid layout="grid" columns="2" columnClasses="ui-sm-6, ui-sm-6">
+					        	<p:button href="/registration/step-1" value="#{label['input.button.back']}"
+					      	    	      ajax="false" icon="fa fa-caret-left"
+		       					 		  styleClass="btn-block btn-warning btn-back"/>
+		       					<p:commandButton  value="#{label['input.button.continue']}"
+						       					  id="viewWarningDialog"
+						       					  disabled="#{registerController.selectedHour eq null}"
+						       					  icon="fa fa-caret-right" 
+		       					 				  iconPos="right"
+		       					 				  styleClass="btn-block btn-pools btn-continue"
+												  action="#{registerController.saveStep2}"
+												  ajax="true"
+												  validateClient="true"/>
+				        	</p:panelGrid>
+					       	
+				       	</p:panelGrid>
+				    </h:form>
+
+ 
+	            </div>
+	    	</div>
+        </div>
+    </ui:define>
+
+</ui:composition>

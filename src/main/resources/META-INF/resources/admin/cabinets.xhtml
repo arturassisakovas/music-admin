@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/template.xhtml">
+
+    <ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+
+	<ui:define name="title">
+        <h2>#{label['timetable.page.title']}</h2>
+    </ui:define>
+ 
+    <ui:define name="body">
+    <f:view locale="#{localeController.locale}">
+    
+		<p:panel id="container">
+		
+		<ui:include src="../includes/timetables-menu.xhtml"/>
+		<p:messages showSummary="false" showDetail="true" id="crudMessages" autoUpdate="true" closable="true" severity="info, warn"/>
+			<h:form id="tracksForm">
+						<p:commandButton style="margin-top: 40px;" value="#{label['timetable.button.addNew']}"
+		                				 icon="fa fa-plus-circle"
+		                				 action="#{cabinetController.add}"
+		                				 oncomplete="PF('trackDialog').show();"
+		                				 update="trackDialog"
+		                				 styleClass="btn-dark-blue">
+		                				 <p:resetInput target="trackDialog" />
+						</p:commandButton>
+						
+						<p:dataTable rowIndexVar="trackIndex" 
+									 style="margin-top: 20px;" 
+									 id="tracksTable" 
+									 value="#{cabinetController.model}"
+									 var="track"
+									 paginator="true"
+									 lazy="true"
+				              		 rows="#{cabinetController.rowsPerPage}"
+                             		 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             		 currentPageReportTemplate="{currentPage} #{label['paginator.of']} {totalPages}"
+                             		 rowsPerPageTemplate="#{cabinetController.rowsPerPageTemplate}"
+                             		 emptyMessage="#{msg['no.records.found']}">
+						    <p:column class="text-left" headerText="#{label['timetable.track.column.number']}" sortBy="#{track.number}">
+						    	<h:outputText value="#{track.number}"/>
+						    </p:column>
+						    <p:column class="text-left" headerText="#{label['timetable.track.pool']}" sortBy="#{track.pool.name}">
+						    	<h:outputText value="#{track.pool.name}" />
+						    </p:column>
+						    <p:column style="width: 150px;">
+								<h:panelGroup id="editButton">
+									<p:commandButton value="#{label['timetable.button.edit']}"
+													 process="@this"
+													 disabled="#{cabinetController.canTrackBeEditable(track)}"
+													 action="#{cabinetController.edit(track, trackIndex)}"
+													 update=":trackDialog"
+													 oncomplete="PF('trackDialog').show();"
+													 icon="fa fa-pencil"
+													 styleClass="btn-light-blue">
+										<p:resetInput target="trackDialog" />
+									</p:commandButton>
+								</h:panelGroup>
+								<p:tooltip for="editButton"
+										   styleClass="text-center"
+										   position="top"
+										   value="#{label['cannot.edit.track.has.trackPeriod']}"
+										   rendered="#{cabinetController.checkIfTrackHasTrackPeriod(track.id)}"/>
+						    </p:column>
+						    <p:column style="width: 150px;">
+								<h:panelGroup id="trackDeleteButton">
+						        <p:commandButton value="#{label['timetable.button.delete']}" id="withIcon"
+						        				 icon="fa fa-trash-o"  styleClass="btn-red btn-block"
+						        				 action="#{cabinetController.delete(track.id, trackIndex)}"
+						        				 update=":tracksForm:tracksTable"
+												 disabled="#{cabinetController.checkIfTrackHasTrackPeriod(track.id)}">
+			                        <p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.track.message.delete']} '#{track.number}'?" icon="ui-icon-alert"/>
+			                    </p:commandButton>
+								</h:panelGroup>
+								<p:tooltip for="trackDeleteButton"
+										   styleClass="text-center"
+										   position="center top"
+										   value="#{label['cannot.delete.track.has.trackPeriod']}"
+										   rendered="#{cabinetController.checkIfTrackHasTrackPeriod(track.id)}"/>
+							</p:column>
+						</p:dataTable>
+				</h:form>
+				
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
+                        <p:commandButton value="Taip" styleClass="btn-primary ui-confirmdialog-yes"
+                                         icon="fa fa-check"/>
+                        <p:commandButton value="Ne" type="button" styleClass="btn-danger ui-confirmdialog-no"
+                                         icon="fa fa-close"/>
+                    </p:confirmDialog>
+				
+				<p:dialog header="#{empty cabinetController.track.id ? label['timetable.track.header.save'] : label['timetable.track.header.edit']}" id="trackDialog"
+                          widgetVar="trackDialog" resizable="false"
+                          draggable="false" responsive="true" width="400" modal="true">
+					<h:form id="track">
+		                <p:messages showDetail="true" showSummary="false" closable="true"/>
+		                <p:panelGrid id="loginGrid" columns="2" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+		                    <p:outputLabel for="trackNumber" value="#{label['timetable.track.number']}"/>
+		                    <p:inputNumber id="trackNumber" value="#{cabinetController.track.number}" minValue="0" maxValue="9" required="true"
+                                           requiredMessage="#{label['timetable.track.number.requiredMessage']}">
+		                    </p:inputNumber>
+		          			<p:outputLabel for="pool" value="#{label['timetable.track.pool']}:"/>
+							<p:outputLabel id="pool" value="#{cabinetController.pool.name}" rendered="#{!cabinetController.create}"/>
+							<p:selectOneMenu id="pools" value="#{cabinetController.pool}" required="true"
+                                             rendered="#{cabinetController.create}"
+                                             requiredMessage="#{label['timetable.track.pool.requiredMessage']}" converter="omnifaces.SelectItemsConverter">
+								<f:selectItems value="#{cabinetController.pools}" var="pool" itemValue="#{pool}" itemLabel="#{pool.name}" />
+							</p:selectOneMenu>
+		                </p:panelGrid>
+		                <p:separator/>
+		                <p:button styleClass="btn-red pull-left" value="#{label['timetable.button.close']}" onclick="PF('trackDialog').hide();return false"/>
+		                <p:commandButton styleClass="btn-primary btn-light-blue pull-right" value="#{label['timetable.button.save']}"
+		               					 validateClient="true"
+		               					 process="track"
+										 action="#{cabinetController.save}"
+										 oncomplete="if(!args.validationFailed) PF('trackDialog').hide();"
+										 update=":tracksForm:tracksTable @form"> 
+		                	<p:confirm disabled="true" />
+		                </p:commandButton>
+					</h:form> 
+		        </p:dialog>
+		        
+			</p:panel>
+			</f:view>
+			
+			<h:outputScript library="js" name="main.js" />
+			<h:outputScript library="js" name="translations/locale_lt.js" />
+			
+    </ui:define>
+    
+  
+</ui:composition>

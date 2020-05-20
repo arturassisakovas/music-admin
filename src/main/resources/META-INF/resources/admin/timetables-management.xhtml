@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/templates/template.xhtml">
+
+    <ui:define name="top-menu">
+        <ui:include src="/includes/top-bar.xhtml"/>
+    </ui:define>
+
+	<ui:define name="title">
+        <h2>#{label['timetable.page.title']}</h2>
+    </ui:define>
+  
+    <ui:define name="body">
+    
+		<p:panel id="container">
+			
+			<ui:include src="/includes/timetables-menu.xhtml"/>
+			<p:messages showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>    
+			
+			<h:form id="groupsForm">
+			 
+				<p:outputLabel styleClass="periods-title" for="period" value="#{label['timetable.menu.seasons.periods']}"/>
+				<p:selectOneMenu id="period"
+								 value="#{timetablesManagementController.selectedPeriod}"
+	        					 converter="omnifaces.SelectItemsConverter"
+	        					 label="#{label['timetable.season']}"
+	        					 styleClass="periods-select"
+	        					 disabled="#{timetablesManagementController.selectedPeriod ne null}">
+			    	<f:selectItems value="#{timetablesManagementController.periods}" var="period" itemLabel="#{period.season.name} - (#{period.name})" />
+		    	</p:selectOneMenu>
+		    	
+				<p:commandButton value="#{label['timetable.activate.groups.btn']}"
+								 disabled="#{empty timetablesManagementController.periods}"
+								 styleClass="publish-groups-btn btn-light-blue #{timetablesManagementController.selectedPeriod ne null ? '' : 'not-visible'}"
+								 icon="fa fa-save"
+								 update="@form"
+								 action="#{timetablesManagementController.saveGroups}">
+			         <p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.activate.groups']}" icon="ui-icon-alert"/>
+			    </p:commandButton>
+			    
+			    <p:commandButton value="#{label['timetable.management.select.groups.btn']}"
+								 disabled="#{empty timetablesManagementController.periods}"
+			    				 action="#{timetablesManagementController.filterGroups}"
+			    				 update="@form"
+			    				 rendered="#{timetablesManagementController.selectedPeriod eq null}"
+			    				 oncomplete="PF('groupsTable').filter()"
+			    				 styleClass="btn-dark-blue"
+			    				 style="margin-top: 40px"/>
+			    				 
+				<p:commandButton value="#{label['timetable.management.change.period']}"
+								 disabled="#{empty timetablesManagementController.periods}"
+			    				 action="#{timetablesManagementController.setSelectedPeriod(null)}"
+			    				 update="@form"
+			    				 rendered="#{timetablesManagementController.selectedPeriod ne null}"
+			    				 styleClass="btn-dark-blue"
+			    				 style="margin-top: 40px">
+ 				  			<p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.management.change.period.message']}" icon="ui-icon-alert"/>
+ 			    </p:commandButton>
+ 			    
+ 			    <h:outputLabel rendered="#{timetablesManagementController.selectedPeriod ne null}"
+ 			    			   styleClass="active-groups-label"
+ 			    			   value="#{label['timetable.management.total.active.groups']}: #{timetablesManagementController.selectedGroups.size()}" />
+ 
+			    <p:dataTable id="groupsTable"
+			    			 var="group"
+			    			 value="#{timetablesManagementController.groups}"
+			                 selection="#{timetablesManagementController.selectedGroups}"
+			                 rowKey="#{group.id}"
+			                 rowSelectMode="checkbox"
+			                 disabledSelection="#{timetablesManagementController.disableGroupPublicity(group)}"
+			                 widgetVar="groupsTable"
+			                 filteredValue="#{timetablesManagementController.filteredGroups}"
+			                 rendered="#{timetablesManagementController.selectedPeriod ne null}"
+			                 emptyMessage="#{msg['no.records.found']}">
+
+					<p:column filterBy="#{group.pool.name}" filterMatchMode="in" style="width: 150px; border-left-color: #fff;" headerText="#{label['timetable.track.pool']}">
+			            <f:facet name="filter">
+			                <p:selectCheckboxMenu value="#{timetablesManagementController.selectedPools}" label="#{label['timetable.management.select.label']}" onchange="PF('groupsTable').filter()" styleClass="custom-filter">
+			                    <f:selectItems value="#{timetablesManagementController.pools}"
+			                    			   var="pool" itemValue="#{pool.name}" itemLabel="#{pool.name}" />
+			                </p:selectCheckboxMenu>
+			            </f:facet>
+			            <h:outputText value="#{group.pool.name}" />
+			        </p:column>
+			        <p:column headerText="#{label['timetable.management..group']}">
+			            <h:outputText value="#{group.name}" />
+			        </p:column>
+			        <p:column style="width: 70px;" headerText="#{label['timetable.management.track']}">
+			            <h:outputText value="#{timetablesManagementController.collectTrack(group.trackPeriod.track.id).number}" />
+			        </p:column>
+			        <p:column style="width: 180px;" headerText="#{label['timetable.trackPeriod']}">
+			            <h:outputText value="#{group.trackPeriod.startDate} - #{group.trackPeriod.endDate}" />
+			        </p:column>
+			        <p:column headerText="#{label['timetable.coach']}">
+			        	<ui:repeat var="employee" value="#{timetablesManagementController.collectEmployees(group.id)}">
+			            	<h:outputText value="#{employee.name} #{employee.surname}" />
+			            </ui:repeat>
+			        </p:column>
+			        <p:column style="width: 85px;" headerText="#{label['timetable.management.group.size']}">
+			            <h:outputText value="#{group.numOfAttendees}" />
+			        </p:column>
+			        <p:column style="width: 85px;" headerText="#{label['timetable.management.age.group']}">
+			            <h:outputText value="#{group.ageGroup.value} m." />
+			        </p:column>
+			        <p:column headerText="#{label['timetable.swimmingLevel']}">
+			            <h:outputText value="#{label['input.attendee.swimminglevel.'.concat(group.swimmingLevel.toString().toLowerCase())]}" />
+			        </p:column>
+			        <p:column style="width: 110px;" headerText="#{label['timetable.workoutsPerWeek']}">
+			            <h:outputText value="#{group.workoutsPerWeek.value}" />
+			        </p:column>
+			        <p:column selectionMode="multiple" style="width:120px; text-align:center"/>
+			        <p:column style="width: 45px; border-right-color: #fff;" >
+						        <p:commandLink disabled="#{group.isPublic}"
+						        			   action="#{timetablesManagementController.deleteGroup(group)}"
+						        			   update="groupsTable">
+						        			   <h:outputText style="font-size: 2.5rem; color: #de3c3c;" styleClass="fa fa-trash-o"/>
+						        	<p:confirm header="#{label['timetable.confirmation']}" message="#{label['timetable.group.message.delete']} „#{group.name}“" icon="ui-icon-alert"/>
+						        </p:commandLink>
+					</p:column>
+			    </p:dataTable>
+			    
+			    <p:commandButton value="#{label['timetable.activate.groups.btn']}"
+								 styleClass="publish-groups-btn btn-light-blue #{timetablesManagementController.selectedPeriod ne null ? '' : 'not-visible'}"
+								 icon="fa fa-save"
+								 update="@form"
+								 action="#{timetablesManagementController.saveGroups}"
+								 style="margin-top: 10px;"
+								 rendered="#{timetablesManagementController.selectedPeriod ne null}">
+			         <p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.activate.groups']}" icon="ui-icon-alert"/>
+			    </p:commandButton>
+			    
+			    <p:confirmDialog global="true" styleClass="custom-confirm-dialog" showEffect="fade" hideEffect="fade">
+			        <p:commandButton value="#{label['timetable.button.yes']}" styleClass="btn-primary ui-confirmdialog-yes"
+                                         icon="fa fa-check"/>
+                        <p:commandButton value="#{label['timetable.button.no']}" type="button" styleClass="btn-danger ui-confirmdialog-no"
+                                         icon="fa fa-close"/>
+			    </p:confirmDialog> 
+			    
+			</h:form>
+  
+		</p:panel>
+			
+		<h:outputScript library="js" name="main.js"/>
+		<h:outputScript library="js" name="translations/locale_lt.js"/>
+			
+    </ui:define>
+  
+</ui:composition>

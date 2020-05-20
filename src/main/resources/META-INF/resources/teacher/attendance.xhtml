@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/teacher-template.xhtml">
+	
+	<ui:define name="top-menu">
+       	<ui:include src="../includes/top-bar.xhtml"/>
+   	</ui:define>
+
+	<f:metadata>
+	    <f:viewAction action="#{attendanceController.onLoad}" />
+	</f:metadata>
+		
+	<ui:define name="title">
+		<ui:include src="../includes/warrning/teacherNotMarkedAttendanceWarrning.xhtml"/>
+        <h2>
+        	<h:outputFormat value="#{label['coach.panel.attendance.title']}">
+        		<f:param value="#{attendanceController.group.name}"/> 
+        	</h:outputFormat>
+        </h2>
+    </ui:define>    
+     
+	<ui:define name="body">
+    	<f:view locale="#{localeController.locale}">
+    	
+    		<p:panel id="container">
+    		
+    			<p:messages id="msgs" showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>
+    			<p:button href="/teacher/groups" value="#{label['input.button.back']}"
+	      	    	      ajax="false" icon="fa fa-caret-left"
+						  styleClass="btn-flat btn-back"
+						  style="margin-bottom: 20px;"/>
+			    <h:form id="attendeeForm">
+			    	<div>
+				    	<h4>
+					    	<p:outputLabel value="#{label['coach.panel.attendance.ageGroup']}" style="font-size:18px"/>
+					    	<h:outputText value=" #{attendanceController.group.ageGroup.getValue()} "/>
+							<h:outputText value="#{label['coach.panel.attendance.ageGroup.years']}"/>
+							<br/>
+					    	<p:outputLabel value="#{label['coach.panel.attendance.workoutDateTime']}" style="font-size:18px"/>
+					    	<h:outputText value=" #{attendanceController.workoutsDate} (#{attendanceController.workoutTime})"/>
+				    	</h4>
+			    	</div>
+			        <p:panel id="attendancePanel" styleClass="no-border">
+				    	<p:dataTable id="attendance" value="#{attendanceController.attendanceList}"
+				    				 var="attendance" rowIndexVar="rowIndex"
+				    				 emptyMessage="#{msg['no.records.found']}">
+						    <p:column headerText="#{label['rows.No']}" style="width:50px;" styleClass="text-center column-row">
+						        <h:outputText value="#{rowIndex + 1}"/>
+						    </p:column>
+						 
+						    <p:column headerText="#{label['attendee.name']}" styleClass="text-left display-dekstop" sortBy="#{attendance.attendee.name}">
+                                <h:outputText value="#{attendance.attendee.name}" rendered="#{!attendanceController.displayNewcomes[rowIndex]}"/>
+                                <h:outputText value="#{attendance.attendee.name} (N)" styleClass="mobile-display"  rendered="#{attendanceController.displayNewcomes[rowIndex]}"/>
+                                <h:outputText value="#{attendance.attendee.name} (Naujokas)" styleClass="display-dekstop" rendered="#{attendanceController.displayNewcomes[rowIndex]}"/>
+                       
+						    </p:column>
+						 
+						    <p:column headerText="#{label['attendee.surname']}" styleClass="text-left display-dekstop" sortBy="#{attendance.attendee.surname}">
+						        <h:outputText value="#{attendance.attendee.surname}" />
+						    </p:column>
+
+						 	<p:column class="text-left mobile-display" headerText="#{label['coach.panel.attendees.scolumn.name.surname']}">
+					    		<h:outputText value="#{attendance.attendee.name} #{attendance.attendee.surname}"/>
+					    	</p:column>
+
+                            <p:column headerText="#{label['child.extra.info']}" styleClass="text-center column-title-mobile">
+                                <p:commandLink icon=""
+                                                 action="#{attendanceController.findCertificateExpireDate(attendance.attendee)}"
+                                                 oncomplete="PF('attendeeParentContactsDialog').show()"
+                                                 update="attendeeForm:attendeeParentContactsDialog"
+                                                 process="@this">
+                                                 <h:outputText styleClass="fa fa-info-circle fa-2x"/>
+                                </p:commandLink>
+                             </p:column>
+
+                                <p:column styleClass="text-center coach-attendance-marker-width">
+						    	<f:facet name="header">
+			                   	<ui:fragment rendered="#{!attendanceController.enableEdit}" >
+							        <h:outputText for="selectAllPresent" value="#{label['coach.panel.attendance.isPresent']}" styleClass="display-dekstop"/>
+							        <p:selectBooleanCheckbox value="true"
+							        						 style="margin-right:20px;"
+							        						 styleClass="all-present-icon #{!attendanceController.enableEdit ? 'coach-opacity' : ''}"
+							        						 disabled="#{!attendanceController.enableEdit}">
+					                </p:selectBooleanCheckbox> 
+							        <h:outputText for="selectAllMissing" value="#{label['coach.panel.attendance.isAbsent']}" styleClass="display-dekstop"/>
+							        <p:selectBooleanCheckbox value="true"
+							        						 styleClass="all-missing-icon #{!attendanceController.enableEdit ? 'coach-opacity' : ''}"
+							        						 disabled="#{!attendanceController.enableEdit}">
+					                </p:selectBooleanCheckbox>
+					               </ui:fragment>
+							    </f:facet>
+			                   	<f:facet name="header">
+			                   	<ui:fragment rendered="#{attendanceController.enableEdit}">
+							        <h:outputText for="selectAllPresent" value="#{label['coach.panel.attendance.isPresent']}" styleClass="display-dekstop"/>
+							        <p:selectBooleanCheckbox id="selectAllPresent"
+							        						 value="#{attendanceController.selectAllPresent}"
+							        						 style="margin-right:20px;"
+							        						 styleClass="all-present-icon"
+							        						 disabled="#{!attendanceController.enableEdit}">
+							        	<p:ajax update="@form" listener="#{attendanceController.setAllAsPresent}"/>
+					                </p:selectBooleanCheckbox> 
+							        <h:outputText for="selectAllMissing" value="#{label['coach.panel.attendance.isAbsent']}" styleClass="display-dekstop"/>
+							        <p:selectBooleanCheckbox id="selectAllMissing"
+							        						 value="#{attendanceController.selectAllMissing}"
+							        						 styleClass="all-missing-icon"
+							        						 disabled="#{!attendanceController.enableEdit}">
+							        	<p:ajax update="@form" listener="#{attendanceController.setAllAsMissing}"/>
+					                </p:selectBooleanCheckbox>
+					               </ui:fragment>
+							    </f:facet>
+				                <p:triStateCheckbox id="presence"
+				                				  	value="#{attendance.isPresent}"
+				                				  	converter="attendanceConverter"
+				                				  	layout="custom" disabled="#{!attendanceController.enableEdit}"
+				                				  	styleClass="attendance-chkbox-#{attendance.isPresent} #{!attendanceController.enableEdit ? 'coach-opacity' : ''}">
+							    	<p:ajax update="@form" event="change" listener="#{attendanceController.setCheckBoxes}"/>
+				               	</p:triStateCheckbox>
+						    </p:column>
+						</p:dataTable>
+						<div style="height: 56px;">
+							<p:commandButton value="#{label['button.edit']}"
+										 	 style="margin-top: 20px;"
+											 styleClass="btn-primary pull-right btn-pools"
+											 actionListener="#{attendanceController.enableEditing}"
+											 rendered="#{!attendanceController.enableEdit}"
+											 update="attendancePanel"/>
+							<p:commandButton value="#{label['button.cancel']}"
+										 	 style="margin-top: 20px;"
+											 styleClass="btn-red pull-right"
+											 actionListener="#{attendanceController.disableEditing}"
+											 rendered="#{attendanceController.enableEdit}"
+											 update="attendancePanel"/>
+							<p:commandButton value="#{label['button.save']}"
+											 update="attendancePanel"
+											 rendered="#{attendanceController.enableEdit}"
+											 actionListener="#{attendanceController.submit}"
+										 	 style="margin-top: 20px;"
+											 styleClass="btn-primary btn-pools pull-right"
+											 disabled="#{attendanceController.disableSave}">
+								<p:confirm header="#{label['timetable.confirmation']}"
+										   message="#{label['coach.panel.attendees.confirm.message']}"
+										   icon="ui-icon-alert"/>
+							</p:commandButton>
+						</div>
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-warning">
+	                        <p:commandButton value="#{label['coach.panel.attendees.button.yes']}" styleClass="btn-primary ui-confirmdialog-yes"
+	                                         icon="fa fa-check"/>
+	                        <p:commandButton value="#{label['coach.panel.attendees.button.no']}" type="button" styleClass="btn-danger ui-confirmdialog-no"
+	                                         icon="fa fa-close"/>
+	                    </p:confirmDialog>
+
+                        <p:dialog id="attendeeParentContactsDialog"
+	                              widgetVar="attendeeParentContactsDialog"
+	                              modal="true"
+	                              resizable="false"
+	                              draggable="false"
+	                              appendTo="@(body)"
+	                              styleClass="health-problem-details-dialog attendance-client-width"
+	                              header="#{label['child.extra.info']}">
+
+                                  <h:outputText value="#{label['child.health.conditions']}" styleClass="text-bold display-block"/>
+                            
+                                  <h:outputText value="#{attendanceController.healthProblemDescription}" style="padding: 4px 10px;"/>
+                            
+                                  <h:outputText value="#{label['child.medical.certificate']}: " styleClass="text-bold display-block lower-center"/>
+                                  <p:panelGrid layout="grid" columns="2" columnClasses="ui-md-6 ui-g-4, ui-g-8 ui-md-6" styleClass="#{!attendanceController.validCertificate ? '' : 'invalid-certificate'}">
+                        
+			                            <h:outputText value="#{label['client.profile.medical.certificate.expire.date']}:"/>
+			                            <h:outputText value="#{attendanceController.certificate.validTo}"/>                            
+
+                                  </p:panelGrid>
+
+                                  <h:outputText value="#{label['attendee.parents.contacts']}: " styleClass="text-bold display-block lower-center"/>
+
+		                          <p:panelGrid layout="grid" columns="2" columnClasses="ui-md-6 ui-g-4, ui-g-8 ui-md-6">
+
+		                              <h:outputText value="#{label['client.name']}:"/>
+		                              <h:outputText value="#{attendanceController.client.name}"/>
+
+		                              <h:outputText value="#{label['client.surname']}:"/>
+		                              <h:outputText value="#{attendanceController.client.surname}"/>
+
+		                              <h:outputText value="#{label['client.email']}"/>
+		                              <h:outputText value="#{attendanceController.client.email}"/>
+
+		                              <h:outputText value="#{label['client.phone']}"/>
+		                              <h:outputText value="#{attendanceController.client.phone}"/>
+
+		                          </p:panelGrid>
+                         </p:dialog> 
+			        </p:panel>
+		    	</h:form>
+    		</p:panel>
+		</f:view>
+	</ui:define>
+</ui:composition>

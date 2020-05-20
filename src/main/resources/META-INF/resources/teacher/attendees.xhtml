@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/teacher-template.xhtml">
+                
+	<ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+
+	<f:metadata>
+	    <f:viewAction action="#{teacherAttendeesController.onLoad}" />
+	</f:metadata>
+
+	<ui:define name="title">
+		<ui:include src="../includes/warrning/teacherNotMarkedAttendanceWarrning.xhtml"/>
+        <h2>#{label['coach.panel.menu.attendeesprogress']}</h2>
+    </ui:define>
+
+    <ui:define name="body">
+    	<f:view locale="#{localeController.locale}">
+
+		<p:panel id="container">
+
+			<ui:include src="../includes/teacher-groups-menu.xhtml"/>
+
+			<p:messages showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>
+
+			<h:form id="attendeesForm">
+				<p:panelGrid id="selectGroupPanel" columns="2" layout="grid" styleClass="no-border ui-g-5 media-fit"
+							 rendered="#{not empty teacherAttendeesController.coachGroups}"
+							 style="float: none; margin-top: 20px;">
+					<p:outputLabel for="group" value="#{label['coach.panel.attendees.selectGroup']}"/>
+					<p:selectOneMenu id="group"
+									 value="#{teacherAttendeesController.selectedGroup}"
+         							 disabled="false"
+         							 converter="omnifaces.SelectItemsConverter"
+									 widgetVar="groupSelect"
+									 onfocus="PF('groupSelect').items[0].hidden = true">
+         				<f:ajax listener="#{teacherAttendeesController.selectGroup}"
+         						render="attendeesPanel" event="change"/>
+         				<f:selectItem itemLabel="" itemDisabled="true"/>
+		            	<f:selectItems value="#{teacherAttendeesController.coachGroups}" var="group"
+                                       itemLabel="#{group.name}" />
+					</p:selectOneMenu>
+				</p:panelGrid>
+
+				<p:panel id="attendeesPanel" styleClass="no-border">
+					<p:dataTable rowIndexVar="attendeeIndex"
+								 style="margin-top: 20px;" 
+								 id="attendeesTable"
+								 value="#{teacherAttendeesController.groupAttendees}"
+								 var="attendee"
+								 rendered="#{not empty teacherAttendeesController.groupAttendees}"
+								 emptyMessage="#{msg['no.records.found']}">
+					    <p:column style="width: 50px;" headerText="#{label['rows.No']}">
+					    	<h:outputText value="#{attendeeIndex+1}"/>
+					    </p:column>
+					    <p:column class="text-left display-dekstop" headerText="#{label['coach.panel.attendees.column.name']}">
+					    	<h:outputText value="#{attendee.name}"/>
+					    </p:column>
+					    <p:column class="text-left display-dekstop" headerText="#{label['coach.panel.attendees.column.surname']}">
+					    	<h:outputText value="#{attendee.surname}"/>
+					    </p:column>
+					    <p:column class="text-left mobile-display" headerText="#{label['coach.panel.attendees.scolumn.name.surname']}">
+					    	<h:outputText value="#{attendee.name} #{attendee.surname}"/>
+					    </p:column>
+					    <p:column class="text-left" headerText="#{label['coach.panel.attendees.column.progressLevel']}">
+					    	<h:outputText value="#{label['coach.panel.attendees.progressLevel.'.concat(attendee.progressLevel.toString().toLowerCase())]}"
+					    		  		  rendered="#{!teacherAttendeesController.enableEdit and attendee.progressLevel ne null}"/>
+					    	<p:importEnum type="com.mAdmin.enumerator.ProgressLevel" var="ProgressLevel" />
+					    	<p:selectOneMenu id="progressLevel"
+											 value="#{attendee.progressLevel}"
+		         							 converter="omnifaces.SelectItemsConverter"
+		         							 rendered="#{teacherAttendeesController.enableEdit}">
+				            	<f:selectItems value="#{ProgressLevel.ALL_VALUES}" var="current"
+				            				   itemLabel="#{label['coach.panel.attendees.progressLevel.'.concat(current.toString().toLowerCase())]}"
+				            				   itemValue="#{current}" />
+							</p:selectOneMenu>
+					    </p:column>
+					</p:dataTable>
+					<div style="height: 56px;">
+						<p:commandButton value="#{label['button.edit']}"
+									 	 style="margin-top: 20px;"
+										 styleClass="btn-primary btn-pools pull-right"
+										 actionListener="#{teacherAttendeesController.enableEditing}"
+										 rendered="#{not empty teacherAttendeesController.groupAttendees and !teacherAttendeesController.enableEdit}"
+										 update="attendeesPanel"/>
+						<p:commandButton value="#{label['button.cancel']}"
+									 	 style="margin-top: 20px;"
+										 styleClass="btn-red pull-right"
+										 actionListener="#{teacherAttendeesController.disableEditing}"
+										 rendered="#{teacherAttendeesController.enableEdit}"
+										 update="attendeesPanel selectGroupPanel"/>
+						<p:commandButton value="#{label['button.save']}"
+									 	 style="margin-top: 20px;"
+										 styleClass="btn-primary btn-pools pull-right"
+										 actionListener="#{teacherAttendeesController.save}"
+										 rendered="#{teacherAttendeesController.enableEdit}"
+										 update="attendeesPanel selectGroupPanel">
+							<p:confirm header="#{label['timetable.confirmation']}"
+									   message="#{label['coach.panel.attendees.confirm.message']}"
+									   icon="ui-icon-alert"/>
+						</p:commandButton>			   
+					</div>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-warning">
+                        <p:commandButton value="#{label['coach.panel.attendees.button.yes']}" styleClass="btn-primary ui-confirmdialog-yes"
+                                         icon="fa fa-check"/>
+                        <p:commandButton value="#{label['coach.panel.attendees.button.no']}" type="button" styleClass="btn-danger ui-confirmdialog-no"
+                                         icon="fa fa-close"/>
+                    </p:confirmDialog>
+				</p:panel>
+			</h:form>
+		</p:panel>
+		 </f:view>
+    </ui:define>
+
+</ui:composition>

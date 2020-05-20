@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/teacher-template.xhtml">
+                
+	<ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+
+	<f:metadata>
+	    <f:viewAction action="#{teacherGroupsController.onLoad}" />
+	</f:metadata>
+		
+	<ui:define name="title">
+		<ui:include src="../includes/warrning/teacherNotMarkedAttendanceWarrning.xhtml"/>
+        <h2>#{label['coach.panel.menu.mygroups']}</h2>
+    </ui:define>
+	
+
+    <ui:define name="body">
+    	<f:view locale="#{localeController.locale}">
+    	
+			<p:panel id="container">
+			
+				<ui:include src="../includes/teacher-groups-menu.xhtml"/>
+				
+				<p:messages showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>
+				
+				<h:form id="groupsForm">
+				
+					<p:panelGrid columns="2" layout="grid" styleClass="no-border ui-g-4 media-fit"
+                                 rendered="#{teacherGroupsController.showCalendar}" style="float: none; margin-top: 20px;">
+						<p:outputLabel for="selectedDate" value="#{label['coach.panel.groups.selectDate']}"/>
+						<p:calendar id="selectedDate" showOn="button"
+	                    			navigator="true" mask="true" locale="lt_LT"
+			        				pattern="yyyy-MM-dd" value="#{teacherGroupsController.selectedDate}"
+	                    			converter="localDateTimeConverter" mindate="#{teacherGroupsController.firstStartDate}"
+	                    			maxdate="#{teacherGroupsController.lastEndDate}">
+	                		<p:ajax event="dateSelect" listener="#{teacherGroupsController.setDate}"
+	                				update="groupsPanel groupsTable"/>
+	                    </p:calendar>
+					</p:panelGrid>
+					
+					<p:panel id="groupsPanel" styleClass="no-border">
+						<p:dataTable style="margin-top: 20px;" 
+									 id="groupsTable"
+									 value="#{teacherGroupsController.groupsOfTheDay}"
+									 var="groupOfTheDay"
+									 rendered="#{not empty teacherGroupsController.groupsOfTheDay}"
+									 rowStyleClass="#{teacherGroupsController.checkIfMarked(groupOfTheDay) and teacherGroupsController.attendeesByGroupAndWorkoutDay(groupOfTheDay.group, teacherGroupsController.selectedDate).size() > 0 ? 'unmarked-attendance-row' : 'marked'}"
+									 sortBy="#{teacherGroupsController.groupsOfTheDay.size() > 1 ? teacherGroupsController.sortByWorkoutsTime(groupOfTheDay) : ''}"
+									 emptyMessage="#{msg['no.records.found']}">
+						    <p:column class="text-left word-break-break-word coach-groups-table-left" headerText="#{label['coach.panel.groups.column.workoutsTime']}"
+						    		  sortBy="#{teacherGroupsController.getWorkoutsTime(groupOfTheDay)}">
+						    	<h:outputText value="#{teacherGroupsController.getWorkoutsTime(groupOfTheDay)}"/>
+						    </p:column>
+						    <p:column class="text-left word-break-break-word" headerText="#{label['coach.panel.groups.column.name']}"
+						    		  sortBy="#{groupOfTheDay.group.name}">
+						    	<h:outputText value="#{groupOfTheDay.group.name}"/>
+						    </p:column>
+						    <p:column class="text-left display-for-dekstop" headerText="#{label['coach.panel.groups.column.groupsAge']}"
+						    		  sortBy="#{groupOfTheDay.group.ageGroup.ageFrom}">
+						    	<h:outputText value="#{groupOfTheDay.group.ageGroup.getValue()}"/>
+						    </p:column>
+						    <p:column class="text-left display-for-dekstop" headerText="#{label['coach.panel.groups.column.workoutsPerWeek']}"
+						    	  	  sortBy="#{groupOfTheDay.group.workoutsPerWeek.times}">
+						    	<h:outputText value="#{groupOfTheDay.group.workoutsPerWeek.getValue()}"/>
+						    </p:column>
+						    <p:column class="text-left display-for-dekstop" headerText="#{label['coach.panel.groups.column.numOfAttendees']}"
+						    		  sortBy="#{teacherGroupsController.attendeesByGroupAndWorkoutDay(groupOfTheDay.group, teacherGroupsController.selectedDate).size()}">
+						    	<h:outputText value="#{teacherGroupsController.determineOutputTypeForAttendeesCount() ? teacherGroupsController.attendeesByGroupAndWorkoutDay(groupOfTheDay.group, teacherGroupsController.selectedDate).size()
+						    							     : teacherGroupsController.attendanceCountForSpecificDayAndWorkoutHour(groupOfTheDay.group, teacherGroupsController.selectedDate)}"/>
+						    </p:column>
+						    <p:column class="text-left display-dekstop coach-groups-table-right">
+						    	<p:commandButton styleClass="btn-pools"
+						    					 value="#{label['coach.panel.groups.button.markAttendance']}"
+						    					 action="#{teacherGroupsController.markAttendance(groupOfTheDay)}"
+						    					 disabled="#{teacherGroupsController.isAttendanceDisable(groupOfTheDay) or teacherGroupsController.attendeesByGroupAndWorkoutDay(groupOfTheDay.group, teacherGroupsController.selectedDate).size() == 0 or teacherGroupsController.attendeesByGroupAndWorkoutDay(groupOfTheDay.group, teacherGroupsController.selectedDate).isEmpty()}"/>
+						    </p:column>
+						     <p:column class="text-left mobile-display coach-groups-table-right" style="width: 50px;">
+						    	<p:commandButton styleClass="btn-pools"
+						    					 icon="fa fa-pencil"
+						    					 action="#{teacherGroupsController.markAttendance(groupOfTheDay)}"
+						    					 disabled="#{teacherGroupsController.isAttendanceDisable(groupOfTheDay) or teacherGroupsController.attendeesByGroupAndWorkoutDay(groupOfTheDay.group, teacherGroupsController.selectedDate).size() == 0 or teacherGroupsController.attendeesByGroupAndWorkoutDay(groupOfTheDay.group, teacherGroupsController.selectedDate).isEmpty()}"/>
+						    </p:column>
+						</p:dataTable>
+					</p:panel>
+	
+				</h:form>
+			</p:panel>
+		</f:view>
+    </ui:define>
+  
+</ui:composition>

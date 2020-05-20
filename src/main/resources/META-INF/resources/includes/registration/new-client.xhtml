@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
+<h:form id="formA">
+   	<p:panel style="border: none;" id="clientRegistration">
+   	
+		<p:panel rendered="#{registerController.noGroupAvailable}"
+   				 styleClass="city-selection">
+    		<div class="ui-g relative">
+    			<p:message for="city" />
+    			<div class="ui-g-12">
+					<p:outputLabel for="city" value="#{label['register.city.for.reserved']}" />
+			       	<p:selectOneRadio id="city"
+			       					  value="#{registerController.city}"
+			       					  layout="grid"
+			       					  columns="1"
+			       					  required="true">
+			           	<f:selectItems value="#{clientRegistrationController.availableCities}"
+			           				   var="city"
+			           				   itemLabel="#{city}"
+			           				   itemValue="#{city}"/>
+			       	</p:selectOneRadio>
+    			</div>
+    		</div>
+   		</p:panel>
+   	
+   		<div class="ui-g relative">
+   			<p:message for="attendeeGender" />
+   			<div class="ui-g-6 ui-custom-12">
+        		<p:outputLabel for="attendeeGender" value="#{label['input.attendee.gender']}:" />
+   			</div>
+   			<div class="ui-g-6 ui-custom-12 top-15">
+    			<p:selectOneRadio id="attendeeGender" value="#{clientRegistrationController.attendee.gender}" required="true">
+	           		 <f:selectItem itemLabel="#{label['input.attendee.gender.boy']}" itemValue="boy" />
+					<f:selectItem itemLabel="#{label['input.attendee.gender.girl']}" itemValue="girl" />
+	       		 </p:selectOneRadio>
+   			</div>
+   		</div>
+   		
+   		<div class="ui-g relative">
+   			<p:message for="attendeeName" />
+   			<div class="ui-g-6 ui-custom-12">
+	       		    <p:outputLabel for="attendeeName" value="#{label['input.attendee.name']}:"/>
+   			</div>
+   			<div class="ui-g-6 ui-custom-12 top-15">
+    			<p:inputText id="attendeeName" value="#{clientRegistrationController.attendee.name}" required="true">
+					<f:validator validatorId="custom.nameValidator"/>
+		        	<f:validateLength minimum="1" maximum="50" />
+	        	</p:inputText>
+   			</div>
+   		</div>
+   		
+   		<div class="ui-g relative">
+   			<p:message for="attendeeSurname" />
+   			<div class="ui-g-6 ui-custom-12">
+       		    <p:outputLabel for="attendeeSurname" value="#{label['input.attendee.surname']}:" />
+   			</div>
+   			<div class="ui-g-6 ui-custom-12 top-15">
+    			<p:inputText id="attendeeSurname" value="#{clientRegistrationController.attendee.surname}" required="true">
+					<f:validator validatorId="custom.surnameValidator"/>
+		        	<f:validateLength minimum="1" maximum="50" />
+	        	</p:inputText>
+   			</div>
+   		</div>
+   		
+   		<div class="ui-g relative">
+   			<p:message for="clientName" />
+   			<div class="ui-g-6 ui-custom-12">
+                <p:outputLabel for="clientName" value="#{label['input.client.name']}" />
+   			</div>
+   			<div class="ui-g-6 ui-custom-12 top-15">
+    			<p:inputText id="clientName" value="#{clientRegistrationController.client.name}" required="true">
+					<f:validator validatorId="custom.nameValidator"/>
+		        	<f:validateLength minimum="1" maximum="50" />
+	        	</p:inputText>
+   			</div>
+   		</div>
+
+   		<div class="ui-g relative">
+   			<p:message for="clientSurname" />
+   			<div class="ui-g-6 ui-custom-12">
+            	<p:outputLabel for="clientSurname" value="#{label['input.client.surname']}" />
+   			</div>
+   			<div class="ui-g-6 ui-custom-12 top-15">
+    			<p:inputText id="clientSurname" value="#{clientRegistrationController.client.surname}" required="true">
+					<f:validator validatorId="custom.surnameValidator"/>
+		        	<f:validateLength minimum="1" maximum="50" />
+	        	</p:inputText>
+   			</div>
+   		</div>
+
+		<div class="ui-g relative">
+			 <div class="ui-g-6 ui-custom-12">
+				 <p:outputLabel for="clientBDay" value="#{label['input.client.birthday']}" />
+			 </div>
+			<div class="ui-g-6 ui-custom-12 top-15">
+				<p:calendar value="#{clientRegistrationController.client.birthDate}"
+							id="clientBDay" locale="lt_LT"
+							yearRange="c-100:c+10000"
+							showOn="button" readonlyInput="true"
+							pattern="yyyy-MM-dd" navigator="true"
+							converter="localDateTimeConverter"
+							maxdate="#{clientRegistrationController.maxDate}"
+							required="true">
+				</p:calendar>
+			</div>
+
+		</div>
+
+   		<div class="ui-g relative">
+   			<p:message for="clientPhoneNumber" />
+   			<div class="ui-g-6 ui-custom-12">
+       	        <p:outputLabel for="clientPhoneNumber" value="#{label['input.client.phoneNumber']}" />
+   			</div>
+   			<div class="ui-g-6 ui-custom-12 top-15">
+    			<p:inputText id="clientPhoneNumber" value="#{clientRegistrationController.client.phone}" required="true">
+		        	<f:validator validatorId="custom.phoneNumberValidator" />
+		        	<f:validateLength maximum="50" />
+		        </p:inputText>
+   			</div>
+   		</div>
+   		
+   		<div class="ui-g relative">
+   			<p:message for="clientEmail" />
+   			<div class="ui-g-6 ui-custom-12">
+        	    <p:outputLabel for="clientEmail" value="#{label['input.client.email']}" />
+   			</div>
+   			<div class="ui-g-6 ui-custom-12 top-15">
+    			<p:inputText id="clientEmail" 
+       				 value="#{clientRegistrationController.client.email}" 
+      			  	 required="true" 
+       				 disabled="#{clientRegistrationController.matchedCodes}">
+		       		<f:validator validatorId="custom.emailValidator" />
+		   			<f:validator validatorId="custom.uniqueEmailValidator" disabled="#{clientRegistrationController.client.id ne null}"/>
+		       	</p:inputText>
+   			</div>
+   		</div>
+   		
+   		<div class="ui-g relative">
+   			<p:message id="passwordMessage" for="clientPassword" />
+   			<div class="ui-g-6 ui-custom-12">
+       		    <p:outputLabel for="clientPassword" value="#{label['input.client.password']}" />
+   			</div>
+   			<div class="ui-g-6 ui-custom-12 top-15">
+    			<p:password id="clientPassword" 
+       				value="#{clientRegistrationController.clientPassword}" 
+       				match="clientPasswordConfirmation" 
+       				required="true">
+	        		<f:validator validatorId="custom.passwordValidator" />
+	        		<f:validateLength minimum="8" maximum="60" />
+	        	</p:password>
+   			</div>
+   		</div>
+   		
+   		<div class="ui-g relative">
+   			<p:message for="clientPasswordConfirmation" />
+   			<div class="ui-g-6 ui-custom-12">
+       			<p:outputLabel for="clientPasswordConfirmation" value="#{label['input.client.passwordConfirm']}" />
+   			</div>
+   			<div class="ui-g-6 ui-custom-12 top-15">
+    			<p:password id="clientPasswordConfirmation" required="true"/>
+   			</div>
+   		</div>
+       	
+           
+       	<p:commandButton 	id="confirmEmail" 
+       						action="#{clientRegistrationController.sendConfirmation}" 
+       						value="#{label['input.button.confirmEmail']}"  
+       						validateClient="true" 
+       						update="clientRegistration passwordMessage confirmModal clientEmail"  
+       						oncomplete="if(!args.validationFailed) PF('confirmModal').show(); scrollToTop();" 
+       						disabled="#{clientRegistrationController.matchedCodes}"
+       						icon="fa fa-envelope"
+       						styleClass="btn btn-dark-blue email-confirm-btn" />
+       	
+       	<p:panelGrid layout="grid"
+				     style="margin-top: 30px;"
+				     columns="2"
+				     columnClasses="ui-sm-6, ui-sm-6"
+				     rendered="#{!registerController.noGroupAvailable}">
+        	<p:button href="/registration/step-3"
+        			  value="#{label['btn.back']}"
+      	    	      ajax="false"
+      	    	      icon="fa fa-caret-left"
+    				  styleClass="btn-block btn-warning btn-back"/>
+    		<p:commandButton id="continueButton"
+	       					 action="#{clientRegistrationController.saveAndRedirect}"
+	       					 value="#{label['input.button.continue']}"
+	       					 disabled="#{!clientRegistrationController.matchedCodes}"
+	       					 update="@form"
+	       				     ajax="true"
+	       					 icon="fa fa-caret-right"
+			 				 iconPos="right"
+			 				 styleClass="btn-block btn-pools btn-continue"/>
+       	</p:panelGrid>	
+       	
+       	<p:panelGrid rendered="#{registerController.noGroupAvailable}"
+       				 layout="grid"
+       				 style="margin-top: 30px;"
+       				 columns="2"
+				     columnClasses="ui-sm-6, ui-sm-6">
+			<p:commandButton  actionListener="#{registerController.redirectToStep1}"
+							  process="@this"
+        			  		  value="#{label['btn.back']}"
+      	    	     		  icon="fa fa-caret-left"
+    				  		  styleClass="btn-block btn-warning btn-back"/>
+       		<p:commandButton id="continueButtonReserve"
+	       					 action="#{clientRegistrationController.redirectToLoginPage}" 
+	       					 value="#{label['btn.register']}" 
+	       					 disabled="#{!clientRegistrationController.matchedCodes}" 
+	       					 update="@form"
+ 							 ajax="true"
+	       					 icon="fa fa-caret-right" 
+    					 	 iconPos="right"
+    					 	 styleClass="btn-block btn-pools btn-continue"/>
+       	</p:panelGrid>				
+
+       </p:panel>
+   </h:form>
+
+   <p:dialog resizable="false"
+   		  draggable="false"
+   		  id="confirmModal"
+   		  header="#{label['dialog.infoText.header']}"
+   		  widgetVar="confirmModal"
+   		  modal="true"
+   		  styleClass="confirm-modal">
+       	<h:form>
+       		<p:panel id="startPanel" rendered="#{!clientRegistrationController.matchedCodes}">
+   				<h:outputFormat value="#{label['dialog.infoText.confirmEmail']}" escape="false"> 
+   					<f:param value="#{clientRegistrationController.client.email}"></f:param> 
+   				</h:outputFormat>
+   				<br/>
+   				<p:messages showDetail="true" > 
+   					<p:autoUpdate />
+   				</p:messages>
+				<div class="ui-g">
+					<div class="ui-g-6 ui-sm-12">
+						<p:outputLabel style="margin-right: 10px;" for="enteredCode" value="#{label['dialog.infoText.enterCode']}" />
+					</div>
+					<div class="ui-g-6 ui-sm-12 step-4-full-width-input">
+						<p:inputText id="enteredCode" style="margin-left: 10px;" value="#{clientRegistrationController.enteredCode}" />
+					</div>
+				</div>
+   				<br/>
+   				<p:commandButton value="Patvirtinti" 
+   								 action="#{clientRegistrationController.compareCodes}" 
+   								 update="confirmModal successPanel resendButton :formA:continueButton :formA:continueButtonReserve
+   								  :formA:confirmEmail :formA:clientEmail"
+   								 oncomplete="PF('confirmModal').show();" styleClass="center btn btn-light-blue" >	
+   				</p:commandButton>
+   				<br/>
+   				<p:panelGrid layout="grid" columns="2">
+        			<p:commandButton id="resendButton" 
+        							value="#{label['input.button.resend']}" 
+        							action="#{clientRegistrationController.resendEmail}" 
+        							update="@this"
+        							disabled="#{clientRegistrationController.disabledButton}"
+        							style="width: 100%;"
+        							icon="fa fa-envelope"
+        							styleClass="btn-dark-blue"/>
+       				<p:commandButton value="#{label['input.button.changeEmail']}"
+       								 onclick="PF('confirmModal').hide();"
+       								 style="width: 100%;"
+        							 icon="fa fa-gear"
+        							 styleClass="btn-dark-blue"/>	
+       			</p:panelGrid>
+       		</p:panel>
+       		<p:panel id="successPanel" rendered="#{clientRegistrationController.matchedCodes}">
+       			<h:outputFormat value="#{label['dialog.infoText.successMessage']}" escape="false"> 
+					<f:param value="#{clientRegistrationController.client.email}"></f:param> 
+				</h:outputFormat>
+				<br/>
+				<p:commandButton value="#{label['input.button.continueRegistration']}"  
+								onclick="PF('confirmModal').hide();" 
+								styleClass="center" />	
+       		</p:panel>
+       	</h:form>
+</p:dialog>	
+
+
+<h:outputScript library="js" name="main.js" />
+<h:outputScript library="js" name="translations/locale_lt.js" />
+<h:outputScript library="js" name="validators/email_validator.js" />
+<h:outputScript library="js" name="validators/phone_number_validator.js" />
+<h:outputScript library="js" name="validators/password_validator.js" />
+<h:outputScript library="js" name="validators/name_validator.js" />
+<h:outputScript library="js" name="validators/surname_validator.js" />
+</ui:composition>

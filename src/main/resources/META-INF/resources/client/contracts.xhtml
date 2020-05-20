@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/client-template.xhtml">
+
+    <ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+
+    <ui:define name="title">
+        <h2>#{label['client.myContracts.title']}</h2>
+    </ui:define>
+
+    <f:metadata>
+        <f:viewAction action="#{clientContractController.onLoad}"/>
+
+    </f:metadata>
+
+    <ui:define name="body">
+
+        <p:panel id="container">
+        
+            <h:form id="contractForm">
+                <p:dataTable rowIndexVar="contractIndex" 
+                                     style="margin-top: 20px;" 
+                                     id="contractTable" 
+                                     value="#{clientContractController.model}" 
+                                     var="contract"
+                                     paginator="true"
+                                     lazy="true"
+                                     rows="#{clientContractController.rowsPerPage}"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{currentPage} #{label['paginator.of']} {totalPages}"
+                                     rowsPerPageTemplate="#{clientContractController.rowsPerPageTemplate}"
+                                     emptyMessage="#{label['client.records.empty']}">
+                            <p:column class="text-left mobile-width-25-percent" headerText="#{label['client.form.contract.period']}">
+                                <h:outputText value="#{contract.validFrom} - #{contract.validTo}" />
+                            </p:column>         
+                            <p:column class="text-left display-dekstop" headerText="#{label['client.form.ContractsNumber']}">
+                                <h:outputText value="#{contract.number}"  />
+                            </p:column>
+                            <p:column style="width: 140px;" class="text-left mobile-width-25-percent client-profile-word-break tablet-contract-child-column-width" headerText="#{label['client.form.contract.attendee']}">
+                                <h:outputText value="#{contract.attendee.name} #{contract.attendee.surname}"/>
+                            </p:column>
+                            <p:column style="width: 140px;" class="text-left mobile-width-25-percent tablet-contract-status-width" headerText="#{label['client.form.ContractsStatus']}">
+                                <h:outputText value="#{label['contract.type.'.concat(contract.type.toString().toLowerCase())]}"/>
+                            </p:column>
+                            <p:column style="width: 130px;" styleClass="mobile-width">
+                            <div>
+                                <ui:remove>
+                           <p:commandButton value="PDF"
+                                            styleClass="btn-warning display-dekstop"
+                                            icon="fa fa-file-pdf-o"
+                                            style="margin-left: 10px"
+                                            actionListener="#{fileController.setUpPreview(contract.documentPath)}"
+                                            oncomplete="PF('pdfPreviewDialog').show();"
+                                            update="@form:pdfPreviewDialog"
+                                            onclick="scrollToTop()">
+                               <p:ajax listener="#{fileController.setFileName(contract.number)}"/>
+                           </p:commandButton>
+                                </ui:remove>
+                                <p:commandButton styleClass="btn-warning display-dekstop"
+                                                 value="PDF"
+                                                 ajax="false"
+                                                 icon="fa fa-file-pdf-o"
+                                                 style="margin-left: 10px"
+                                                 actionListener="#{fileController.download(contract.documentPath)}">
+                                    <p:fileDownload value="#{fileController.download}"/>
+                                </p:commandButton>
+                            </div>
+                            <div class="text-align-center">
+                           <p:commandButton styleClass="btn-warning mobile-display"
+                                            ajax="false"
+                                            icon="fa fa-file-pdf-o"
+                                            style="margin: 5px auto"
+                                            actionListener="#{fileController.download(contract.documentPath)}">
+                               <p:fileDownload value="#{fileController.download}"/>
+                           </p:commandButton>
+                           </div>
+                            </p:column>
+                        </p:dataTable>
+                <p:dialog id="pdfPreviewDialog"
+                          header="#{label['review.contract']}"
+                          widgetVar="pdfPreviewDialog"
+                          draggable="false"
+                          resizable="false"
+                          responsive="true"
+                          appendTo="@(body)"
+                          styleClass="pdf-preview-dialog"
+                          modal="true">
+
+                    <div id="contractDiv" style="height: 90%;">
+                        <p:media value="#{fileController.preview}" styleClass="pdf-preview-media" cache="true" player="pdf">
+                            <f:param name="id" value="#{fileController.generateRandomIdForNotCaching()}" />
+                            <f:param name="title" value="#{fileController.getFileName()}" />
+                        </p:media>
+                    </div>
+                </p:dialog>
+                </h:form>
+
+         </p:panel>
+
+    </ui:define>
+  
+</ui:composition>

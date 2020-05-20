@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/template.xhtml">
+                
+	<f:metadata>
+	    <f:viewParam name="clientId" value="#{clientPreviewController.clientId}" />
+	    <f:event type="preRenderView" listener="#{clientPreviewController.init}"/>
+	</f:metadata>
+
+    <ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+
+	<ui:define name="title">
+        <h2>#{clientPreviewController.client.name} #{clientPreviewController.client.surname}</h2>
+    </ui:define>
+ 
+    <ui:define name="body">
+    
+    <p:panel id="container">		
+		<p:button href="#{clientPreviewController.redirectBack()}"
+				  value="#{label['client.preview']}"
+				  styleClass="btn-flat btn-back"
+				  icon="fa fa-caret-left"
+				  style="margin-bottom: 20px"/>
+    	<ui:include src="../includes/client-preview-menu.xhtml"/>
+    	
+		<div class="ui-g">
+		    <div class="ui-g-6">
+			    <h3>#{label['client.about']}</h3>
+				<div class="ui-g">
+					<div class="ui-g-3">
+						<p:outputLabel value="#{label['client.email']}" />
+					</div>
+					<div class="ui-g-3">
+						<p class="margin-tb-10">
+							<h:outputText value="#{clientPreviewController.client.email}" />
+						</p>
+					</div>
+				</div>
+				<div class="ui-g">
+					<div class="ui-g-3">
+						<p:outputLabel value="#{label['client.phone']}" />
+					</div>
+					<div class="ui-g-3">
+						<p class="margin-tb-10">
+							<h:outputText value="#{clientPreviewController.client.phone}" />
+						</p>
+					</div>
+				</div>
+				<div class="ui-g">
+					<div class="ui-g-3">
+						<p:outputLabel value="#{label['client.status']}:" />
+					</div>
+					<div class="ui-g-3">
+						<p class="margin-tb-10">
+							<h:outputText value="#{clientStatus[clientPreviewController.client.status]}" />
+						</p>
+					</div>
+				</div>
+		    </div>
+		    <div class="ui-g-6">
+		    	<h3>#{label['client.attendee.about']}</h3>
+			    <p:tabView value="#{clientPreviewController.attendees}" var="attendee">
+			        <p:tab title="#{attendee.name}">
+                		<div class="ui-g">
+							<div class="ui-g-3">
+								<p:outputLabel value="#{label['client.attendee.name']}"/>
+							</div>
+							<div class="ui-g-3">
+								<p class="margin-tb-10">
+									<h:outputText value="#{attendee.name}"/>    
+								</p>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-3">
+								<p:outputLabel value="#{label['client.attendee.surname']}" />
+							</div>
+							<div class="ui-g-3">
+								<p class="margin-tb-10">
+									<h:outputText value="#{attendee.surname}" />        
+								</p>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-3">
+								<p:outputLabel value="#{label['client.attendee.birthdate']}" />
+							</div>
+							<div class="ui-g-3">
+								<p class="margin-tb-10">
+									<h:outputText value="#{attendee.birthDate}" /> 
+								</p>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-3">
+								<p:outputLabel value="#{label['client.attendee.city']}" />
+							</div>
+							<div class="ui-g-3">
+								<p class="margin-tb-10">
+									<h:outputText value="#{attendee.city}" />        
+								</p>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-3">
+								<p:outputLabel value="#{label['client.attendee.gender']}" />
+							</div>
+							<div class="ui-g-3">
+								<p class="margin-tb-10">
+									<h:outputText value="#{label['attendee.gender.'.concat(attendee.gender)]}" />   
+								</p>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-3">
+								<p:outputLabel value="#{label['client.attendee.group']}" />
+							</div>
+							<div class="ui-g-3">
+								<p class="margin-tb-10">
+									<h:outputText value="#{attendee.getClass().simpleName ne 'ReservedAttendee' ? attendee.group.name : '-'}" />
+								</p>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-3">
+								<p:outputLabel value="#{label['client.attendee.coach']}" />
+							</div>
+							<div class="ui-g-3">
+								<ui:fragment rendered="#{attendee.getClass().simpleName ne 'ReservedAttendee'}">
+								<p:repeat value="#{attendee.group.employees}" var="employee">
+								<p class="margin-tb-10">
+									<h:outputText value="#{employee.name} #{employee.surname}"/>
+								</p>
+								</p:repeat>	
+								</ui:fragment>
+								<h:outputText rendered="#{attendee.getClass().simpleName eq 'ReservedAttendee'}"
+											  value="-"/>
+							</div>
+						</div>
+
+			        </p:tab>
+			    </p:tabView>
+		    </div>
+		</div>
+        
+		</p:panel>
+
+    </ui:define>
+
+
+</ui:composition>

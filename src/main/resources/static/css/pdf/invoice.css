@@ -1,0 +1,92 @@
+@font-face {
+	font-family: Aller-Lt;
+	src: url('../../fonts/pdf/Aller_Lt.ttf');
+	-fs-pdf-font-embed: embed;
+	-fs-pdf-font-encoding: Identity-H;
+}
+
+@font-face {
+	font-family: Aller-Bd;
+	src: url('../../fonts/pdf/Aller_Bd.ttf');
+	-fs-pdf-font-embed: embed;
+	-fs-pdf-font-encoding: Identity-H;
+}
+        
+body {
+	font-family: Aller-Lt;
+	font-size: 12pt;
+}
+
+#logo {
+	width: 150px;
+	float: right;
+}
+
+#content {
+	width: 100%;
+	margin: auto;
+	background-color: #fff;
+}
+
+#invoice-header {
+	text-align: center;
+	margin-bottom: 5px;
+}
+
+.invoice-sub-heading {
+	text-align: center;
+	margin: 5px 0 0 0;
+}
+
+#info {
+	width:100%;
+	height: 180px;
+	font-size: 12px;
+	margin-bottom: 20px;
+}
+
+#info div {
+	height: 180px;
+	width: 49%;
+	border: 1px solid;
+	margin-bottom: 20px;
+	display: inline-block; 
+}
+
+#info p {
+	margin: 5px;
+}
+
+.bold {
+	font-family: Aller-Bd;
+}
+
+table {
+	font-size: 12px;
+	text-align: center;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.table-header-row {
+	background-color: #e4e4e4;
+	height: 40px;
+}
+
+table th {
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+}
+
+table th:first-child {
+     border-left: 1px solid;
+}
+
+table th:last-child {
+     border-right: 1px solid;
+}
+
+.table-footer-row td {
+	border-top: 2px solid;
+}
+

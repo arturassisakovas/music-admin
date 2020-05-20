@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/template.xhtml">
+                
+    <f:metadata>
+        <f:viewParam name="clientId" value="#{clientContractController.clientId}" />
+        <f:viewAction action="#{clientContractController.onLoad}"/>
+    </f:metadata>
+
+    <ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+    
+    <ui:define name="title">
+        <h2>#{clientContractController.client.name} #{clientContractController.client.surname}</h2>
+    </ui:define>
+
+    <f:metadata>
+        <f:viewAction action="#{clientContractController.onLoad}"/>
+        
+    </f:metadata>
+
+    <ui:define name="body">
+
+        <p:panel id="container">
+
+         <p:messages showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>
+
+         <p:button href="/admin/clients"
+          		   value="#{label['client.preview']}"
+          		   styleClass="btn-flat btn-back"
+          		   icon="fa fa-caret-left"
+          		   style="margin-bottom: 20px"/> 
+
+        	<ui:include src="../includes/client-preview-menu.xhtml"/>
+
+            <h:form id="contractForm">
+                <p:dataTable rowIndexVar="contractIndex" 
+                             style="margin-top: 20px;" 
+                             id="contractTable" 
+                             value="#{clientContractController.model}" 
+                             var="contract"
+                             paginator="true"
+                             lazy="true"
+                             rows="#{clientContractController.rowsPerPage}"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="{currentPage} #{label['paginator.of']} {totalPages}"
+                             rowsPerPageTemplate="#{clientContractController.rowsPerPageTemplate}"
+                             emptyMessage="#{label['client.records.empty']}">
+                            <p:column class="text-left" headerText="#{label['client.form.period']}">
+                                <h:outputText value="#{contract.validFrom} - #{contract.validTo}" />
+                            </p:column>         
+                            <p:column class="text-left" headerText="#{label['client.form.ContractsNumber']}">
+                                <h:outputText value="#{contract.number}"  />
+                            </p:column>
+                            <p:column style="width: 140px;" class="text-left" headerText="#{label['client.form.contract.attendee']}">
+                                <h:outputText value="#{contract.attendee.name} #{contract.attendee.surname}"/>
+                            </p:column>
+                            <p:column style="width: 140px;" class="text-left" headerText="#{label['client.form.ContractsStatus']}">
+                                <h:outputText value="#{label['contract.type.'.concat(contract.type.toString().toLowerCase())]}"/>
+                            </p:column>
+                            <p:column style="width: 350px;">
+	                            <div>
+		                            <p:commandButton styleClass="display-dekstop btn-red" value="#{label['client.preview.termination.terminate']}"
+		                                         validateClient="true"
+		                                         action="#{clientContractController.populateContract(contract)}"
+		                                         oncomplete="PF('contractTermination').show();"
+		                                         update="contractTermination">
+		                                         <p:resetInput target="contractTermination" />
+		                            </p:commandButton>
+                                    <p:commandButton value="#{label['btn.review.contract.clarification']}"
+                                                     onclick="scrollToTop()"
+                                                     process="@this"
+                                                     actionListener="#{fileController.setUpPreview(contract.documentPath)}"
+                                                     icon="fa fa-file-pdf-o"
+                                                     styleClass="contract-btn btn-warning"
+                                                     oncomplete="PF('pdfPreviewDialog').show();"
+                                                     update="@form:pdfPreviewDialog">
+                                        <p:ajax listener="#{fileController.setFileName(contract.number)}" />
+                                    </p:commandButton>
+	                           </div>
+                            </p:column>
+                        </p:dataTable>
+                <p:dialog id="pdfPreviewDialog"
+                          header="#{label['review.contract']}"
+                          widgetVar="pdfPreviewDialog"
+                          draggable="false"
+                          resizable="false"
+                          responsive="true"
+                          appendTo="@(body)"
+                          styleClass="pdf-preview-dialog"
+                          modal="true">
+
+                    <div id="contractDiv" style="height: 90%;">
+                        <p:media value="#{fileController.preview}" styleClass="pdf-preview-media" cache="true" player="pdf">
+                            <f:param name="id" value="#{fileController.generateRandomIdForNotCaching()}" />
+                            <f:param name="title" value="#{fileController.getFileName()}" />
+                        </p:media>
+                    </div>
+                </p:dialog>
+                </h:form>
+
+                <p:dialog header="#{label['client.preview.termination.modal.header']}" id="contractTermination" 
+                          widgetVar="contractTermination" resizable="false" 
+                          draggable="false" responsive="true" width="400" modal="true">
+                    <h:form id="contract">
+                        <p:messages showDetail="true" showSummary="false" closable="true"/>
+                        <p:panelGrid id="loginGrid" columns="2" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+
+                                <p:outputLabel for="startDate" value="#{label['client.preview.termination.modal.calendar']}"/>
+                                <p:calendar id="startDate" showOn="button" required="true"
+                                            navigator="true" mask="true" locale="lt_LT"
+                                            pattern="yyyy-MM-dd" value="#{clientContractController.terminationDate}"
+                                            requiredMessage="#{label['timetable.trackPeriod.startDate.requiredMessage']}"
+                                            converter="localDateTimeConverter"
+                                            mindate="#{clientContractController.minDate}"
+                                            maxdate="#{clientContractController.maxDate}"
+                                            readonlyInput="true">
+                                </p:calendar>
+
+                        </p:panelGrid>
+                        <p:separator/>
+                        <p:button styleClass="btn-red pull-left" value="#{label['timetable.button.close']}" onclick="PF('contractTermination').hide();return false"/>
+                        <p:commandButton styleClass="btn-primary btn-light-blue pull-right" value="#{label['timetable.button.save']}"
+                                         validateClient="true"
+                                         process="contract"
+                                         action="#{clientContractController.save}"
+                                         oncomplete="if(!args.validationFailed) PF('contractTermination').hide();"
+                                         update=":contractForm:contractTable @form"> 
+                          <p:confirm header="#{label['dialog.confirmation']}"  message="#{label['medical.certificate.confirmation.dialog']}" icon="ui-icon-alert"/>
+                        </p:commandButton>
+
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger" appendTo="@(body)" message="">
+                        <p:commandButton value="#{label['timetable.button.no']}" type="button" styleClass="btn-danger ui-confirmdialog-no"
+                                         icon="fa fa-close"/>
+                        <p:commandButton value="#{label['timetable.button.yes']}" styleClass="btn-primary ui-confirmdialog-yes"
+                                         icon="fa fa-check"/>
+                    </p:confirmDialog>
+
+                    </h:form> 
+                </p:dialog>
+         </p:panel>
+            
+    </ui:define>
+  
+</ui:composition>

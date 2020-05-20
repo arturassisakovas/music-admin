@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/template.xhtml">
+                
+	<f:metadata>
+	    <f:viewParam name="clientId" value="#{clientPreviewController.clientId}" />
+	    <f:event type="preRenderView" listener="#{clientPreviewController.init}"/>
+	</f:metadata>
+
+    <ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+
+	<ui:define name="title">
+        <h2>#{clientPreviewController.client.name} #{clientPreviewController.client.surname}</h2>
+    </ui:define>
+ 
+    <ui:define name="body">
+    
+    <p:panel id="container">		
+		<p:button href="/admin/clients"
+				  value="#{label['client.preview']}"
+				  styleClass="btn-flat btn-back"
+				  icon="fa fa-caret-left"
+				  style="margin-bottom: 20px"/>
+    	<ui:include src="../includes/client-preview-menu.xhtml"/>
+    	
+    		<p:messages showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>
+    		
+			<h:form id="invoicesForm">
+				<p:dataTable value="#{clientPreviewController.sortedInvoices}"
+							 var="invoice"
+							 paginator="true"
+							 rowIndexVar="invoiceIndex" 
+							 style="margin-top: 20px;"
+							 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+	                       	 currentPageReportTemplate="{currentPage} #{label['paginator.of']} {totalPages}"
+	                       	 rowsPerPageTemplate="#{clientController.rowsPerPageTemplate}"
+	                       	 emptyMessage="#{label['client.records.empty']}">
+	                       	 
+					<p:column style="width: 60px;" class="text-left" headerText="#{label['rows.No']}">
+	               		<h:outputText value="#{invoiceIndex+1}"/>
+	               	</p:column>
+					<p:column class="text-left" headerText="#{label['client.record.created']}">
+						<h:outputText value="#{invoice.createdAt}"
+									  converter="localDateTimeConverterWithoutSeconds"/>
+					</p:column>
+                        <p:column class="text-left" headerText="#{label['invoice.period']}">
+					<h:outputText value="#{clientPreviewController.subscriptionStartAndEndDate(invoice)}" />
+					</p:column>
+					<p:column class="text-left" headerText="#{label['invoice.attendees']}">
+                        <h:outputText value="#{clientPreviewController.findAttendee(invoice)}"  />
+					</p:column>
+					<p:column class="text-left" headerText="#{label['client.form.sum']}">
+	               		<h:outputText value="#{invoice.price}">
+	               			<f:convertNumber pattern="#0.00 ¤"/>
+	               		</h:outputText>
+	               	</p:column>
+	               	<p:column class="text-left" headerText="#{label['invoice.status']}">
+	               		<h:outputText value="#{invoice.payment.datePaid ne null ? 'Apmokėta' : 'Neapmokėta'}"/>
+	               	</p:column>
+	               	<p:column>
+						<p:importEnum type="com.mAdmin.enumerator.InvoiceType" var="InvoiceType" />
+	               		<p:commandButton value="#{label['change.status']}"
+	               						 rendered="#{invoice.payment.datePaid eq null}"
+	               						 styleClass="btn-light-blue"
+										 disabled="#{invoice.type eq clientPreviewController.getInvoiceTypeThatDisablesStatusChange()}"
+	               						 actionListener="#{clientPreviewController.setSelectInvoice(invoice)}" />
+	               		<p:commandButton rendered="#{invoice.payment.datePaid ne null}"
+                                         process="@this"
+                                         value="PDF"
+                                         actionListener="#{fileController.setUpPreview(invoice.documentPath)}"
+                                         oncomplete="PF('pdfPreviewDialog').show();"
+                                         update="@form:pdfPreviewDialog"
+                                         icon="fa fa-file-pdf-o"
+                                         style="margin-left: 10px"
+                                         styleClass="btn-warning display-dekstop"
+										 onclick="scrollToTop()">
+							<p:ajax listener="#{fileController.setFileName(invoice.invoiceNumber)}"/>
+                        </p:commandButton>
+	               	</p:column>
+				</p:dataTable>
+	 			
+	 			<p:dialog widgetVar="changeInvoiceStatusModal"
+	 					  id="changeInvoiceStatusModal"
+						  resizable="false" 
+						  draggable="false"
+						  responsive="true"
+						  width="400"
+						  modal="true">
+					<p class="change-invoice-status-msg">#{label['change.invoice.status.confirmation.message']}</p>
+					<p:commandButton value="#{label['tasks.delete.confirm.yes']}"
+									 styleClass="ui-confirmdialog-yes"
+									 icon="fa fa-check"
+									 actionListener="#{clientPreviewController.changeStatusOfInvoicePayment}"
+									 oncomplete="PF('changeInvoiceStatusModal').hide()"
+									 update="@form"/>
+		            <p:commandButton value="#{label['tasks.delete.confirm.no']}"
+						             type="button"
+						             styleClass="ui-confirmdialog-no"
+						             icon="fa fa-times"
+						             onclick="PF('changeInvoiceStatusModal').hide()" />
+
+	 			</p:dialog>
+
+                 <p:dialog id="pdfPreviewDialog"
+                           header="#{label['preview']}"
+                           widgetVar="pdfPreviewDialog"
+                           draggable="false"
+                           resizable="false"
+                           responsive="true"
+                           appendTo="@(body)"
+                           styleClass="pdf-preview-dialog"
+                           modal="true">
+
+					 <div id="invoiceDiv" style="height: 90%;">
+                           <p:media value="#{fileController.preview}" styleClass="pdf-preview-media" cache="true" player="pdf">
+							   <f:param name="id" value="#{fileController.generateRandomIdForNotCaching()}" />
+							   <f:param name="title" value="#{fileController.getFileName()}" />
+						   </p:media>
+					 </div>
+                  </p:dialog>
+
+ 			</h:form>
+        
+		</p:panel>
+
+    </ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="../templates/forms.xhtml">
+
+    <ui:define name="body">
+    	<f:view locale="#{localeController.locale}">
+	    	<f:metadata>
+	    		<f:viewAction action="#{registerController.onLoad}"/>
+	    		<f:viewAction action="#{registrationSessionController.onLoad}"/>
+	    		<f:event type="preRenderView" listener="#{registerController.checkCurrentRegistrationStep(1)}" />
+	    	</f:metadata>
+			<div class="register-box-custom">
+				<div class="table-cell">
+		            <div class="login-logo">
+		                <p:link style="color: #fff;" href="/login"><b>#{label['login.logo.name1']}</b>#{label['login.logo.name2']}</p:link>
+		            </div>
+		            <div class="box login-box-body">
+						<h:form>
+					    
+					    <div class="wizard">
+							<div class="steps">
+								<ul role="tablist">
+									<li class="first"><a></a></li>
+									<li><a></a></li>
+									<li><a></a></li>
+									<li><a></a></li>
+									<li><a></a></li>
+									<li class="last"><a></a></li>
+								 </ul>
+							 </div>
+						 </div>
+
+						<p:messages id="messages" showSummary="false" showDetail="true">
+					        <p:autoUpdate />
+					    </p:messages>
+						<sec:authorize access="hasRole('CLIENT')">
+						<ui:fragment rendered="#{!registerController.attendees.isEmpty() and registerController.attendees ne null}">
+
+						<p:selectOneRadio value="#{registerController.existingAttendee}" columns="1" layout="grid">
+							<p:ajax listener="#{registerController.collectExistingClientAttendees}" update="@form registerReserveDialog registerActiveAttendeeDialog"/>
+			       			<f:selectItem itemLabel="#{label['register.option.chooseattendee']}" itemValue="true"/>
+			           		<f:selectItem itemLabel="#{label['register.option.newattendee']}" itemValue="false" />
+			       		</p:selectOneRadio>
+			       		<ui:fragment rendered="#{anonymous or registerController.existingAttendee}"> 
+			       		  <ui:include src="../includes/registration/select-period.xhtml"/>
+			       		</ui:fragment>
+			       		</ui:fragment>
+
+						</sec:authorize>
+						<sec:authorize access="isAnonymous()" var="anonymous"/>
+					    <ui:fragment rendered="#{anonymous or !registerController.existingAttendee}">
+
+                            <ui:include src="../includes/registration/select-period.xhtml"/>
+
+				   		<p:outputLabel value="#{label['register.birthdate']}" required="true" />
+				    	<h:panelGrid  columns="3" id="dateGrid" styleClass="register-dates-tabled-width">
+					        <p:selectOneMenu id="years"
+					        				 value="#{registerController.year}"
+					        				 required="true"
+											 requiredMessage="#{msg['register.birthdaterequired']}"
+											 widgetVar="yearSelect"
+											 onfocus="PF('yearSelect').items[0].hidden = true">
+				            	<p:ajax update="months days submitButtons" listener="#{registerController.monthsAndDaysFiller}" />
+					            <f:selectItem itemLabel="#{label['register.selectyear']}" itemDisabled="true" />
+					            <f:selectItems value="#{registerController.years}" />
+					        </p:selectOneMenu>
+
+					        <p:selectOneMenu id="months"
+					        				 value="#{registerController.month}"
+					        				 required="true"
+					        				 requiredMessage="#{msg['register.birthdaterequired']}"
+											 widgetVar="monthSelect"
+											 onfocus="PF('monthSelect').items[0].hidden = true">
+				            	<p:ajax update="days submitButtons" listener="#{registerController.daysFiller}" />
+					            <f:selectItem itemLabel="#{label['register.selectmonth']}" itemDisabled="true" />
+					            <f:selectItems value="#{registerController.months}" />
+					        </p:selectOneMenu>
+				
+					        <p:selectOneMenu id="days"
+					        				 value="#{registerController.day}"
+					        				 required="true"
+					        				 requiredMessage="#{msg['register.birthdaterequired']}"
+											 widgetVar="daySelect"
+											 onfocus="PF('daySelect').items[0].hidden = true"
+											 styleClass="register-dates-select-margin">
+					        	<p:ajax update="submitButtons" listener="#{registerController.checkAvailability}" />
+					            <f:selectItem itemLabel="#{label['register.selectday']}" itemDisabled="true" />
+					            <f:selectItems value="#{registerController.days}"  />
+					        </p:selectOneMenu>
+				    	</h:panelGrid>
+				    	
+				    	<h:outputText value="&lt;br/&gt;" escape="false" />
+				    	
+				    	<h:panelGrid id="swimmingLevelGrid">
+					    	<p:outputLabel for="swimming_level" value="Pasirinkite vaiko patirties lygį" />
+					    	<p:importEnum type="com.mAdmin.enumerator.SwimmingLevel" var="SwimmingLevel" />
+				        	<p:selectOneRadio id="swimming_level"
+				        					  value="#{registerController.swimLevel}"
+				        					  layout="grid"
+				        					  columns="1"
+				        					  required="true"
+				        					  requiredMessage="#{msg['register.swimlevelrequired']}">
+					        	<p:ajax update="submitButtons" listener="#{registerController.checkAvailability}" />
+				            	<f:selectItems value="#{SwimmingLevel.ALL_VALUES}"
+				            				   var="current"
+				            				   itemLabel="#{label['input.attendee.swimminglevel.'.concat(current.toString().toLowerCase())]}"
+				            				   itemValue="#{current}"/>
+				        	</p:selectOneRadio>
+				        </h:panelGrid>
+				        
+				        <p:panelGrid id="submitButtons"
+				        			 layout="grid"
+				        			 columns="2"
+				        			 columnClasses="ui-sm-6, ui-sm-6">
+				        	<p:button href="/" value="#{label['input.button.exit']}"
+						      	    	      ajax="false" icon="fa fa-caret-left"
+			       					 		  styleClass="btn-block btn-warning btn-back"
+			       					 		  style="margin-top: 20px !important"/>
+					  	    <p:commandButton rendered="#{!registerController.noGroupAvailable}"
+					        				 value="#{label['register.continue']}"
+					       					 action="#{registerController.save}"
+					       					 ajax="true" 
+					       					 icon="fa fa-caret-right"
+					       					 iconPos="right"
+					       					 oncomplete="if(#{registerController.attendeeHasGroup}) PF('registerActiveAttendeeDialog').show() ;"
+					       					 disabled="#{registerController.tooYoung}"
+					       					 styleClass="btn-block btn-pools btn-continue"
+					       					 style="margin-top: 20px !important;"/>
+	       					<p:commandButton rendered="#{registerController.noGroupAvailable}"
+	       					 				 value="#{label['register.continue']}"
+	       					 				 icon="fa fa-caret-right"
+	       					 				 iconPos="right"
+	 										 oncomplete="if(!args.validationFailed) PF('registerReserveDialog').show() ;"
+					       					 disabled="#{registerController.tooYoung}"
+					       					 styleClass="btn-block btn-pools btn-continue"
+					       					 style="margin-top: 20px !important;"/>
+
+				        </p:panelGrid>
+
+    					</ui:fragment>
+						
+					    </h:form>
+
+					    <p:dialog id="registerReserveDialog" 
+						  		  widgetVar="registerReserveDialog"
+						  		  resizable="false" draggable="false"
+						  		  responsive="true" modal="true"
+						  		  styleClass="registerReserveDialog"
+						  		  showEffect="fade" hideEffect="fade">
+							<h:form>
+							   <i class="fa fa-exclamation-triangle fa-warning-custom" aria-hidden="true"/>
+								<p:messages id="msg" showSummary="false" showDetail="true">
+									<p:autoUpdate />
+								</p:messages>
+							   <sec:anonymous>
+								   <h:outputText styleClass="warning-message" value="#{label['register.no.groups.message']}"/>
+								   <p:commandButton value="#{label['btn.continue.registration']}"
+							       					 action="#{registerController.redirectToStep4}"
+							       					 ajax="true" 
+							       					 disabled="#{registerController.tooYoung}"
+							       					 styleClass="btn-block btn-pools btn-continue"
+							       					 style="margin-top: 20px !important;"
+							       					 process="@form"/>
+						       </sec:anonymous>
+							   <sec:authorize access="hasRole('CLIENT')">
+								   <h:outputText styleClass="warning-message" value="#{label['register.no.groups.message.for.reserved']}"/>
+								   
+										<h:panelGroup layout="block" rendered="#{!registerController.existingAttendee}">
+									   		<div class="ui-g relative">
+									   			<p:message for="attendeeName" />
+									   			<div class="ui-g-6 ui-custom-12">
+										       		<p:outputLabel for="attendeeName" value="#{label['input.attendee.name']}:"/>
+									   			</div>
+									   			<div class="ui-g-6 ui-custom-12 top-15">
+									    			<p:inputText id="attendeeName" value="#{registerController.reservedAttendee.name}" required="true">
+														<f:validator validatorId="custom.nameValidator"/>
+											        	<f:validateLength minimum="1" maximum="50" />
+										        	</p:inputText>
+									   			</div>
+									   		</div>
+									   		<div class="ui-g relative">
+									   			<p:message for="attendeeSurname" />
+									   			<div class="ui-g-6 ui-custom-12">
+									       		    <p:outputLabel for="attendeeSurname" value="#{label['input.attendee.surname']}:" />
+									   			</div>
+									   			<div class="ui-g-6 ui-custom-12 top-15">
+									    			<p:inputText id="attendeeSurname" value="#{registerController.reservedAttendee.surname}" required="true">
+														<f:validator validatorId="custom.nameValidator"/>
+											        	<f:validateLength minimum="1" maximum="50" />
+										        	</p:inputText>
+									   			</div>
+									   		</div>
+
+								            <div class="ui-g relative">
+								                <p:message for="attendeeHealthProblems" />
+								                <div class="ui-g-6 ui-custom-12">
+								                    <p:outputLabel for="attendeeHealthProblems" value="#{label['input.attendee.health_problems']}" />
+								                </div>
+								                <div class="ui-g-6 ui-custom-12 top-15">
+								                    <p:inputTextarea styleClass="full-width" id="attendeeHealthProblems" value="#{registerController.healthProblems}" required="false">
+								                        <f:validateLength maximum="2000" />
+								                    </p:inputTextarea>
+								                </div>
+								            </div>
+
+									   		<div class="ui-g relative">
+									   			<p:message for="attendeeGender" />
+									   			<div class="ui-g-6 ui-custom-12">
+									        		<p:outputLabel for="attendeeGender" value="#{label['input.attendee.gender']}:" />
+									   			</div>
+									   			<div class="ui-g-6 ui-custom-12 top-15">
+									    			<p:selectOneRadio id="attendeeGender"
+									    							  value="#{registerController.reservedAttendee.gender}"
+									    							  required="true"
+									    							  label="#{label['input.attendee.gender']}" style="font-size: 13px;">
+										           		 <f:selectItem itemLabel="#{label['input.attendee.gender.boy']}" itemValue="boy" />
+										           		 <f:selectItem itemLabel="#{label['input.attendee.gender.girl']}" itemValue="girl" />
+										       		 </p:selectOneRadio>
+									   			</div>
+									   		</div>
+									   		<div class="ui-g relative">
+									   			<div class="ui-g-6 ui-custom-12">
+									   				<p:outputLabel for="poolCity" value="#{label['input.attendee.city']}"/>
+									   			</div>
+									   			<div class="ui-g-6 ui-custom-12 top-15">
+									   				<p:selectOneMenu id="poolCity" value="#{registerController.city}">
+										                <f:selectItems value="#{registerController.poolCities()}" />
+										            </p:selectOneMenu>
+									   			</div>
+									   		</div>
+								   			<p:commandButton value="#{label['btn.continue.registration']}"
+									   					action="#{registerController.addAttendeeToReserve}"
+									   					styleClass="btn-block btn-pools btn-continue"
+								       					style="margin-top: 20px !important;"
+								       					process="@form"/>
+									   	</h:panelGroup>									   	
+								   <p:commandButton rendered="#{registerController.existingAttendee}"
+								   					value="#{label['btn.continue.registration']}"
+								   					action="#{registerController.saveReserved}"
+								   					styleClass="btn-block btn-pools btn-continue"
+							       					style="margin-top: 20px !important;"/>
+						       </sec:authorize>
+							</h:form>
+						</p:dialog>
+
+						<p:dialog id="registerActiveAttendeeDialog" 
+                                  widgetVar="registerActiveAttendeeDialog"
+                                  resizable="false" draggable="false"
+                                  responsive="true" modal="true"
+                                  styleClass="registerReserveDialog"
+                                  showEffect="fade" hideEffect="fade">
+						<h:form>
+                            <i class="fa fa-exclamation-triangle fa-warning-custom" aria-hidden="true"/>
+                            <h:outputFormat  styleClass="warning-message" value="#{label['register.active.attendee.consent']}">
+                            <f:param value="#{registerController.selectedAttendee.name}"/>
+                            <f:param value="#{label['timetable.period.type.'.concat(registerController.period.periodType.toString().toLowerCase())]}"/>
+                            <f:param value="(#{registerController.period.startDate} - #{registerController.period.endDate})"/>
+                            </h:outputFormat>
+                        <p:commandButton rendered="#{registerController.existingAttendee}"
+                                                    value="#{label['btn.continue.with.active.attendee']}"
+                                                    action="#{registerController.save}"
+                                                    styleClass="btn-block btn-pools btn-continue"
+                                                    style="margin-top: 20px !important;"/>
+						</h:form>
+						</p:dialog>
+
+						<p:dialog id="alreadyRegisteredDialog"
+								  widgetVar="alreadyRegisteredDialog"
+								  resizable="false" draggable="false"
+								  responsive="true" modal="true"
+								  styleClass="registerReserveDialog"
+								  showEffect="fade" hideEffect="fade"
+						 		  closable="false">
+							<h:form>
+								<i class="fa fa-exclamation-triangle fa-warning-custom" aria-hidden="true"/>
+								<h:outputText styleClass="warning-message" value="#{label['register.attendee.already.registered.message']}"/>
+								<p:commandButton value="#{label['btn.continue.registration']}"
+												 action="#{registerController.saveRegisteredAndPaid}"
+												 styleClass="btn-block btn-pools btn-continue"
+												 style="margin-top: 20px !important;"/>
+							</h:form>
+						</p:dialog>
+		            </div>
+		    	</div>
+	        </div>
+    	</f:view>
+    </ui:define>
+
+</ui:composition>

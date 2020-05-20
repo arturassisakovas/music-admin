@@ -1,0 +1,160 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+  <head>
+    <title>Contract</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" media="all" href="../../static/css/pdf/contract.css" th:href="@{classpath:static/css/pdf/contract.css}" />
+  </head>
+
+  <body>
+  	<th:block th:each="i : ${#numbers.sequence(0, contracts.size()- 1)}">
+		<div style="-fs-page-sequence: start;"/>
+		<div class="content" style="page-break-before: auto;" th:styleappend="${i == (contracts.size() - 1)} ? 'page-break-after: avoid;' : 'page-break-after: always;'">
+			<div style="height: 50px; display:block; text-align: center;">
+				<img class="logo" alt="" src="../static/img/logo.png" th:src="@{classpath:static/img/logo.png}"/>
+			</div>
+
+			<h5 class="contract-header" th:if="${contracts[i].number != ''}">PASLAUGŲ TEIKIMO SUTARTIS  Nr. <span th:text="${contracts[i].number}"></span></h5>
+			<div th:if="${contracts[i].number == ''}" style="height: 50px;"></div>
+			<h5 class="contract-header">SPECIALIOSIOS SĄLYGOS</h5>
+			<p class="contract-sub-heading">
+				<span th:text="${contractYear[i]}">2019</span> m.
+				<span th:text="${contractMonth[i]}">Rugsėjis</span>
+				<span th:text="${contractDay[i]}">23</span> d.,
+				<span th:if="${contracts[i].attendee.newGroup == null}" th:text="${contracts[i].attendee.group.pool.city}">Vilnius</span>
+				<span th:if="${contracts[i].attendee.newGroup != null}" th:text="${contracts[i].attendee.newGroup.pool.city}">Vilnius</span>
+			</p>
+
+			<div style="height: 10px"></div>
+
+			<table style="width: 90%">
+				<tr class="table-header-row">
+					<th>PASLAUGŲ TEIKĖJAS:</th>
+					<th></th>
+				</tr>
+				<tr>
+					<td>Pavadinimas:</td>
+					<td><span th:text="${env.getProperty('company.name')}">Music Admin, UAB</span></td>
+				</tr>
+				<tr>
+					<td>Įmonės kodas:</td>
+					<td><span th:text="${env.getProperty('company.code')}">303283994</span></td>
+				</tr>
+				<tr>
+					<td>PVM mokėtojo kodas:</td>
+					<td><span th:text="${env.getProperty('company.vatcode')}">nėra PVM mokėtojas</span></td>
+				</tr>
+				<tr>
+					<td>Registracijos adresas:</td>
+					<td><span th:text="${env.getProperty('company.address')}">Šalčininkų r. sav. Baltosios Vokės m. Vilniaus g. 12</span></td>
+				</tr>
+				<tr>
+					<td>El. pašto adresas:</td>
+					<td><span th:text="${env.getProperty('company.email')}">info@music-admin.lt</span></td>
+				</tr>
+				<tr>
+					<td>Kontaktinis telefono numeris:</td>
+					<td><span th:text="${env.getProperty('company.phone')}">+37064933377</span></td>
+				</tr>
+				<tr>
+					<td>Bankas:</td>
+					<td><span th:text="${env.getProperty('company.bank')}">Luminor Bank AS</span></td>
+				</tr>
+				<tr>
+					<td>Banko sąskaitos Nr.:</td>
+					<td><span th:text="${env.getProperty('company.iban')}">LT064010051001960755</span></td>
+				</tr>
+
+				<tr class="table-header-row">
+					<th>PASLAUGŲ GAVĖJAS (TĖVAS, GLOBĖJAS):</th>
+					<th></th>
+				</tr>
+				<tr>
+					<td>Vardas:</td>
+					<td><span th:text="${contracts[i].attendee.client.name}"></span></td>
+				</tr>
+				<tr>
+					<td>Pavardė:</td>
+					<td><span th:text="${contracts[i].attendee.client.surname}"></span></td>
+				</tr>
+				<tr>
+					<td>Gimimo data:</td>
+					<td><span th:text="${contracts[i].attendee.client.birthDate}"></span></td>
+				</tr>
+				<tr>
+					<td>El. pašto adresas:</td>
+					<td><span th:text="${contracts[i].attendee.client.email}"></span></td>
+				</tr>
+				<tr>
+					<td>Kontaktinis telefono numeris:</td>
+					<td><span th:text="${contracts[i].attendee.client.phone}"></span></td>
+				</tr>
+
+				<tr class="table-header-row">
+					<th>PASLAUGŲ GAVĖJAS (UGDYTINIS):</th>
+					<th></th>
+				</tr>
+				<tr>
+					<td>Lytis</td>
+					<td><span th:text="${label.getString('attendee.gender.' + contracts[i].attendee.gender)}"></span></td>
+				</tr>
+				<tr>
+					<td>Vaiko vardas:</td>
+					<td><span th:text="${contracts[i].attendee.name}"></span></td>
+				</tr>
+				<tr>
+					<td>Vaiko pavardė:</td>
+					<td><span th:text="${contracts[i].attendee.surname}"></span></td>
+				</tr>
+				<tr>
+					<td>Gimimo data:</td>
+					<td><span th:text="${contracts[i].attendee.birthDate}"></span></td>
+				</tr>
+				<tr>
+					<td>Išsami informacija apie vaiko sveikatos sutrikimus (ligas, alergijas, vartojamus vaistus ir kt.), į kurią turėtų atsižvelgti treneris:</td>
+					<td><span th:text="${contracts[i].attendee.healthProblems}"></span></td>
+				</tr>
+
+				<tr class="table-header-row">
+					<th>INFORMACIJA APIE PASLAUGAS:</th>
+					<th></th>
+				</tr>
+				<tr>
+					<td>Paslaugų pavadinimas:</td>
+					<td>Mokymas groti instrumentu</td>
+				</tr>
+				<tr>
+					<td>Paslaugų teikimo pradžia:</td>
+					<td><span th:text="${contracts[i].validFrom}"></span></td>
+				</tr>
+				<tr>
+					<td>Paslaugų teikimo pabaiga:</td>
+					<td><span th:text="${contracts[i].validTo}"></span></td>
+				</tr>
+				<tr>
+					<td>Paslaugų teikimo vieta:</td>
+					<td>
+						<span th:if="${contracts[i].attendee.newGroup == null}" th:text="${contracts[i].attendee.group.pool.city}">Vilnius</span>
+						<span th:if="${contracts[i].attendee.newGroup != null}" th:text="${contracts[i].attendee.newGroup.pool.city}">Vilnius</span>
+					</td>
+				</tr>
+				<tr>
+					<td>Užsiėmimų laikas:</td>
+					<td><span th:text="${workoutTimes[i]}"></span></td>
+				</tr>
+				<tr>
+					<td>Užsiėmimo kaina:</td>
+					<td><span th:text="${lessonPrice[i]}"></span></td>
+				</tr>
+				<tr>
+					<td>Užsiėmimų lankymo dažnumas:</td>
+					<td><span th:text="${workoutsPerWeek[i]}"></span></td>
+				</tr>
+			</table>
+		</div>
+	</th:block>
+  </body>
+</html>

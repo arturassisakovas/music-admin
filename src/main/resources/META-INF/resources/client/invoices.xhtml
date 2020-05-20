@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/client-template.xhtml">
+
+    <ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+
+    <f:metadata>
+        <f:viewAction action="#{invoiceController.onLoad}"/>
+        
+    </f:metadata>
+
+	<ui:define name="title">
+		<h2>#{label['client.myInvoices.title']}</h2>
+	</ui:define>
+
+    <ui:define name="body">
+    
+        <p:panel id="container">
+        
+            <h:form id="invoicesForm">
+                <p:dataTable rowIndexVar="invoiceIndex" 
+                                     style="margin-top: 20px;" 
+                                     styleClass="invoices-table"
+                                     id="invoiceTable" 
+                                     value="#{invoiceController.model}"
+                                     var="invoice"
+                                     paginator="true"
+                                     lazy="true"
+                                     rows="#{invoiceController.rowsPerPage}"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{currentPage} #{label['paginator.of']} {totalPages}"
+                                     rowsPerPageTemplate="#{invoiceController.rowsPerPageTemplate}"
+                                     emptyMessage="#{msg['no.records.found']}">
+                            <p:column class="text-left" headerText="#{label['client.form.invoice.period']}">
+                                <h:outputText value="#{invoiceController.subscriptionStartAndEndDate(invoice)}" />
+                            </p:column>         
+                            <p:column class="text-left" headerText="#{label['client.form.attendee']}">
+                                <h:outputText value="#{invoiceController.findAttendee(invoice)}"  />
+                            </p:column>
+                            <p:column style="width: 100px;" class="text-left" styleClass="mobile-pay-sum-column tablet-price-width" headerText="#{label['client.form.sum']}">
+                                <h:outputText value="#{invoice.price}">
+                                <f:convertNumber pattern="#0.00 ¤"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column style="width: 250px;" styleClass="mobile-width tablet-buttons-column-width">
+                            <div style="#{invoiceController.displayDate(invoice) ? 'display:none;' : ''}" class="text-align-center">
+                             <h:outputText value="#{label['client.form.pay.date']} #{invoiceController.convertLocalDateTime(invoice)}"
+                             rendered="#{(invoiceController.displayMessage(invoice)) and !(invoiceController.invoiceBeingTerminated(invoice))}"/>
+                              <h:outputText value="#{label['client.form.pay.date']} #{invoice.expireDate}"
+                              style="#{invoiceController.displayStyle(invoice) ? 'color:#de3c3c;' : ''}"
+                              rendered="#{(!invoiceController.displayMessage(invoice)) and !(invoiceController.invoiceBeingTerminated(invoice))}"/>
+                              </div>
+                              
+							  <div class="text-align-center">
+								  <h:panelGroup id="invoicePaymentButtons">
+                              	   <p:commandButton rendered="#{invoiceController.checkIfContractIsSigned(invoice) and invoice.payment.datePaid eq null}"
+                              	   					styleClass="btn-pools display-dekstop"
+                              					    value="#{label['client.invoices.btn']}"
+                              					    actionListener="#{invoiceController.setNotPaidInvoice(invoice)}"
+                              					    oncomplete="PF('contractConfirmDialog').show();"
+													disabled="#{invoiceController.invoiceBeingTerminated(invoice)}"
+													update="contractConfirmDialog"
+													style="margin-left: 10px"
+                              					    icon="fa fa-file-text-o"/>
+		                           <p:commandButton styleClass="btn-primary btn-pools display-dekstop" value="#{label['btn.pay']}"
+		                                            validateClient="true"
+		                                            rendered="#{!invoiceController.displayMessage(invoice) and !invoiceController.checkIfContractIsSigned(invoice)}"
+													actionListener="#{invoiceController.setNotPaidInvoice(invoice)}"
+													style="margin-left: 10px"
+													disabled="#{invoiceController.invoiceBeingTerminated(invoice)}"
+								   					action="#{invoiceController.redirectToPay()}">
+		                           </p:commandButton>
+								  </h:panelGroup>
+								  <p:tooltip for="invoicePaymentButtons"
+											 styleClass="text-center"
+											 position="top"
+											 value="#{label['payment.option.unavailable.contract.is.being.terminated']}"
+											 rendered="#{invoiceController.invoiceBeingTerminated(invoice)}"/>
+								  <ui:remove>
+		                           <p:commandButton rendered="#{invoice.payment.datePaid ne null}"
+													process="@this"
+													value="PDF"
+													actionListener="#{fileController.setUpPreview(invoice.documentPath)}"
+													oncomplete="PF('invoicePdfPreviewDialog').show();"
+													update="@form:invoicePdfPreviewDialog"
+													icon="fa fa-file-pdf-o"
+													style="margin-left: 10px"
+													styleClass="btn-warning display-dekstop"
+													onclick="scrollToTop()">
+									   <p:ajax listener="#{fileController.setFileName(invoice.invoiceNumber)}"/>
+						           </p:commandButton>
+								  </ui:remove>
+								  <p:commandButton rendered="#{invoice.payment.datePaid ne null}"
+												   ajax="false"
+												   value="PDF"
+												   style="margin-left: 10px"
+												   actionListener="#{fileController.download(invoice.documentPath)}"
+												   icon="fa fa-file-pdf-o"
+												   styleClass="btn-warning display-dekstop">
+									  <p:fileDownload value="#{fileController.download}" />
+								  </p:commandButton>
+
+								  <h:panelGroup id="invoicePaymentButtonsMobile">
+		                           <p:commandButton rendered="#{invoiceController.checkIfContractIsSigned(invoice) and invoice.payment.datePaid eq null}"
+                              	   					styleClass="btn-pools mobile-display"
+                              					    icon="fa fa-file-text-o"
+                              					    actionListener="#{invoiceController.setNotPaidInvoice(invoice)}"
+                              					    oncomplete="PF('contractConfirmDialog').show();"
+													disabled="#{invoiceController.invoiceBeingTerminated(invoice)}"
+													update="contractConfirmDialog"
+													style="margin: 5px auto"/>
+		                           <p:commandButton styleClass="btn-primary btn-pools mobile-display"
+		                                         	icon="fa fa-id-card-o"
+		                                         	validateClient="true"
+		                                         	rendered="#{!invoiceController.displayMessage(invoice) and !invoiceController.checkIfContractIsSigned(invoice)}"
+													actionListener="#{invoiceController.setNotPaidInvoice(invoice)}"
+													disabled="#{invoiceController.invoiceBeingTerminated(invoice)}"
+													action="#{invoiceController.redirectToPay()}"
+													style="margin: 5px auto">
+		                           </p:commandButton>
+								  </h:panelGroup>
+								  <p:tooltip for="invoicePaymentButtonsMobile"
+											 styleClass="text-center"
+											 position="center top"
+											 value="#{label['payment.option.unavailable.contract.is.being.terminated']}"
+											 rendered="#{invoiceController.invoiceBeingTerminated(invoice)}"/>
+		                           <p:commandButton rendered="#{invoice.documentPath ne null}"
+		                                            ajax="false"
+												    style="margin: 5px auto"
+												    actionListener="#{fileController.download(invoice.documentPath)}"
+												    icon="fa fa-file-pdf-o"
+												    styleClass="btn-warning mobile-display">
+						                <p:fileDownload value="#{fileController.download}" />
+						           </p:commandButton>
+                            </div>
+                            
+                            </p:column>
+                        </p:dataTable>
+					<p:dialog id="invoicePdfPreviewDialog"
+							  header="#{label['preview']}"
+							  widgetVar="invoicePdfPreviewDialog"
+							  draggable="false"
+							  resizable="false"
+							  responsive="true"
+							  appendTo="@(body)"
+							  styleClass="pdf-preview-dialog"
+							  modal="true">
+
+						<div id="invoiceDiv" style="height: 90%" >
+							<p:media value="#{fileController.preview}" styleClass="pdf-preview-media" cache="true" player="pdf">
+								<f:param name="id" value="#{fileController.generateRandomIdForNotCaching()}" />
+								<f:param name="title" value="#{fileController.getFileName()}" />
+							</p:media>
+						</div>
+					</p:dialog>
+			</h:form>
+
+			<p:dialog header="#{label['contract.sign.title']}"
+						  id="contractConfirmDialog" 
+						  widgetVar="contractConfirmDialog"
+						  resizable="false" draggable="false"
+						  responsive="true" modal="true"
+						  appendTo="@(body)">
+					<p:ajax event="close" update="invoicesForm:invoiceTable" />
+					<h:form id="pool">
+                        <p:outputPanel styleClass="ui-messages-warn ui-corner-all" rendered="#{!invoiceController.invoiceValid}">
+                            <h:outputText styleClass="ui-messages-warn-detail" style="color: #ffff" value="#{msg['client.invoice.contractconfirmation.expired']}" />
+                        </p:outputPanel>
+						<p:remoteCommand name="updateButtonPanelGrid" update="submitButton" action="#{invoiceController.setAgreeWithTermsOfService(true)}" process="@this"/>
+						<p:messages id="messages" showDetail="true" showSummary="false" closable="true">
+					        <p:autoUpdate />
+					    </p:messages>
+
+						<p:panelGrid rendered="#{invoiceController.invoiceValid}">
+							<ui:remove>
+						<p:commandButton value="#{label['btn.review.contract.clarification']}"
+										 process="@this"
+										 icon="fa fa-file-pdf-o"
+										 actionListener="#{contractController.createMultipleContractPreviewForDekstop(invoiceController.notPaidInvoice.records)}"
+										 styleClass="contract-btn btn-warning display-dekstop"
+										 oncomplete="PF('pdfPreviewDialog').show();"
+										 update="pdfPreviewDialog">
+						</p:commandButton>
+							</ui:remove>
+							<p:commandButton value="#{label['btn.review.contract.clarification']}"
+											 process="@this"
+											 icon="fa fa-file-pdf-o"
+											 actionListener="#{contractController.createMultipleContractPreviewForMobile(invoiceController.notPaidInvoice.records)}"
+											 styleClass="contract-btn btn-warning display-dekstop"
+											 oncomplete="PF('pdfDownloadDialog').show();"
+											 update="pdfDownloadDialog">
+							</p:commandButton>
+
+						<p:commandButton value="#{label['btn.review.contract.clarification']}"
+										 process="@this"
+										 icon="fa fa-file-pdf-o"
+										 styleClass="contract-btn btn-dark-blue mobile-display"
+										 actionListener="#{contractController.createMultipleContractPreviewForMobile(invoiceController.notPaidInvoice.records)}"
+										 oncomplete="PF('pdfDownloadDialog').show();"
+										 update="pdfDownloadDialog"
+										 onclick="scrollToTop()">
+						</p:commandButton>
+
+						<h:panelGroup id="submitButton">
+				        <p:commandButton value="#{label['btn.continue']}"
+				        				 ajax="true"
+				        				 icon="fa fa-caret-right"
+	       					 			 iconPos="right"
+	       					 			 style="margin-top: 20px !important;"
+	       					 			 styleClass="btn-block btn-pools btn-continue"
+										 disabled="#{!invoiceController.agreeWithTermsOfService}"
+	       					 			 actionListener="#{invoiceController.validateForm}"/>
+						</h:panelGroup>
+						<p:tooltip for="submitButton"
+								   styleClass="text-center"
+								   position="center top"
+								   value="#{label['continue.when.agree.with.terms.of.service']}"
+								   rendered="#{!invoiceController.agreeWithTermsOfService}"/>
+						</p:panelGrid>
+					</h:form>
+				</p:dialog>
+
+			<p:dialog id="pdfPreviewDialog"
+					  header="#{label['review.contract']}"
+					  widgetVar="pdfPreviewDialog"
+					  draggable="false"
+					  resizable="false"
+					  responsive="true"
+					  appendTo="@(body)"
+					  styleClass="pdf-preview-dialog"
+					  modal="true">
+
+				<div id="contractDiv" class="preview-window-height">
+					<p:media value="#{contractController.preview}"  styleClass="pdf-preview-media" cache="true" player="pdf">
+						<f:param name="id" value="#{fileController.generateRandomIdForNotCaching()}" />
+						<f:param name="title" value="sutartis" />
+					</p:media>
+				</div>
+
+				<p:commandButton value="#{label['btn.continue']}"  ajax="true" id="aggreWithTerms" icon="fa fa-caret-right"
+								 iconPos="right" styleClass="btn-block btn-pools btn-continue"
+								 process="@this"
+								 update="pool:submitButton"
+								 actionListener="#{invoiceController.setAgreeWithTermsOfService(true)}"
+								 oncomplete="PF('pdfPreviewDialog').hide()"/>
+			</p:dialog>
+
+			<p:dialog id="pdfDownloadDialog"
+					  header="#{label['review.contract.step5']}"
+					  widgetVar="pdfDownloadDialog"
+					  draggable="false"
+					  resizable="false"
+					  responsive="true"
+					  appendTo="@(body)"
+					  width="auto"
+					  modal="true">
+				<div style="text-align: center; margin: 10px 0;">
+					<a href="/contract/preview/file" class="custom-download-button-registration-step-5-mobile" onclick="PF('agreeWithTermsMobile').enable();">#{label['btn.download.contract']}</a>
+				</div>
+				<p:commandButton value="#{label['btn.agree.with.terms.of.service']}"  ajax="true" id="agreeWithTermsMobile" icon="fa fa-caret-right" widgetVar="agreeWithTermsMobile"
+								 process="@this"
+								 disabled="true"
+								 iconPos="right" styleClass="btn-block btn-pools btn-continue"
+								 oncomplete="PF('pdfDownloadDialog').hide(); updateButtonPanelGrid();"/>
+			</p:dialog>
+
+
+         </p:panel>
+            
+    </ui:define>
+  
+</ui:composition>

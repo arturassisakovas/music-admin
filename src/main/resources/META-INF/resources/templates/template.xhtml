@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:adm="http://github.com/adminfaces"
+      xmlns:sec="http://www.springframework.org/security/tags">
+
+<f:view locale="#{localeController.locale}">
+
+<ui:insert name="metadata"/>
+
+<h:head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <ui:insert name="head"/>
+    <ui:insert name="head-end"/>
+    <title>Music Admin</title>
+</h:head>
+<h:body styleClass="#{not empty skin ? skin:skinMB.skin} sidebar-mini #{not empty layoutMB.sidebarCollapsed and layoutMB.sidebarCollapsed eq 'true' ? 'sidebar-collapse':''}">
+    <ui:insert name="body-begin"/>
+
+    <p:ajaxStatus rendered="#{adminConfig.renderAjaxStatus}"
+                  onstart="$('#loader').show();"
+                  onsuccess="$('#loader').hide();"/>
+ 
+    <div class="wrapper">
+        <div id="loader" class="load-bar" style="display: none">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <header class="main-header">
+            <a href="/admin/index.xhtml" class="logo">
+                <span class="logo-lg">
+                        <h:graphicImage style="height: 40px;" value="../images/logo-white.png" />
+                </span>
+            </a>
+            <nav class="navbar navbar-static-top">
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only"></span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ui:insert name="top-menu"/>
+                </div>
+            </nav>
+        </header>
+
+        <!-- side menu -->
+        <aside id="sidebar" class="main-sidebar slideout-menu">
+            <div>
+                <ul class="sidebar-menu">
+                    <sec:authorize access="hasAnyRole('SADMIN', 'MANAGER')">
+			        <li>
+			            <p:link href="/admin/seasons">
+			                <i class="fa fa-bar-chart"></i>
+			                <span>#{label['admin.panel.menu.graphics']}</span>
+			            </p:link>
+			        </li>
+			        <li>
+			            <p:link href="/admin/users">
+			                <i class="fa fa-user-plus"></i>
+			                <span>#{label['admin.panel.menu.users']}</span>
+			            </p:link>
+			        </li>
+                        <li>
+                            <p:link href="/admin/clients">
+                                <i class="fa fa-id-card-o"></i>
+                                <span>#{label['admin.panel.menu.clients']}</span>
+                            </p:link>
+                        </li>
+                    </sec:authorize>
+                    <sec:authorize access="hasRole('COACH')">
+                        <li class="btn-orange">
+                            <p:link href="/teacher/groups">
+                                <i class="fa fa-user-circle-o"></i>
+                                <span>#{label['admin.panel.menu.coach']}</span>
+                            </p:link>
+                        </li>
+                    </sec:authorize>
+		        </ul>
+            </div>
+        </aside>
+        <!-- content -->
+        <div id="content" class="content-wrapper">
+            <adm:breadcrumb title="#{title}" rendered="#{not empty title and empty requestScope['javax.servlet.error.exception_type'] and empty requestScope['javax.servlet.error.message']}"/>
+            <ui:insert name="content-wrapper"/>
+            <section class="content-header">
+                <h1>
+                    <ui:insert name="title">
+                        <h:outputText value="#{title}" rendered="#{not empty title and empty requestScope['javax.servlet.error.exception_type'] and empty requestScope['javax.servlet.error.message']}"/>
+                    </ui:insert>
+                    <small><ui:insert name="description"/></small>
+                </h1>
+
+                <ui:insert name="content-header"/>
+            </section>
+            <section class="content">
+                <ui:insert name="body"/>
+            </section>
+        </div>
+
+
+        <footer class="main-footer">
+	    	<a target="_blank">
+	            #{label['footer.company.name']} <h:outputText  value="#{homeController.currentYear()}"/> #{label['footer.rights']}
+	        </a>
+	        <div class="pull-right hidden-xs app-version">
+	            <i>#{applicationController.buildVersion}</i>
+	        </div>
+        </footer>
+
+    </div>
+  
+    <script type="text/javascript">
+        if (isMobile()) {
+            window.onscroll = activateScrollToTop;
+        }
+    </script>
+
+    <script type="text/javascript">
+        if (false) {
+            ripple();
+        } else if (isMobile()) {
+            ripple();
+        }
+
+        function ripple() {
+            var rippleElements = '.ripplelink,button.ui-button:not([class*=ui-picklist]):not([class*=ui-orderlist]),.ui-selectlistbox-item,.ui-multiselectlistbox-item,.ui-selectonemenu-label,.ui-selectcheckboxmenu,.ui-autocomplete-dropdown, .ui-autocomplete-item, .ui-splitbutton-menubutton, .ui-splitbutton button.ui-button,.input-group, .ui-selectbooleanbutton, div.ui-button,.ui-chkbox-icon, .ui-link, .form-control, .btn, .ui-sortable-column,.ui-link, .ui-tabs-nav > li,.ui-selectonemenu-trigger, .ui-accordion-header, .treeview, .sidebar-toggle, .ui-radiobutton-icon, td[role="gridcell"], .ui-selectcheckboxmenu-trigger,.ui-paginator-page, .ui-panelmenu-header > a, a#layout-setup, .control-sidebar div#restore-defaults > a, .control-sidebar div.ui-selectbooleancheckbox .ui-chkbox, .control-sidebar span.control-sidebar-subheading > label, .control-sidebar a.skin-link, button.navbar-toggle, li.dropdown > a';
+
+            $(function () {
+                $(document.body).off('mousedown.ripple', rippleElements)
+                    .on('mousedown.ripple', rippleElements, null, function (e) {
+                        var element = $(this);
+                        $(".ripple").remove();
+                        var posX = element.offset().left,
+                            posY = element.offset().top,
+                            width = element.outerWidth(),
+                            height = element.outerHeight();
+
+                        element.prepend("<span class='ripple'></span>");
+
+
+                        if (width >= height) {
+                            height = width;
+                        } else {
+                            width = height;
+                        }
+                        var x = e.pageX - posX - width / 2;
+                        var y = e.pageY - posY - height / 2;
+
+                        $(".ripple").css({
+                            width: width,
+                            height: height,
+                            top: y + 'px',
+                            left: x + 'px'
+                        }).addClass("rippleEffect");
+                    });
+            });
+        }
+    </script>
+
+	<h:outputStylesheet library="css" name="style.css" target="head" />
+    <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
+    <h:outputScript library="js" name="bootstrap.min.js" target="head"/>
+    <h:outputScript library="js" name="admin-lte.min.js" target="head"/>
+    <h:outputScript library="js" name="admintemplate.js" target="head"/>
+    <!-- slide in/out menu integration  -->
+    <h:outputScript library="js" name="slideout.min.js" target="head" rendered="#{adminConfig.enableSlideMenu and (empty enableSlideMenu or enableSlideMenu)}"/>
+    <h:outputScript library="js" name="adminslide.js" target="head" rendered="#{adminConfig.enableSlideMenu and (empty enableSlideMenu or enableSlideMenu)}"/>
+    <h:outputScript library="js" name="control-sidebar.js" target="head" rendered="#{adminConfig.renderControlSidebar and (empty renderControlSidebar or renderControlSidebar)}"/>
+    <h:outputScript library="js" name="slimscroll.min.js" target="head"/>
+    <h:outputScript library="js" name="main.js"/>
+    <h:outputScript library="js" name="translations/locale_lt.js"/>
+    <ui:fragment rendered="#{not adminConfig.enableSlideMenu or (not empty enableSlideMenu and enableSlideMenu eq 'false')}">
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.slideout-menu').removeClass('slideout-menu');
+                $('.slideout-panel').removeClass('slideout-panel');
+            });
+        </script>
+    </ui:fragment>
+
+    
+</h:body>
+
+</f:view>
+
+</html>

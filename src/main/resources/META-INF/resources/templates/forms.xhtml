@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<f:view locale="#{localeController.locale}">
+
+    <h:head>
+        <title>Music Admin</title>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+
+        <style type="text/css">
+			.ui-messages>div {
+			    padding: 5px 0;
+    			font-size: 14px;
+    			margin-top: 0;
+			}
+            html, body {
+			    height: auto;
+			}
+
+            html {
+                background: url(#{resource[ 'images:login-bg.png' ]}) no-repeat center center fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+            }
+        </style>
+    </h:head>
+
+    <h:body styleClass="hold-transition login-page">
+
+		<section class="content">
+        	<ui:insert name="body"/>
+    	</section>
+
+        <h:outputScript library="js" name="admintemplate.js" target="head"/>
+        <h:outputScript library="js" name="main.js" target="head"/>
+        <h:outputStylesheet library="css" name="style.css" target="head" />
+    </h:body>
+    </f:view>
+</html>

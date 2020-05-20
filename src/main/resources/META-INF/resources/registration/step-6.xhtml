@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/forms.xhtml">
+                
+     <f:metadata>
+		<f:viewAction action="#{registrationSessionController.onLoad}"/>
+		<f:event type="preRenderView" listener="#{registerController.checkCurrentRegistrationStep(6)}" />
+	</f:metadata>
+           
+    <ui:define name="body">
+		<div class="register-box-custom">
+			<div class="table-cell">
+	            <div class="login-logo">
+	                <p:link style="color: #fff;" href="/login"><b>#{label['login.logo.name1']}</b>#{label['login.logo.name2']}</p:link>
+	            </div>
+	            <div class="box login-box-body">
+				    <div class="wizard">
+						<div class="steps">
+							<ul role="tablist">
+								<li class="first"><a></a></li>
+								<li class="checked"><a></a></li>
+								<li class="checked"><a></a></li>
+								<li class="checked"><a></a></li>
+								<li class="checked"><a></a></li>
+								<li class="checked last"><a></a></li>
+							 </ul>
+						 </div>
+					 </div>
+					 
+					<h:form id="form">
+ 						 <h2 class="text-center register-success"> #{label['registration.success']} </h2>
+ 						 <p:commandButton styleClass="btn btn-teal btn-block btn-login-last-step btn-light-blue"
+ 						 				  actionListener="#{registerController.redirectToClientPage()}"
+ 						 				  value="#{label['login.login.text']}" ajax="false"/>
+					</h:form>
+	            </div>
+	    	</div>
+        </div>
+    </ui:define>
+
+</ui:composition>

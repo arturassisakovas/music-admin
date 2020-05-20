@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="templates/forms.xhtml">
+                
+    <f:metadata>
+        <f:viewAction action="#{loginController.clearSession}"/>
+    </f:metadata>
+
+    <ui:define name="body">
+		<div class="login-box">
+            <div class="box login-box-body">
+               <h:outputText styleClass="login-box-msg" style="padding-bottom: 25px; display: block;" value="#{label['register.new.user']}" escape="false" />
+               <div class="row">
+                  <div class="col-xs-12">
+                     <p:button value="#{label['login.register.text']}" styleClass="btn btn-teal btn-block btn-light-blue" type="button" href="/registration/step-1"/>
+                  </div>
+               </div>
+		    </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

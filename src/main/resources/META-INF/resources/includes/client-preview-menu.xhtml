@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+			    <div class="ui-tabs ui-widget ui-widget-content ui-corner-all ui-hidden-container ui-tabs-top">
+				    <ul class="ui-tabs-nav ui-helper-reset ui-widget-header ui-corner-all">
+						<li  class="ui-tabs-header ui-state-default ui-corner-top #{view.viewId eq '/admin/clientsPreview.xhtml' ? 'ui-tabs-selected ui-state-active' : ''}" >
+							<p:link outcome="/admin/clientsPreview.xhtml" value="#{label['client.preview.informations']}">
+								<f:param name="clientId" value="#{clientPreviewController.client.id}"/>
+							</p:link>
+						</li>
+						<li  class="ui-tabs-header ui-state-default ui-corner-top #{view.viewId eq '/admin/clientsContracts.xhtml' ? 'ui-tabs-selected ui-state-active' : ''}" >
+                            <p:link outcome="/admin/clientsContracts.xhtml" value="#{label['client.preview.contracts']}">
+                                <f:param name="clientId" value="#{clientPreviewController.client.id}"/>
+                            </p:link>
+                        </li>
+						<li  class="ui-tabs-header ui-state-default ui-corner-top #{view.viewId eq '/admin/client-invoices.xhtml' ? 'ui-tabs-selected ui-state-active' : ''}" >
+							<p:link outcome="/admin/client-invoices.xhtml" value="#{label['client.preview.invoices']}">
+								<f:param name="clientId" value="#{clientPreviewController.client.id}"/>
+							</p:link>
+						</li>					
+				    </ul>
+			    </div>
+
+</ui:composition>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/template.xhtml">
+
+    <ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+
+	<ui:define name="title">
+        <h2>#{label['timetable.page.title']}</h2>
+    </ui:define>
+ 
+    <ui:define name="body">
+    
+		<p:panel id="container">
+		
+		<ui:include src="../includes/timetables-menu.xhtml"/>
+		
+		<p:messages showSummary="false" showDetail="true" id="crudMessages" autoUpdate="true" closable="true" severity="info, warn"/>
+			<h:form id="periodsForm">
+						<p:commandButton style="margin-top: 40px;" value="#{label['timetable.button.addNew']}"
+		                				 icon="fa fa-plus-circle"
+		                				 action="#{seasonPeriodController.add}"
+		                				 oncomplete="PF('periodDialog').show();"
+		                				 update="periodDialog"
+		                				 styleClass="btn-dark-blue">
+		                				 <p:resetInput target="periodDialog" />
+						</p:commandButton>
+						
+						<p:dataTable rowIndexVar="periodIndex" 
+									 style="margin-top: 20px;" 
+									 id="periodsTable" 
+									 value="#{seasonPeriodController.model}" 
+									 var="period"
+									 paginator="true"
+									 lazy="true"
+				              		 rows="#{seasonPeriodController.rowsPerPage}"
+                             		 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             		 currentPageReportTemplate="{currentPage} #{label['paginator.of']} {totalPages}"
+                             		 rowsPerPageTemplate="#{seasonPeriodController.rowsPerPageTemplate}"
+                             		 emptyMessage="#{msg['no.records.found']}">
+						    <p:column class="text-left" headerText="#{label['timetable.column.name']}" sortBy="#{period.name}">
+						    	<h:outputText value="#{period.name}"/>
+						    </p:column>
+						    <p:column class="text-left" headerText="#{label['timetable.season']}" sortBy="#{period.season.name}">
+						    	<h:outputText value="#{period.season.name}" />
+						    </p:column>
+						    <p:column class="text-left" headerText="#{label['timetable.column.startDate']}" sortBy="#{period.startDate}">
+						    	<h:outputText value="#{period.startDate}"/>
+						    </p:column>
+						    <p:column class="text-left" headerText="#{label['timetable.column.endDate']}" sortBy="#{period.endDate}">
+						    	<h:outputText value="#{period.endDate}"/>
+						    </p:column>
+						    <p:column class="text-left" headerText="#{label['timetable.column.discounts']}" styleClass="discounts-column">
+						    	<p:panelGrid styleClass="no-border ui-fluid">
+						    		<ui:repeat var="discount" value="#{seasonPeriodController.discountsByPeriod(period)}">
+							    	<p>
+								    	<h:outputLabel value="#{discount.subscriptionMonths} #{label['timetable.period.discount.months.short']}" />
+								    	<h:outputText value=" #{discount.discountRate}%" />
+							    	</p>
+							    	</ui:repeat>
+								</p:panelGrid>
+						    </p:column>
+						    <p:column style="width: 150px;">
+								<h:panelGroup id="editButton">
+									<p:commandButton value="#{label['timetable.button.edit']}"
+													 process="@this"
+													 action="#{seasonPeriodController.edit(period.id, periodIndex)}"
+													 update=":periodDialog"
+													 oncomplete="PF('periodDialog').show();"
+													 icon="fa fa-pencil"
+													 disabled="#{seasonPeriodController.checkIfSeasonPeriodCannotBeDeleted(period)}"
+													 styleClass="btn-light-blue">
+										<p:resetInput target="periodDialog" />
+									</p:commandButton>
+								</h:panelGroup>
+								<p:tooltip for="editButton"
+										   styleClass="text-center"
+										   position="top"
+										   value="#{label['cannot.edit.seasonPeriod.has.trackPeriod']}"
+										   rendered="#{seasonPeriodController.checkIfSeasonPeriodCannotBeDeleted(period)}"/>
+						    </p:column>
+						    <p:column style="width: 150px;">
+								<h:panelGroup id="seasonPeriodDeleteButton">
+						        <p:commandButton value="#{label['timetable.button.delete']}" id="withIcon"
+						        				 icon="fa fa-trash-o" styleClass="btn-red btn-block"
+						        				 action="#{seasonPeriodController.delete(period)}"
+						        				 update=":periodsForm:periodsTable"
+												 disabled="#{seasonPeriodController.checkIfSeasonPeriodCannotBeDeleted(period)}">
+			                        <p:confirm header="#{label['timetable.confirmation']}" message="#{label['timetable.period.message.delete']} '#{period.name}'?" icon="ui-icon-alert"/>
+			                    </p:commandButton>
+								</h:panelGroup>
+									<p:tooltip for="seasonPeriodDeleteButton"
+											   styleClass="text-center"
+											   position="center top"
+											   value="#{label['seasonPeriod.delete.error']}"
+											   rendered="#{seasonPeriodController.checkIfSeasonPeriodCannotBeDeleted(period)}"/>
+						    </p:column>
+						</p:dataTable>
+				</h:form>
+				
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
+                        <p:commandButton value="#{label['timetable.button.yes']}" styleClass="btn-primary ui-confirmdialog-yes"
+                                         icon="fa fa-check"/>
+                        <p:commandButton value="#{label['timetable.button.no']}" type="button" styleClass="btn-danger ui-confirmdialog-no"
+                                         icon="fa fa-close"/>
+                    </p:confirmDialog>
+				
+				<p:dialog header="#{empty seasonPeriodController.period.id ? label['timetable.period.header.save'] : label['timetable.period.header.edit']}" id="periodDialog" 
+						  widgetVar="periodDialog" resizable="false" 
+						  draggable="false" responsive="true" width="500" modal="true">
+					<h:form id="period">
+		                <p:messages showDetail="true" showSummary="false" closable="true"/>
+		                <p:panelGrid id="loginGrid" columns="2" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+		                    <p:outputLabel for="periodName" value="#{label['timetable.period.name']}"/>
+		                    <p:inputText id="periodName" value="#{seasonPeriodController.period.name}" required="true"
+		                                 requiredMessage="#{label['timetable.period.name.requiredMessage']}" label="periodName"/>		                  
+		          			<p:outputLabel for="season" value="#{label['timetable.period.season.name']}:"/>
+		          			<p:selectOneMenu id="season" value="#{seasonPeriodController.season}" required="true"
+		          							 requiredMessage="#{label['timetable.period.season.requiredMessage']}" converter="omnifaces.SelectItemsConverter">
+		          				<p:ajax update="startDate"/>
+					            <f:selectItem itemLabel="#{seasonPeriodController.season.name}" itemValue="#{seasonPeriodController.season}" />
+					            <f:selectItems value="#{seasonPeriodController.seasons}" var="season" itemLabel="#{season.name}" />
+					        </p:selectOneMenu>
+		                    <p:outputLabel for="startDate" value="#{label['timetable.period.startDate']}"/>
+		                    <p:calendar id="startDate" showOn="button" required="true"
+		                    			navigator="true" mask="true" locale="#{localeController.locale}"
+				        				pattern="yyyy-MM-dd" value="#{seasonPeriodController.startDate}"
+		                    			requiredMessage="#{label['timetable.period.startDate.requiredMessage']}"
+		                    			converter="localDateTimeConverter"
+		                    			mindate="#{seasonPeriodController.season.startDate}"
+		                    			maxdate="#{seasonPeriodController.season.endDate}"
+		                    			disabled="#{seasonPeriodController.season eq null}"
+		                    			readonlyInput="true">
+		                    			<p:ajax event="dateSelect" listener="#{seasonPeriodController.setMinDate}" update="endDate"/>
+		                    </p:calendar>
+		                    <p:outputLabel for="endDate" value="#{label['timetable.period.endDate']}"/>
+		                    <p:calendar id="endDate" showOn="button" required="true"
+		                    			navigator="true" mask="true" locale="#{localeController.locale}"
+				        				pattern="yyyy-MM-dd" value="#{seasonPeriodController.endDate}"
+		                    			requiredMessage="#{label['timetable.period.endDate.requiredMessage']}"
+		                    			converter="localDateTimeConverter"
+		                    			mindate="#{seasonPeriodController.minDate}"
+		                    			maxdate="#{seasonPeriodController.season.endDate}"
+		                    			disabled="#{seasonPeriodController.season eq null}"
+		                    			readonlyInput="true">
+		                    			<p:ajax event="dateSelect" listener="#{seasonPeriodController.setMinDate}"/>
+		                    </p:calendar>
+		                </p:panelGrid>
+		                <p:separator/>
+		                <p:panelGrid id="typesGrid" columns="2" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+					    	<p:outputLabel for="periodType" value="#{label['timetable.period.type']}" />
+					    	<p:importEnum type="com.mAdmin.enumerator.PeriodType" var="PeriodType" />
+				        	<p:selectOneRadio id="periodType"
+				        	                  styleClass="margins-top-bottom-10"
+				        					  value="#{seasonPeriodController.periodType}"
+				        					  layout="grid"
+				        					  columns="2"
+				        					  required="true"
+				        					  requiredMessage="">
+					        	<p:ajax process="@this" update="discountsPanel" listener="#{seasonPeriodController.showDiscounts}"/>
+				            	<f:selectItems value="#{PeriodType.ALL_VALUES}"
+				            				   var="current"
+				            				   itemLabel="#{label['timetable.period.type.'.concat(current.toString().toLowerCase())]}"
+				            				   itemValue="#{current}"/>
+				        	</p:selectOneRadio>
+		                </p:panelGrid>
+		                <p:panel id="discountsPanel" styleClass="no-border discounts-panel">
+			                <p:separator id="discountSeparator" rendered="#{seasonPeriodController.periodType ne null}"  styleClass="discounts-separator"/>
+		                	<p:outputLabel value="#{label['timetable.column.discounts']}:" styleClass="discounts-title"  rendered="#{seasonPeriodController.periodType ne null}"/>
+		                	<p:dataTable rowIndexVar="discountIndex"
+		                				 id="discountsTable"
+		                				 value="#{seasonPeriodController.periodDiscounts}"
+		                				 var="discount"
+		                				 styleClass="no-border ui-fluid discount-selection"
+		                				 rendered="#{seasonPeriodController.periodType ne null}"
+		                				 emptyMessage="#{msg['no.records.found']}">
+							    <p:column styleClass="ui-g-6 no-border discount-label">
+							    	<p:outputLabel value="#{discount.subscriptionMonths} #{label['timetable.period.discount.months']}" />
+							    </p:column>
+							    <p:column styleClass="ui-g-2 no-border">
+				                	<p:inputNumber id="discount"
+						            			   value="#{discount.discountRate}"
+						            			   decimalPlaces="0"
+						            			   maxlenght="2"
+						            			   onkeypress="return false"/>
+							    </p:column>
+							    <p:column styleClass="ui-g-4 no-border">
+				        			<p:slider for="discount" maxValue="20" styleClass="discount-slider" />
+							    </p:column>
+				        	</p:dataTable>
+			        	</p:panel>
+		                <p:separator/>
+		                <p:button styleClass="btn-red pull-left" value="#{label['timetable.button.close']}" onclick="PF('periodDialog').hide()"/>
+		                <p:commandButton styleClass="btn-primary btn-light-blue pull-right" value="#{label['timetable.button.save']}"
+		               					 validateClient="true"
+		               					 process="@form"
+										 action="#{seasonPeriodController.save}"					
+										 update=":periodsForm:periodsTable @form"> 
+		                	<p:confirm disabled="true" />
+		                </p:commandButton>
+					</h:form> 
+		        </p:dialog>
+		        
+			</p:panel>
+			
+			<h:outputScript library="js" name="main.js"/>
+			<h:outputScript library="js" name="translations/locale_lt.js"/>
+			
+    </ui:define>
+  
+</ui:composition>

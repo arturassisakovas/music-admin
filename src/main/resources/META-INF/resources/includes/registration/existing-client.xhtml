@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+<h:form id="form">
+	
+	<p:outputLabel style="margin-top: 20px;" value="#{label['register.registeredattendees']}:" rendered="#{registeredAttendees ne null and !registeredAttendees.isEmpty()}"/>
+
+	<p:tabView id="attendeesTabView" value="#{clientRegistrationController.collectRegisteredAttendees()}" var="attendee" styleClass="no-padding" cache="false" dynamic="true">
+        
+		<p:tab title="#{clientRegistrationController.getAttendeeName(attendee) ne null ? clientRegistrationController.getAttendeeName(attendee) : label['register.newattendee']}" >
+			<p:panel style="border: none;" id="clientRegistration">
+   	
+	   		<ui:fragment rendered="#{attendee.id eq null}">
+	   		
+	   		<div class="ui-g relative">
+	   			<p:message for="attendeeGender" />
+	   			<div class="ui-g-6 ui-custom-12">
+	        		<p:outputLabel for="attendeeGender" value="#{label['input.attendee.gender']}:" />
+	   			</div>
+	   			<div class="ui-g-6 ui-custom-12 top-15">
+	    			<p:selectOneRadio id="attendeeGender"
+	    							  value="#{selectedAttendee.gender}"
+	    							  required="true"
+	    							  label="#{label['input.attendee.gender']}">
+		           		 <f:selectItem itemLabel="#{label['input.attendee.gender.boy']}" itemValue="boy" />
+		           		 <f:selectItem itemLabel="#{label['input.attendee.gender.girl']}" itemValue="girl" />
+		       		 </p:selectOneRadio>
+	   			</div>
+	   		</div>
+	   		
+	   		<div class="ui-g relative">
+	   			<p:message for="attendeeName" /> 
+	   			<div class="ui-g-6 ui-custom-12">
+		       		    <p:outputLabel for="attendeeName" value="#{label['input.attendee.name']}:"/>
+	   			</div>
+	   			<div class="ui-g-6 ui-custom-12 top-15">
+	    			<p:inputText id="attendeeName"
+	    						 value="#{selectedAttendee.name}"
+	    						 required="true"
+	    						 label="#{label['input.attendee.name']}"
+	    						 styleClass="full-width">
+						<f:validator validatorId="custom.nameValidator"/>
+			        	<f:validateLength minimum="1" maximum="50" />
+		        	</p:inputText>
+	   			</div>
+	   		</div>
+	   		
+	   		<div class="ui-g relative">
+	   			<p:message for="attendeeSurname" />
+	   			<div class="ui-g-6 ui-custom-12">
+	       		    <p:outputLabel for="attendeeSurname" value="#{label['input.attendee.surname']}:" />
+	   			</div>
+	   			<div class="ui-g-6 ui-custom-12 top-15">
+	    			<p:inputText id="attendeeSurname"
+	    						 value="#{selectedAttendee.surname}"
+	    						 required="true"
+	    						 label="#{label['input.attendee.surname']}"
+	    						 styleClass="full-width">
+						<f:validator validatorId="custom.surnameValidator"/>
+			        	<f:validateLength minimum="1" maximum="50" />
+		        	</p:inputText>
+	   			</div>
+	   		</div>
+
+	   		<div class="ui-g relative">
+	   			<p:message for="attendeeHealthProblems" />
+	   			<div class="ui-g-6 ui-custom-12">
+	       		    <p:outputLabel for="attendeeHealthProblems" value="#{label['input.attendee.health_problems']}" />
+	   			</div>
+	   			<div class="ui-g-6 ui-custom-12 top-15">
+	    			<p:inputTextarea styleClass="full-width" id="attendeeHealthProblems" value="#{selectedAttendee.healthProblems}" required="false">
+	    				<f:validateLength maximum="2000" />
+	    			</p:inputTextarea>
+	   			</div>
+	   		</div>
+
+	   		<div class="ui-g relative">
+	   			<div class="ui-g-6 ui-sm-12 float-btn-left">
+	   				<p:commandButton value="#{label['register.attendee.cancel']}" action="#{clientRegistrationController.removeRegisteredAttendee(attendee)}" process="@this"
+	   							   update="attendeesTabView"
+	   							   icon="fa fa-times"
+	   							   styleClass="btn-red">
+	   					<p:confirm header="#{label['register.attendee.cancel.confirm.header']}" message="#{label['register.attendee.cancel.confirm.message']}" icon="fa fa-exclamation-triangle" />
+	   				</p:commandButton>
+	   			</div>
+	   			<div class="ui-g-6 ui-sm-12 registration-step-4-text-align-end">
+	   				<h:panelGroup id="addAttendeeNew">
+	   					<p:commandButton value="#{label['input.button.addAnotherChild']}" 
+								     	 action="#{clientRegistrationController.addAnotherAttendee}"
+				     				 	 icon="fa fa-plus"				     				 			 
+				     				 	 disabled="#{registeredAttendees.size() > clientRegistrationController.maxAttendees - 1}"
+				     				 	 styleClass="btn-dark-blue"/>
+	   				</h:panelGroup>
+	   				<p:tooltip for="addAttendeeNew" value="#{label['register.maxattendees'].concat(clientRegistrationController.maxAttendees)}" position="bottom"/>
+	   			</div>
+	   		</div>
+	   		
+	   		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		        <p:commandButton value="#{label['confirmdialog.yes']}" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+		        <p:commandButton value="#{label['confirmdialog.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+		    </p:confirmDialog>
+	   		
+	   		</ui:fragment>
+	   		
+	   		<ui:fragment rendered="#{attendee.id ne null}">
+	   		
+	   		<p:panelGrid layout="grid" columns="1">
+	   			<p><strong>#{label['attendee.name']}: </strong>#{attendee.name}</p>
+	   			<p><strong>#{label['attendee.surname']}: </strong>#{attendee.surname}</p>
+	   			<p><strong>#{label['attendee.gender']}: </strong>#{label['attendee.gender.'.concat(attendee.gender)]}</p>
+	   			<p><strong>#{label['attendee.birthdate']}: </strong>#{attendee.birthDate}</p>
+	   		</p:panelGrid>
+	   		
+	   		<div class="ui-g relative">
+	   			<div class="ui-g-6 ui-sm-12 float-btn-left">
+	   				<p:commandButton value="#{label['register.attendee.cancel']}" action="#{clientRegistrationController.removeRegisteredAttendee(attendee)}" process="@this"
+	   							   update="attendeesTabView"
+	   							   icon="fa fa-times"
+	   							   styleClass="btn-red">
+	   					<p:confirm header="#{label['register.attendee.cancel.confirm.header']}" message="#{label['register.attendee.cancel.confirm.message']}" icon="fa fa-exclamation-triangle" />
+	   				</p:commandButton>
+	   			</div>
+	   			<div class="ui-g-6 ui-sm-12 registration-step-4-text-align-end">
+	   				<h:panelGroup id="addAttendee">
+	   					<p:commandButton value="#{label['input.button.addAnotherChild']}" 
+								     	 action="#{clientRegistrationController.addAnotherAttendee}"
+				     				 	 icon="fa fa-plus"
+				     				 	 styleClass="btn-dark-blue"
+				     				 	 disabled="#{registeredAttendees.size() > clientRegistrationController.maxAttendees - 1}"
+				     				 	 validateClient="true"/>
+	   				</h:panelGroup>
+					<p:tooltip for="addAttendee" value="#{label['register.maxattendees'].concat(clientRegistrationController.maxAttendees)}" position="bottom"/>
+	   			</div>
+	   		</div>
+	   		
+	   		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		        <p:commandButton value="#{label['confirmdialog.yes']}" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+		        <p:commandButton value="#{label['confirmdialog.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+		    </p:confirmDialog>
+	   		
+	   		</ui:fragment>
+
+	       	<p:panelGrid layout="grid" style="margin-top: 30px;" columns="1">
+				<p:commandButton
+						 id="continueButton"
+						 action="#{clientRegistrationController.continueWithExisting}" 
+	  					 value="#{label['input.button.continue']}" 
+	  				     ajax="true"
+						 update="@form"
+	  					 icon="fa fa-caret-right" 
+				 		 iconPos="right"
+				 		 styleClass="btn-block btn-pools btn-continue"
+				 		 validateClient="true"/>	
+	       	</p:panelGrid>					
+	
+	       </p:panel>
+		</p:tab>
+	</p:tabView>
+
+</h:form>
+<h:outputScript library="js" name="main.js" />
+<h:outputScript library="js" name="translations/locale_lt.js" />
+<h:outputScript library="js" name="validators/email_validator.js" />
+<h:outputScript library="js" name="validators/phone_number_validator.js" />
+<h:outputScript library="js" name="validators/password_validator.js" />
+<h:outputScript library="js" name="validators/name_validator.js" />
+<h:outputScript library="js" name="validators/surname_validator.js" />
+</ui:composition>

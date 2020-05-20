@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="../templates/template.xhtml">
+
+    <ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+
+	<ui:define name="title">
+        <h2>#{label['timetable.page.title']}</h2>
+    </ui:define>
+  
+    <ui:define name="body">
+    
+		<p:panel id="container">
+
+			<ui:include src="../includes/timetables-menu.xhtml"/>
+			<p:messages showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>    
+			
+			<h:form id="timetablesForm"
+					styleClass="timetables-form"
+					prependId="false">
+				<div class="ui-g">
+					<div class="ui-g-2">
+						<p:outputLabel value="#{label['timetable.season']}"
+									   styleClass="timetable-label" />
+						<p:selectOneMenu id="season"
+										 value="#{timetableController.selectedSeason}"
+										 required="true"
+	         							 converter="omnifaces.SelectItemsConverter"
+	         							 disabled="#{timetableController.enabledField}"
+	         							 label="#{label['timetable.season']}">
+	         				<f:ajax listener="#{timetableController.selectSeason}" render="@form"/>
+	         				<f:selectItem itemLabel="#{label['timetable.season']}"/>
+			            	<f:selectItems value="#{timetableController.seasons}" var="season" itemLabel="#{season.name}" />
+			        	</p:selectOneMenu>
+					</div>
+					<div class="ui-g-2">
+						<p:outputLabel value="#{label['timetable.menu.season.period']}"
+									   styleClass="timetable-label" />
+						<p:selectOneMenu id="seasonsPeriods"
+										 value="#{timetableController.selectedSeasonPeriod}"
+										 required="true"
+	         							 disabled="#{empty timetableController.seasonsPeriods || timetableController.enabledField}"
+	         							 converter="omnifaces.SelectItemsConverter"
+	         							 label="#{label['timetable.menu.season.period']}">
+	         				<f:ajax listener="#{timetableController.selectSeasonPeriod}" render="@form"/>
+	         				<f:selectItem itemLabel="#{label['timetable.menu.season.period']}"/>
+			            	<f:selectItems value="#{timetableController.seasonsPeriods}" var="seasonPeriod" itemLabel="#{seasonPeriod.name}" />
+			        	</p:selectOneMenu>
+					</div>
+					<div class="ui-g-2">
+						<p:outputLabel value="#{label['timetable.track.pool']}"
+									   styleClass="timetable-label" />
+						<p:selectOneMenu id="pools"
+										 value="#{timetableController.selectedPool}"
+										 required="true"
+	         							 disabled="#{empty timetableController.pools || timetableController.enabledField}"
+	         							 converter="omnifaces.SelectItemsConverter"
+	         							 label="#{label['timetable.track.pool']}">
+	         				<f:ajax listener="#{timetableController.selectPool}" render="@form"/>
+	         				<f:selectItem itemLabel="#{label['timetable.track.pool']}"/>
+			            	<f:selectItems value="#{timetableController.pools}" var="pool" itemLabel="#{pool.name} (#{pool.city})" />
+			        	</p:selectOneMenu>
+					</div>
+					<div class="ui-g-2">
+						<p:outputLabel value="#{label['timetable.trackPeriod.track']}"
+									   styleClass="timetable-label" />
+						<p:selectOneMenu id="tracks"
+										 value="#{timetableController.selectedTrack}"
+										 required="true"
+	         							 disabled="#{empty timetableController.tracks || timetableController.enabledField}"
+	         							 converter="omnifaces.SelectItemsConverter"
+	         							 label="#{label['timetable.trackPeriod.track']}">
+	         				<f:ajax listener="#{timetableController.selectTrack}" render="@form"/>
+	         				<f:selectItem itemLabel="#{label['timetable.trackPeriod.track']}"/>
+			            	<f:selectItems value="#{timetableController.tracks}" var="track" itemLabel="#{track.number}" />
+			        	</p:selectOneMenu>
+					</div>
+					<div class="ui-g-2">
+						<p:outputLabel value="#{label['timetable.trackPeriod']}"
+									   styleClass="timetable-label" />
+						<p:selectOneMenu id="trackPeriods"
+										 value="#{timetableController.selectedTrackPeriod}"
+										 required="true"
+	         							 disabled="#{empty timetableController.trackPeriods || timetableController.enabledField}"
+	         							 converter="omnifaces.SelectItemsConverter"
+	         							 label="#{label['timetable.trackPeriod']}">
+	         				<f:ajax listener="#{timetableController.selectTrackPeriod}" render="@form"/>
+	         				<f:selectItem itemLabel="#{label['timetable.trackPeriod']}"/>
+			            	<f:selectItems value="#{timetableController.trackPeriods}" var="trackPeriod" itemLabel="#{trackPeriod.startDate} - #{trackPeriod.endDate}" />
+			        	</p:selectOneMenu>
+					</div>
+				</div>
+				<div class="ui-g">
+					<div class="ui-g-2">
+						<p:outputLabel value="#{label['timetable.coach']}"
+									   styleClass="timetable-label" />
+						<p:selectCheckboxMenu id="coach"
+										 value="#{timetableController.selectedCoaches}"
+										 required="true"
+	         							 disabled="#{not timetableController.enabledSelectMenu || timetableController.enabledField}"
+	         							 converter="omnifaces.SelectItemsConverter"
+	         							 label="#{label['timetable.coach']}"
+	         							 multiple="true">
+			            	<f:selectItems value="#{timetableController.coaches}" var="coach" itemLabel="#{coach.name} #{coach.surname}" />
+			        	</p:selectCheckboxMenu>
+					</div>
+					<div class="ui-g-2">
+						<p:outputLabel value="#{label['timetable.groupSize']}"
+									   styleClass="timetable-label" />
+						<p:selectOneMenu id="groupSize"
+										 value="#{timetableController.selectedGroupSize}"
+										 required="true"
+	         							 disabled="#{not timetableController.enabledSelectMenu || timetableController.enabledField}"
+	         							 converter="omnifaces.SelectItemsConverter"
+	         							 label="#{label['timetable.groupSize']}">
+	         				 <f:selectItem itemLabel="#{label['timetable.groupSize']}"/>
+	         				 <f:selectItems value="#{timetableController.groupSize}" var="singleGroupSize" itemLabel="#{singleGroupSize}"/>
+			        	</p:selectOneMenu>
+					</div>
+					<div class="ui-g-2">
+						<p:outputLabel value="#{label['timetable.ageGroup']}"
+									   styleClass="timetable-label" />
+						<p:selectOneMenu id="ageGroup"
+										 value="#{timetableController.selectedAgeGroup}"
+										 required="true"
+	         							 disabled="#{not timetableController.enabledSelectMenu || timetableController.enabledField}"
+	         							 converter="omnifaces.SelectItemsConverter"
+	         							 label="#{label['timetable.ageGroup']}">
+			            	 <f:selectItem itemLabel="#{label['timetable.ageGroup']}" itemValue=""/>
+			            	 <f:selectItems value="#{timetableController.ageGroups}" var="ageGroup" itemLabel="#{ageGroup.value} m."/>
+			        	</p:selectOneMenu>
+					</div>
+					<div class="ui-g-2">
+						<p:outputLabel value="#{label['timetable.swimmingLevel']}"
+									   styleClass="timetable-label" />
+						<p:selectOneMenu id="swimmingLevel"
+										 value="#{timetableController.selectedSwimmingLevel}"
+										 required="true"
+	         							 disabled="#{not timetableController.enabledSelectMenu || timetableController.enabledField}"
+	         							 converter="omnifaces.SelectItemsConverter"
+	         							 label="#{label['timetable.swimmingLevel']}">
+			            	 <f:selectItem itemLabel="#{label['timetable.swimmingLevel']}" itemValue=""/>
+			            	 <f:selectItems value="#{timetableController.swimmingLevels}" var="swimmingLevel" itemLabel="#{label['input.attendee.swimminglevel.'.concat(swimmingLevel.toString().toLowerCase())]}"/>
+			        	</p:selectOneMenu>
+					</div>
+					<div class="ui-g-2">
+						<p:outputLabel value="#{label['timetable.workoutsPerWeek']}"
+									   styleClass="timetable-label" />
+						<p:selectOneMenu id="workoutsPerWeek"
+										 value="#{timetableController.selectedWorkoutsPerWeek}"
+										 required="true"
+	         							 disabled="#{not timetableController.enabledSelectMenu || timetableController.enabledField}"
+	         							 converter="omnifaces.SelectItemsConverter"
+	         							 label="#{label['timetable.workoutsPerWeek']}">
+	         				 <f:selectItem itemLabel="#{label['timetable.workoutsPerWeek']}" itemValue=""/>
+			            	 <f:selectItems value="#{timetableController.workoutsPerWeek}" var="workoutPerWeek" itemLabel="#{workoutPerWeek.value}"/>
+			        	</p:selectOneMenu>
+					</div>
+					<div class="ui-g-2"
+						 style="position: relative;">
+						<h:panelGroup id="showGraphicsButton">
+							<p:commandButton validateClient="true"
+											 rendered="#{!timetableController.enabledField}"
+											 value="#{label['timetable.showGraphics']}"
+											 disabled="#{timetableController.selectedTrackPeriod eq null}"
+											 actionListener="#{timetableController.filterWorkdaysActivities}"
+											 update="@form"
+											 styleClass="groups-filter-button btn-dark-blue"/>
+						</h:panelGroup>
+							<p:commandButton validateClient="true"
+											 rendered="#{timetableController.enabledField}"
+											 value="#{label['timetable.changeSettings']}"
+											 actionListener="#{timetableController.activateSettingsChanging}"
+											 update="@form"
+											 styleClass="groups-filter-button btn-dark-blue"/>
+						<p:tooltip for="showGraphicsButton"
+								   styleClass="text-center"
+								   position="center top"
+								   value="#{label['timetable.showGraphics.disabled.reason']}"
+								   rendered="#{timetableController.selectedTrackPeriod eq null}"/>
+					</div>
+				</div>
+
+				<p:outputLabel rendered="#{timetableController.multipleWorkoutPerWeek and timetableController.enabledField}"
+							   value="#{timetableController.firstGroupSelected ? 'Pasirinkite antrą laiką' : 'Pasirinkite pirmą laiką'}"
+							   styleClass="choose-time">
+					<li class="fa fa-hand-o-down"/>
+				</p:outputLabel>
+				
+				<p:panel rendered="#{not empty timetableController.weekdays and timetableController.enabledField}"
+						 styleClass="weekdays">
+					<div class="ui-g m-40">
+						<div class="col-7">
+							<p:outputLabel styleClass="weekdayLabel" value="#{calendarLabel['weekday.monday']}"/>
+							<p:repeat var="dayOfWeek" value="#{timetableController.weekdays}">
+								<p:panel rendered="#{dayOfWeek.dayOfWeek == 'MONDAY'}"
+										 styleClass="group-panel">
+									<p:repeat  var="workingHour" value="#{dayOfWeek.trackWorkingHours}">
+										<p:commandButton rendered="#{!timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{cabinetPeriodController.minutesToTimeConverter(workingHour.startHour)} - #{cabinetPeriodController.minutesToTimeConverter(workingHour.endHour)}"
+														 actionListener="#{timetableController.prepareGroupDataObject(workingHour.id)}"
+														 styleClass="group-item  #{timetableController.selectedTimeId eq workingHour.id ? 'group-selected' : 'available'}"
+														 update="@form"
+														 icon="#{timetableController.selectedTimeId eq workingHour.id ? 'fa fa-check' : ''}"/>
+										<p:commandButton rendered="#{timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{timetableController.getFormattedGroupName(workingHour.id, 'show')}" 
+														 styleClass="group-item not-available"
+														 actionListener="#{timetableController.deleteGroup(workingHour.id)}"
+														 style="background: #{timetableController.getGroupColor(workingHour.id)}"
+														 update="@form">
+											<p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.group.message.delete']} #{timetableController.getFormattedGroupName(workingHour.id, 'delete')}?" icon="ui-icon-alert"/>
+										</p:commandButton>
+									</p:repeat>
+								</p:panel>
+							</p:repeat>
+						</div>
+						<div class="col-7">
+							<p:outputLabel styleClass="weekdayLabel" value="#{calendarLabel['weekday.tuesday']}"/>
+							<p:repeat var="dayOfWeek" value="#{timetableController.weekdays}">
+								<p:panel rendered="#{dayOfWeek.dayOfWeek == 'TUESDAY'}"
+										 styleClass="group-panel">
+									<p:repeat  var="workingHour" value="#{dayOfWeek.trackWorkingHours}">
+										<p:commandButton rendered="#{!timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{cabinetPeriodController.minutesToTimeConverter(workingHour.startHour)} - #{cabinetPeriodController.minutesToTimeConverter(workingHour.endHour)}"
+														 actionListener="#{timetableController.prepareGroupDataObject(workingHour.id)}"
+														 styleClass="group-item  #{timetableController.selectedTimeId eq workingHour.id ? 'group-selected' : 'available'}"
+														 update="@form"
+														 icon="#{timetableController.selectedTimeId eq workingHour.id ? 'fa fa-check' : ''}"/>
+										<p:commandButton rendered="#{timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{timetableController.getFormattedGroupName(workingHour.id, 'show')}" 
+														 styleClass="group-item not-available"
+														 actionListener="#{timetableController.deleteGroup(workingHour.id)}"
+														 style="background: #{timetableController.getGroupColor(workingHour.id)}"
+														 update="@form">
+											<p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.group.message.delete']} #{timetableController.getFormattedGroupName(workingHour.id, 'delete')}?" icon="ui-icon-alert"/>
+										</p:commandButton>
+									</p:repeat>
+								</p:panel>
+							</p:repeat>
+						</div>
+						<div class="col-7">
+							<p:outputLabel styleClass="weekdayLabel" value="#{calendarLabel['weekday.wednesday']}"/>
+							<p:repeat var="dayOfWeek" value="#{timetableController.weekdays}">
+								<p:panel rendered="#{dayOfWeek.dayOfWeek == 'WEDNESDAY'}"
+										 styleClass="group-panel">
+									<p:repeat  var="workingHour" value="#{dayOfWeek.trackWorkingHours}">
+										<p:commandButton rendered="#{!timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{cabinetPeriodController.minutesToTimeConverter(workingHour.startHour)} - #{cabinetPeriodController.minutesToTimeConverter(workingHour.endHour)}"
+														 actionListener="#{timetableController.prepareGroupDataObject(workingHour.id)}"
+														 styleClass="group-item  #{timetableController.selectedTimeId eq workingHour.id ? 'group-selected' : 'available'}"
+														 update="@form"
+														 icon="#{timetableController.selectedTimeId eq workingHour.id ? 'fa fa-check' : ''}">
+												<p:dialog widgetVar="confDlg" />
+										</p:commandButton>
+										<p:commandButton rendered="#{timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{timetableController.getFormattedGroupName(workingHour.id, 'show')}" 
+														 styleClass="group-item not-available"
+														 actionListener="#{timetableController.deleteGroup(workingHour.id)}"
+														 style="background: #{timetableController.getGroupColor(workingHour.id)}"
+														 update="@form">
+												<p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.group.message.delete']} #{timetableController.getFormattedGroupName(workingHour.id, 'delete')}?" icon="ui-icon-alert"/>
+										</p:commandButton>
+									</p:repeat>
+								</p:panel>
+							</p:repeat>
+						</div>
+						<div class="col-7">
+							<p:outputLabel styleClass="weekdayLabel" value="#{calendarLabel['weekday.thursday']}"/>
+							<p:repeat var="dayOfWeek" value="#{timetableController.weekdays}">
+								<p:panel rendered="#{dayOfWeek.dayOfWeek == 'THURSDAY'}"
+										 styleClass="group-panel">
+									<p:repeat  var="workingHour" value="#{dayOfWeek.trackWorkingHours}">
+										<p:commandButton rendered="#{!timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{cabinetPeriodController.minutesToTimeConverter(workingHour.startHour)} - #{cabinetPeriodController.minutesToTimeConverter(workingHour.endHour)}"
+														 actionListener="#{timetableController.prepareGroupDataObject(workingHour.id)}"
+														 styleClass="group-item  #{timetableController.selectedTimeId eq workingHour.id ? 'group-selected' : 'available'}"
+														 update="@form"
+														 icon="#{timetableController.selectedTimeId eq workingHour.id ? 'fa fa-check' : ''}"/>
+										<p:commandButton rendered="#{timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{timetableController.getFormattedGroupName(workingHour.id, 'show')}" 
+														 styleClass="group-item not-available"
+														 actionListener="#{timetableController.deleteGroup(workingHour.id)}"
+														 style="background: #{timetableController.getGroupColor(workingHour.id)}"
+														 update="@form">
+											<p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.group.message.delete']} #{timetableController.getFormattedGroupName(workingHour.id, 'delete')}?" icon="ui-icon-alert"/>
+										</p:commandButton>
+									</p:repeat>
+								</p:panel>
+							</p:repeat>
+						</div>
+						<div class="col-7">
+							<p:outputLabel styleClass="weekdayLabel" value="#{calendarLabel['weekday.friday']}"/>
+							<p:repeat var="dayOfWeek" value="#{timetableController.weekdays}">
+								<p:panel rendered="#{dayOfWeek.dayOfWeek == 'FRIDAY'}"
+										 styleClass="group-panel">
+									<p:repeat  var="workingHour" value="#{dayOfWeek.trackWorkingHours}">
+										<p:commandButton rendered="#{!timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{cabinetPeriodController.minutesToTimeConverter(workingHour.startHour)} - #{cabinetPeriodController.minutesToTimeConverter(workingHour.endHour)}"
+														 actionListener="#{timetableController.prepareGroupDataObject(workingHour.id)}"
+														 styleClass="group-item  #{timetableController.selectedTimeId eq workingHour.id ? 'group-selected' : 'available'}"
+														 update="@form"
+														 icon="#{timetableController.selectedTimeId eq workingHour.id ? 'fa fa-check' : ''}"/>
+										<p:commandButton rendered="#{timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{timetableController.getFormattedGroupName(workingHour.id, 'show')}" 
+														 styleClass="group-item not-available"
+														 actionListener="#{timetableController.deleteGroup(workingHour.id)}"
+														 style="background: #{timetableController.getGroupColor(workingHour.id)}"
+														 update="@form">
+											<p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.group.message.delete']} #{timetableController.getFormattedGroupName(workingHour.id, 'delete')}?" icon="ui-icon-alert"/>
+										</p:commandButton>
+									</p:repeat>
+								</p:panel>
+							</p:repeat>
+						</div>
+						<div class="col-7">
+							<p:outputLabel styleClass="weekdayLabel" value="#{calendarLabel['weekday.saturday']}"/>
+							<p:repeat var="dayOfWeek" value="#{timetableController.weekdays}">
+								<p:panel rendered="#{dayOfWeek.dayOfWeek == 'SATURDAY'}"
+										 styleClass="group-panel">
+									<p:repeat  var="workingHour" value="#{dayOfWeek.trackWorkingHours}">
+										<p:commandButton rendered="#{!timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{cabinetPeriodController.minutesToTimeConverter(workingHour.startHour)} - #{cabinetPeriodController.minutesToTimeConverter(workingHour.endHour)}"
+														 actionListener="#{timetableController.prepareGroupDataObject(workingHour.id)}"
+														 styleClass="group-item  #{timetableController.selectedTimeId eq workingHour.id ? 'group-selected' : 'available'}"
+														 update="@form"
+														 icon="#{timetableController.selectedTimeId eq workingHour.id ? 'fa fa-check' : ''}"/>
+										<p:commandButton rendered="#{timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{timetableController.getFormattedGroupName(workingHour.id, 'show')}" 
+														 styleClass="group-item not-available"
+														 actionListener="#{timetableController.deleteGroup(workingHour.id)}"
+														 style="background: #{timetableController.getGroupColor(workingHour.id)}"
+														 update="@form">
+											<p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.group.message.delete']} #{timetableController.getFormattedGroupName(workingHour.id, 'delete')}?" icon="ui-icon-alert"/>
+										</p:commandButton>
+									</p:repeat>
+								</p:panel>
+							</p:repeat>
+						</div>
+						<div style="border-right: none;" class="col-7">
+							<p:outputLabel styleClass="weekdayLabel" value="#{calendarLabel['weekday.sunday']}"/>
+							<p:repeat var="dayOfWeek" value="#{timetableController.weekdays}">
+								<p:panel rendered="#{dayOfWeek.dayOfWeek == 'SUNDAY'}"
+										 styleClass="group-panel">
+									<p:repeat  var="workingHour" value="#{dayOfWeek.trackWorkingHours}">
+										<p:commandButton rendered="#{!timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{cabinetPeriodController.minutesToTimeConverter(workingHour.startHour)} - #{cabinetPeriodController.minutesToTimeConverter(workingHour.endHour)}"
+														 actionListener="#{timetableController.prepareGroupDataObject(workingHour.id)}"
+														 styleClass="group-item  #{timetableController.selectedTimeId eq workingHour.id ? 'group-selected' : 'available'}"
+														 update="@form"
+														 icon="#{timetableController.selectedTimeId eq workingHour.id ? 'fa fa-check' : ''}"/>
+										<p:commandButton rendered="#{timetableController.checkIfGroupExist(workingHour.id)}"
+														 value="#{timetableController.getFormattedGroupName(workingHour.id, 'show')}" 
+														 styleClass="group-item not-available"
+														 actionListener="#{timetableController.deleteGroup(workingHour.id)}"
+														 style="background: #{timetableController.getGroupColor(workingHour.id)}"
+														 update="@form">
+											<p:confirm header="#{label['timetable.confirmation']}"  message="#{label['timetable.group.message.delete']} #{timetableController.getFormattedGroupName(workingHour.id, 'delete')}?" icon="ui-icon-alert"/>
+										</p:commandButton>
+									</p:repeat>
+								</p:panel>
+							</p:repeat>
+						</div>
+					</div>
+				</p:panel>
+				
+				<p:panel rendered="#{empty timetableController.weekdays and timetableController.enabledField}"
+						 styleClass="weekdays no-groups">
+						 #{label['timetable.noAvailableGroups']}
+				</p:panel>
+				
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger">
+                        <p:commandButton value="#{label['timetable.button.yes']}" styleClass="btn-primary ui-confirmdialog-yes"
+                                         icon="fa fa-check"/>
+                        <p:commandButton value="#{label['timetable.button.no']}" type="button" styleClass="btn-danger ui-confirmdialog-no"
+                                         icon="fa fa-close"/>
+         	    </p:confirmDialog>
+         	    
+         	    <p:confirmDialog header="#{label['timetable.attention']}" showEffect="fade" hideEffect="fade" styleClass="box-solid box-danger"
+         	    				 widgetVar="confirmDlg" width="600px">
+         	    	<p:commandButton value="#{label['timetable.button.yes']}" actionListener="#{timetableController.createGroup()}"
+         	    				     oncomplete="PF('confirmDlg').hide()" styleClass="btn-primary ui-confirmdialog-yes"
+                                     icon="fa fa-check" update="timetablesForm" process="@this"/>
+         	    	<p:commandButton value="#{label['timetable.button.no']}" onclick="PF('confirmDlg').hide();" type="button"
+         	    					 styleClass="btn-danger ui-confirmdialog-no" icon="fa fa-close" style="float:right;"/>
+         	    			     <f:facet name="message">
+         	    			     		<p style="margin-bottom: 20px">
+         	    				 			<h:outputText value="#{label['timetable.coachAlreadyHasWorkouts']}" escape="false"/>
+         	    				 		</p>
+         	    				 		<p>
+         	    				 			<h:outputText value="#{label['timetable.coachAssignedWorkoutTime']}" escape="false"/>
+         	    				 		</p>
+         	    				 		<p:repeat var="coachTakenDay" value="#{timetableController.coachTakenDaysModels}">
+         	    				 		<p>
+         	    				 			<h:outputText value="#{coachTakenDay.weekDayName}" escape="false"/>
+         	    				 		</p>
+											<p:dataTable var="takenTime" value="#{coachTakenDay.coachTakenTimes}" style="margin-bottom: 10px">
+												<p:column headerText="#{label['timetable.coach']}" >
+													<h:outputText value="#{takenTime.coachName}" />
+												</p:column>
+
+												<p:column headerText="#{label['timetable.track.pool']}">
+													<h:outputText value="#{takenTime.coachTakenPool}"/>
+												</p:column>
+
+												<p:column headerText="#{label['timetable.coach.workout.time']}">
+													<h:outputText value="#{takenTime.formattedWorkTime}"/>
+												</p:column>
+											</p:dataTable>
+         	    				 		</p:repeat>
+         	    				 		<p style="margin-top: 20px">
+         	    				 			<h:outputText value="#{label['timetable.multipleWorkoutsSameDayConfirmation']}" escape="false"/>
+         	    				 		</p>
+         	    				 </f:facet>    	    
+         	    </p:confirmDialog>
+								
+			</h:form>
+  
+		</p:panel>
+			
+		<h:outputScript library="js" name="main.js"/>
+		<h:outputScript library="js" name="translations/locale_lt.js"/>
+			
+    </ui:define>
+  
+</ui:composition>

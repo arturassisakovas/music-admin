@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/templates/template.xhtml">
+
+    <ui:define name="top-menu">
+        <ui:include src="../includes/top-bar.xhtml"/>
+    </ui:define>
+
+	<ui:define name="title">
+        <h2>#{label['clients.management']}</h2>
+    </ui:define>
+ 
+    <ui:define name="body">
+    
+    <p:panel id="container">
+    	<ui:include src="../includes/clients-menu.xhtml"/>
+			<h:form id="clientsForm" styleClass="admin-groups-datatable-border">
+			<p:dataTable id="clientsTable" widgetVar="clientsTable"
+						 value="#{clientController.model}" var="client"
+			 			 rows="#{clientController.rowsPerPage}" lazy="true" paginator="true"
+						 rowIndexVar="clientIndex" 
+						 style="margin-top: 20px;"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         currentPageReportTemplate="{currentPage} #{label['paginator.of']} {totalPages}"
+                         rowsPerPageTemplate="#{clientController.rowsPerPageTemplate}"
+                         emptyMessage="#{label['client.records.empty']}">
+					<f:facet name="header">
+			            <p:outputPanel>
+			                <h:outputText value="#{label['client.search']}: " style="margin-right: 10px"/>
+			                <p:inputText id="globalFilter"
+			                			 onkeyup="PF('clientsTable').filter()"
+			                			 style="width: 200px"
+			                			 styleClass="datatable-search"
+					                	 placeholder="#{label['client.search.placeholder']}"/>
+			            </p:outputPanel>
+			        </f:facet>                          
+                 	<p:column style="width: 50px;" class="text-left" headerText="#{label['rows.No']}">
+                 		<h:outputText value="#{clientIndex+1}"/>
+                 	</p:column>
+					<p:column class="text-left" headerText="#{label['client.name']}" sortBy="#{client.name}">
+						<h:outputText value="#{client.name}"/>
+					</p:column>
+					<p:column class="text-left" headerText="#{label['client.surname']}" sortBy="#{client.surname}">
+						<h:outputText value="#{client.surname}"/>
+					</p:column>
+					<p:column class="text-left" headerText="#{label['client.phone.basic']}">
+						<h:outputText value="#{client.phone}"/>
+					</p:column>
+					<p:column class="text-left" headerText="#{label['client.email.basic']}">
+						 <h:outputText value="#{client.email}"/>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+			
+			
+		</p:panel>
+
+    </ui:define>
+
+
+</ui:composition>
